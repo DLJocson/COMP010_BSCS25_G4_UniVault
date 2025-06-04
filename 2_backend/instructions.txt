@@ -1,0 +1,2 @@
+Upload all source code for the frontend application here. 
+Make sure to organize the files into different folders based on their category.
