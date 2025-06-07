@@ -19,7 +19,7 @@ CREATE TABLE CIVIL_STATUS_TYPE (
     
     -- CHECK CONSTRAINTS
     CONSTRAINT check_civil_status_code             CHECK (civil_status_code REGEXP '^CS[0-9]{2}$'),
-    CONSTRAINT check_civil_status_description      CHECK (civil_status_description REGEXP '^[A-Za-z ]+$')
+    CONSTRAINT check_civil_status_description      CHECK (civil_status_description REGEXP '^[A-Za-z /(),&.''-]+$')
     );
 
 
@@ -34,7 +34,7 @@ CREATE TABLE ADDRESS_TYPE (
     
     -- CHECK CONSTRAINTS
     CONSTRAINT check_address_type_code         CHECK (address_type_code REGEXP '^AD[0-9]{2}$'),
-    CONSTRAINT check_address_type              CHECK (address_type REGEXP '^[A-Za-z ]+$')
+    CONSTRAINT check_address_type              CHECK (address_type REGEXP '^[A-Za-z /(),&.''-]+$')
     );
 
 
@@ -49,7 +49,7 @@ CREATE TABLE CONTACT_TYPE (
     
     -- CHECK CONSTRAINTS
     CONSTRAINT check_contact_type_code                 CHECK (contact_type_code REGEXP '^CT[0-9]{2}$'),
-    CONSTRAINT check_contact_type_description          CHECK (contact_type_description REGEXP '^[A-Za-z ]+$')
+    CONSTRAINT check_contact_type_description          CHECK (contact_type_description REGEXP '^[A-Za-z /(),&.''-]+$')
     );
 
 
@@ -65,8 +65,8 @@ CREATE TABLE EMPLOYMENT_POSITION (
     
     -- CHECK CONSTRAINTS
     CONSTRAINT check_position_code       CHECK (position_code REGEXP '^EP[0-9]{2}$'),
-    CONSTRAINT check_employment_type     CHECK (employment_type REGEXP '^[A-Za-z /]+$'),
-    CONSTRAINT check_job_title           CHECK (job_title REGEXP '^[A-Za-z /]+$')
+    CONSTRAINT check_employment_type 	CHECK (employment_type REGEXP '^[A-Za-z /-]+$'),
+    CONSTRAINT check_job_title           CHECK (job_title REGEXP '^[A-Za-z /(),&.''-]+$')
     );
 
 
@@ -88,15 +88,15 @@ CREATE TABLE FUND_SOURCE_TYPE (
 -- 6. WORK_NATURE_TYPE
 -- ===================
 CREATE TABLE WORK_NATURE_TYPE (
-    work_nature_code        CHAR(5) NOT NULL,
+    work_nature_code        CHAR(3) NOT NULL,
     nature_description      VARCHAR(150) NOT NULL,
     
     -- KEY CONSTRAINTS
     PRIMARY KEY (work_nature_code),
     
     -- CHECK CONSTRAINTS
-    CONSTRAINT check_work_nature_code        CHECK (work_nature_code REGEXP '^WN[A-Za-z0-9]{3}$'),
-    CONSTRAINT check_nature_description     CHECK (nature_description REGEXP '^[A-Za-z /-]+$')
+    CONSTRAINT check_work_nature_code        CHECK (work_nature_code REGEXP '^[A-Z]{3}$'),
+    CONSTRAINT check_nature_description     CHECK (nature_description REGEXP '^[A-Za-z /(),&.''-]+$')
     );
 
 
@@ -111,7 +111,7 @@ CREATE TABLE BIOMETRIC_TYPE (
     
     -- CHECK CONSTRAINTS
     CONSTRAINT check_biometrics_type_code        CHECK (biometrics_type_code REGEXP '^BI[0-9]{2}$'),
-    CONSTRAINT check_biometrics_description      CHECK (biometric_description REGEXP '^[A-Za-z ]+$')
+    CONSTRAINT check_biometrics_description      CHECK (biometric_description REGEXP '^[A-Za-z /(),&.''-]+$')
     );
 
 
@@ -125,8 +125,8 @@ CREATE TABLE CUSTOMER_PRODUCT_TYPE (
     PRIMARY KEY (product_id),
     
     -- CHECK CONSTRAINTS
-    CONSTRAINT check_product_id         CHECK (product_id REGEXP '^PT[0-9]{2}$'),
-    CONSTRAINT check_product_type       CHECK (product_type REGEXP '^[A-Za-z ]+$')
+    CONSTRAINT check_product_id         CHECK (product_id REGEXP '^PR[0-9]{2}$'),
+    CONSTRAINT check_product_type       CHECK (product_type REGEXP '^[A-Za-z /(),&.''-]+$')
     );
 
 
@@ -156,7 +156,7 @@ CREATE TABLE ID_TYPE (
     
     -- CHECK CONSTRAINTS
     CONSTRAINT check_id_type_code       CHECK (id_type_code REGEXP '^[A-Z]{3}$'),
-    CONSTRAINT check_id_description  	CHECK (id_description REGEXP '^[A-Za-z0-9 /'']+$')
+    CONSTRAINT check_id_description  	CHECK (id_description REGEXP '^[A-Za-z /(),&.''-]+$')
     );
 
 
@@ -200,9 +200,9 @@ CREATE TABLE CUSTOMER (
     CONSTRAINT check_customer_username             CHECK (customer_username REGEXP '^[A-Za-z0-9._-]+$'),
     CONSTRAINT check_customer_password             	CHECK (customer_password REGEXP '^(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9]).{8,}$'),
     CONSTRAINT check_gender                         CHECK (gender IN ('Male', 'Female', 'Non-Binary/Third Gender', 'Prefer not to say', 'Other')),
-    CONSTRAINT check_birth_country                  CHECK (birth_country REGEXP '^[A-Za-z''- ]+$'),
+    CONSTRAINT check_birth_country                  CHECK (birth_country REGEXP '^[A-Za-z''\\- ]+$'),
     CONSTRAINT check_residency_status               CHECK (residency_status IN ('Resident', 'Non-Resident')),
-    CONSTRAINT check_citizenship                    CHECK (citizenship REGEXP '^[A-Za-z''- ]+$'),
+    CONSTRAINT check_citizenship                    CHECK (citizenship REGEXP '^[A-Za-z''\\- ]+$'),
     CONSTRAINT check_customer_tin                   CHECK (tax_identification_number >= 100000000 AND tax_identification_number <= 999999999999),
     CONSTRAINT check_customer_status                CHECK (customer_status IN ('Active', 'Inactive', 'Suspended')),
     CONSTRAINT check_remittance_conditional         CHECK (remittance_country IS NULL AND remittance_purpose IS NULL OR remittance_country REGEXP '^[A-Za-z ]+$' AND remittance_purpose REGEXP '^[A-Za-z0-9 ,\\.\\-]+$')
@@ -214,14 +214,14 @@ CREATE TABLE CUSTOMER (
 CREATE TABLE CUSTOMER_ADDRESS (
     cif_number              BIGINT UNSIGNED NOT NULL,
     address_type_code       CHAR(4) NOT NULL,
-    address_unit            VARCHAR(10),
-    address_building        VARCHAR(100),
-    address_street          VARCHAR(100),
-    address_subdivision     VARCHAR(100),
-    address_barangay        VARCHAR(100) NOT NULL,
-    address_city            VARCHAR(100) NOT NULL,
-    address_province        VARCHAR(100) NOT NULL,
-    address_country         VARCHAR(100) NOT NULL,
+    address_unit            VARCHAR(255),
+    address_building        VARCHAR(255),
+    address_street          VARCHAR(255),
+    address_subdivision     VARCHAR(255),
+    address_barangay        VARCHAR(255) NOT NULL,
+    address_city            VARCHAR(255) NOT NULL,
+    address_province        VARCHAR(255) NOT NULL,
+    address_country         VARCHAR(255) NOT NULL,
     address_zip_code        CHAR(4) NOT NULL,
     
     -- KEY CONSTRAINTS
@@ -231,11 +231,11 @@ CREATE TABLE CUSTOMER_ADDRESS (
     
     -- CHECK CONSTRAINTS
     CONSTRAINT check_address_complete         CHECK (address_unit IS NOT NULL OR address_street IS NOT NULL OR address_subdivision IS NOT NULL),
-    CONSTRAINT check_address_barangay          CHECK (address_barangay REGEXP '^[A-Za-z ]+$'),
-    CONSTRAINT check_address_city              CHECK (address_city REGEXP '^[A-Za-z ]+$'),
-    CONSTRAINT check_address_province          CHECK (address_province REGEXP '^[A-Za-z ]+$'),
-    CONSTRAINT check_address_country            CHECK (address_country REGEXP '^[A-Za-z ]+$'),
-    CONSTRAINT check_address_zipcode            CHECK (address_zip_code REGEXP '^[0-9]{4}$')
+    CONSTRAINT check_address_barangay          CHECK (address_barangay REGEXP '^[A-Za-z0-9\\.\\-''/ ]+$'),
+    CONSTRAINT check_address_city              CHECK (address_city REGEXP '^[A-Za-z0-9\\.\\-''/ ]+$'),
+    CONSTRAINT check_address_province          CHECK (address_province REGEXP '^[A-Za-z0-9\\.\\-''/ ]+$'),
+    CONSTRAINT check_address_country            CHECK (address_country REGEXP '^[A-Za-z0-9\\.\\-''/ ]+$'),
+    CONSTRAINT check_address_zipcode            CHECK (address_zip_code REGEXP '^[A-Za-z0-9\\.\\-''/ ]+$')
     );
 
 
@@ -295,7 +295,7 @@ CREATE TABLE CUSTOMER_FUND_SOURCE (
 -- ========================
 CREATE TABLE CUSTOMER_WORK_NATURE (
     customer_employment_id      INTEGER UNSIGNED NOT NULL,
-    work_nature_code            CHAR(5) NOT NULL,
+    work_nature_code            CHAR(3) NOT NULL,
     
     -- KEY CONSTRAINTS
     PRIMARY KEY (customer_employment_id, work_nature_code),
@@ -349,8 +349,7 @@ CREATE TABLE ALIAS_DOCUMENTATION (
 -- 19. BANK_EMPLOYEE
 -- ================
 CREATE TABLE BANK_EMPLOYEE (
-    employee_section_id    INT AUTO_INCREMENT PRIMARY KEY,
-    employee_id            CHAR(7) UNIQUE,
+    employee_id    INT AUTO_INCREMENT PRIMARY KEY,
     employee_position      VARCHAR(50) NOT NULL,
     employee_last_name     VARCHAR(255) NOT NULL,
     employee_first_name    VARCHAR(255) NOT NULL,
@@ -360,7 +359,6 @@ CREATE TABLE BANK_EMPLOYEE (
     employee_password      VARCHAR(255) NOT NULL,
     
     -- CHECK CONSTRAINTS
-    CONSTRAINT check_employee_id            CHECK (employee_id REGEXP '^E[0-9]{6}$'),
     CONSTRAINT check_employee_position       CHECK (employee_position REGEXP '^[A-Za-z ]+$'),
     CONSTRAINT chk_employee_last_name        CHECK (employee_last_name REGEXP '^[A-Za-z \\-]+$'),
     CONSTRAINT chk_employee_first_name       CHECK (employee_first_name REGEXP '^[A-Za-z ]+$'),
@@ -378,9 +376,10 @@ CREATE TABLE ACCOUNT_DETAILS (
     product_id              CHAR(4) NOT NULL,
     referral_type           VARCHAR(30) NOT NULL,
     referral_source         VARCHAR(255),
-    verified_by_employee    CHAR(7) NOT NULL,
-    approved_by_employee    CHAR(7) NOT NULL,
+    verified_by_employee    INT NOT NULL,
+    approved_by_employee    INT NOT NULL,
     account_open_date       DATE NOT NULL,
+    account_close_date      DATE,
     account_status          VARCHAR(10) NOT NULL,
     biometrics_type_code    CHAR(4) NOT NULL,
     
@@ -438,21 +437,6 @@ CREATE TABLE CUSTOMER_ID (
 --     TRIGGERS
 -- ////////////////
 
-
--- Table: CUSTOMER, Trigger: enforce_cif_length
--- Description: BEFORE INSERT on CUSTOMER - ensures cif_number is exactly 10 digits
-DELIMITER $$
-CREATE TRIGGER enforce_cif_length BEFORE INSERT ON CUSTOMER
-FOR EACH ROW
-BEGIN
-    IF NEW.cif_number < 1000000000 OR NEW.cif_number > 9999999999 THEN
-        SIGNAL SQLSTATE '45000'
-        SET MESSAGE_TEXT = 'cif_number exceeds allowed length';
-    END IF;
-END $$
-DELIMITER ;
-
-
 -- Table: CUSTOMER, Trigger: check_customer_age_before_insert
 -- Description: BEFORE INSERT on CUSTOMER - ensures customer is at least 18 years old
 DELIMITER $$
@@ -508,158 +492,6 @@ BEGIN
             SIGNAL SQLSTATE '45000'
               SET MESSAGE_TEXT = 'Remittances fund source requires remittance_country and remittance_purpose in CUSTOMER';
         END IF;
-    END IF;
-END$$
-DELIMITER ;
-
--- Table: CUSTOMER_CONTACT_DETAILS, Trigger: trg_customer_contact_insert_check
--- Description: AFTER INSERT on CUSTOMER_CONTACT_DETAILS - ensures at least one CT01, one CT02, one CT03 per customer
-DELIMITER $$
-CREATE TRIGGER trg_customer_contact_insert_check
-AFTER INSERT ON CUSTOMER_CONTACT_DETAILS
-FOR EACH ROW
-BEGIN
-    DECLARE cnt_mobile      INT DEFAULT 0;
-    DECLARE cnt_phone       INT DEFAULT 0;
-    DECLARE cnt_personal_em INT DEFAULT 0;
-
-    -- Count “Mobile” contacts for this customer
-    SELECT COUNT(*) 
-      INTO cnt_mobile
-      FROM CUSTOMER_CONTACT_DETAILS ccd
-      JOIN CONTACT_TYPE ct 
-        ON ccd.contact_type_code = ct.contact_type_code
-     WHERE ccd.cif_number = NEW.cif_number
-       AND ct.contact_type_description = 'Mobile';
-
-    -- Count “Phone” contacts for this customer
-    SELECT COUNT(*) 
-      INTO cnt_phone
-      FROM CUSTOMER_CONTACT_DETAILS ccd
-      JOIN CONTACT_TYPE ct 
-        ON ccd.contact_type_code = ct.contact_type_code
-     WHERE ccd.cif_number = NEW.cif_number
-       AND ct.contact_type_description = 'Phone';
-
-    -- Count “Personal Email” contacts for this customer
-    SELECT COUNT(*) 
-      INTO cnt_personal_em
-      FROM CUSTOMER_CONTACT_DETAILS ccd
-      JOIN CONTACT_TYPE ct 
-        ON ccd.contact_type_code = ct.contact_type_code
-     WHERE ccd.cif_number = NEW.cif_number
-       AND ct.contact_type_description = 'Personal Email';
-
-    -- Enforce at least one Mobile, at least one Phone, and exactly one Personal Email
-    IF cnt_mobile = 0 
-       OR cnt_phone = 0 
-       OR cnt_personal_em <> 1 
-    THEN
-        SIGNAL SQLSTATE '45000'
-          SET MESSAGE_TEXT = 
-            'Customer must have at least one Mobile, one Phone, and exactly one Personal Email';
-    END IF;
-END$$
-DELIMITER ;
-
-
--- Table: CUSTOMER_CONTACT_DETAILS, Trigger: trg_customer_contact_update_check
--- Description: AFTER UPDATE on CUSTOMER_CONTACT_DETAILS - maintains required CT01, CT02, CT03 counts
-DELIMITER $$
-CREATE TRIGGER trg_customer_contact_update_check
-AFTER UPDATE ON CUSTOMER_CONTACT_DETAILS
-FOR EACH ROW
-BEGIN
-    DECLARE cnt_mobile      INT DEFAULT 0;
-    DECLARE cnt_phone       INT DEFAULT 0;
-    DECLARE cnt_personal_em INT DEFAULT 0;
-
-    -- Count “Mobile” contacts for this customer
-    SELECT COUNT(*) 
-      INTO cnt_mobile
-      FROM CUSTOMER_CONTACT_DETAILS ccd
-      JOIN CONTACT_TYPE ct 
-        ON ccd.contact_type_code = ct.contact_type_code
-     WHERE ccd.cif_number = NEW.cif_number
-       AND ct.contact_type_description = 'Mobile';
-
-    -- Count “Phone” contacts for this customer
-    SELECT COUNT(*) 
-      INTO cnt_phone
-      FROM CUSTOMER_CONTACT_DETAILS ccd
-      JOIN CONTACT_TYPE ct 
-        ON ccd.contact_type_code = ct.contact_type_code
-     WHERE ccd.cif_number = NEW.cif_number
-       AND ct.contact_type_description = 'Phone';
-
-    -- Count “Personal Email” contacts for this customer
-    SELECT COUNT(*) 
-      INTO cnt_personal_em
-      FROM CUSTOMER_CONTACT_DETAILS ccd
-      JOIN CONTACT_TYPE ct 
-        ON ccd.contact_type_code = ct.contact_type_code
-     WHERE ccd.cif_number = NEW.cif_number
-       AND ct.contact_type_description = 'Personal Email';
-
-    -- Enforce at least one Mobile, at least one Phone, and exactly one Personal Email
-    IF cnt_mobile = 0 
-       OR cnt_phone = 0 
-       OR cnt_personal_em <> 1 
-    THEN
-        SIGNAL SQLSTATE '45000'
-          SET MESSAGE_TEXT = 
-            'Customer must have at least one Mobile, one Phone, and exactly one Personal Email';
-    END IF;
-END$$
-DELIMITER ;
-
-
--- Table: CUSTOMER_CONTACT_DETAILS, Trigger: trg_customer_contact_delete_check
--- Description: AFTER DELETE on CUSTOMER_CONTACT_DETAILS - prevents deletion if it violates required CT01, CT02, CT03 counts
-DELIMITER $$
-CREATE TRIGGER trg_customer_contact_delete_check
-AFTER DELETE ON CUSTOMER_CONTACT_DETAILS
-FOR EACH ROW
-BEGIN
-    DECLARE cnt_mobile      INT DEFAULT 0;
-    DECLARE cnt_phone       INT DEFAULT 0;
-    DECLARE cnt_personal_em INT DEFAULT 0;
-
-    -- Count “Mobile” contacts for this customer
-    SELECT COUNT(*) 
-      INTO cnt_mobile
-      FROM CUSTOMER_CONTACT_DETAILS ccd
-      JOIN CONTACT_TYPE ct 
-        ON ccd.contact_type_code = ct.contact_type_code
-     WHERE ccd.cif_number = OLD.cif_number
-       AND ct.contact_type_description = 'Mobile';
-
-    -- Count “Phone” contacts for this customer
-    SELECT COUNT(*) 
-      INTO cnt_phone
-      FROM CUSTOMER_CONTACT_DETAILS ccd
-      JOIN CONTACT_TYPE ct 
-        ON ccd.contact_type_code = ct.contact_type_code
-     WHERE ccd.cif_number = OLD.cif_number
-       AND ct.contact_type_description = 'Phone';
-
-    -- Count “Personal Email” contacts for this customer
-    SELECT COUNT(*) 
-      INTO cnt_personal_em
-      FROM CUSTOMER_CONTACT_DETAILS ccd
-      JOIN CONTACT_TYPE ct 
-        ON ccd.contact_type_code = ct.contact_type_code
-     WHERE ccd.cif_number = OLD.cif_number
-       AND ct.contact_type_description = 'Personal Email';
-
-    -- Enforce at least one Mobile, at least one Phone, and exactly one Personal Email
-    IF cnt_mobile = 0 
-       OR cnt_phone = 0 
-       OR cnt_personal_em <> 1 
-    THEN
-        SIGNAL SQLSTATE '45000'
-          SET MESSAGE_TEXT = 
-            'Cannot delete: Customer must maintain at least one Mobile, one Phone, and exactly one Personal Email';
     END IF;
 END$$
 DELIMITER ;
@@ -834,18 +666,6 @@ BEGIN
         SIGNAL SQLSTATE '45000'
           SET MESSAGE_TEXT = 'Document expiry date cannot be in the past on update';
     END IF;
-END$$
-DELIMITER ;
-
-
--- Table: BANK_EMPLOYEE, Trigger: trg_before_insert_bank_employee
--- Description: BEFORE INSERT on BANK_EMPLOYEE - auto-generates employee_id as 'E' plus zero-padded employee_section_id
-DELIMITER $$
-CREATE TRIGGER trg_before_insert_bank_employee
-BEFORE INSERT ON BANK_EMPLOYEE
-FOR EACH ROW
-BEGIN
-	SET NEW.employee_id = CONCAT('E', LPAD(NEW.employee_section_id, 6, '0'));
 END$$
 DELIMITER ;
 
@@ -1049,97 +869,6 @@ BEGIN
   IF id_count < 2 THEN
     SIGNAL SQLSTATE '45000'
     SET MESSAGE_TEXT = 'Cannot create account: customer must submit at least two IDs';
-  END IF;
-END$$
-DELIMITER ;
-
-
--- Table: CUSTOMER_CONTACT_DETAILS, Trigger: trg_contact_format_validate
--- Description: BEFORE INSERT on CUSTOMER_CONTACT_DETAILS - enforces E.164 or local format for phones, and RFC‐5322 for emails, based on contact_type_code.
-DELIMITER $$
-CREATE TRIGGER trg_contact_format_validate
-BEFORE INSERT ON CUSTOMER_CONTACT_DETAILS
-FOR EACH ROW
-BEGIN
-  SET @re_e164 = '^\+[1-9][0-9]{1,14}$'; 
-  SET @re_local_landline = '^\([0-9]{2}\) [0-9]{4}-[0-9]{4}$';
-  SET @re_email = '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$';
-
-  IF NEW.contact_type_code = 'CT01' 
-     OR NEW.contact_type_code = 'CT02'  -- Mobile or Telephone
-  THEN
-    IF NOT (NEW.contact_value REGEXP @re_e164 
-            OR NEW.contact_value REGEXP @re_local_landline) THEN
-      SIGNAL SQLSTATE '45000'
-        SET MESSAGE_TEXT = 'Contact number must be E.164 or local format (e.g. (02) 8372-4581)';
-    END IF;
-
-  ELSEIF NEW.contact_type_code = 'CT04' 
-      OR NEW.contact_type_code = 'CT05'  -- Personal Email or Work Email
-  THEN
-    IF NOT NEW.contact_value REGEXP @re_email THEN
-      SIGNAL SQLSTATE '45000'
-        SET MESSAGE_TEXT = 'Email must follow username@domain.ext format';
-    END IF;
-
-  ELSE
-    SIGNAL SQLSTATE '45000'
-      SET MESSAGE_TEXT = 'Unknown contact type—cannot validate format';
-  END IF;
-END$$
-DELIMITER ;
-
-
--- Table: CUSTOMER_CONTACT_DETAILS, Trigger: trg_contact_format_validate_update
--- Description: BEFORE UUPDATE on CUSTOMER_CONTACT_DETAILS - enforces E.164 or local format for phones, and RFC‐5322 for emails, based on contact_type_code.
-DELIMITER $$
-CREATE TRIGGER trg_contact_format_validate_update
-BEFORE UPDATE ON CUSTOMER_CONTACT_DETAILS
-FOR EACH ROW
-BEGIN
-  SET @re_e164 = '^\+[1-9][0-9]{1,14}$';
-  SET @re_local_landline = '^\([0-9]{2}\) [0-9]{4}-[0-9]{4}$';
-  SET @re_email = '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$';
-
-  IF NEW.contact_type_code = 'CT01' 
-     OR NEW.contact_type_code = 'CT02' THEN
-    IF NOT (NEW.contact_value REGEXP @re_e164
-            OR NEW.contact_value REGEXP @re_local_landline) THEN
-      SIGNAL SQLSTATE '45000'
-        SET MESSAGE_TEXT = 'Contact number must be E.164 or local format (e.g. (02) 8372-4581)';
-    END IF;
-
-  ELSEIF NEW.contact_type_code = 'CT04' 
-      OR NEW.contact_type_code = 'CT05' THEN
-    IF NOT NEW.contact_value REGEXP @re_email THEN
-      SIGNAL SQLSTATE '45000'
-        SET MESSAGE_TEXT = 'Email must follow username@domain.ext format';
-    END IF;
-
-  ELSE
-    SIGNAL SQLSTATE '45000'
-      SET MESSAGE_TEXT = 'Unknown contact type—cannot validate format';
-  END IF;
-END$$
-DELIMITER ;
-
--- Table: CUSTOMER_ALIAS, Trigger: trg_alias_requires_document
--- Description: AFTER INSERT on CUSTOMER_ALIAS - ensures exactly one ALIAS_DOCUMENTATION row exists for the new alias
-DELIMITER $$
-CREATE TRIGGER trg_alias_requires_document
-AFTER INSERT ON CUSTOMER_ALIAS
-FOR EACH ROW
-BEGIN
-  DECLARE doc_count INT;
-
-  SELECT COUNT(*) 
-    INTO doc_count
-    FROM ALIAS_DOCUMENTATION
-   WHERE customer_alias_id = NEW.customer_alias_id;
-
-  IF doc_count = 0 THEN
-    SIGNAL SQLSTATE '45000'
-      SET MESSAGE_TEXT = 'Each alias must be accompanied by exactly one documentation row.';
   END IF;
 END$$
 DELIMITER ;
