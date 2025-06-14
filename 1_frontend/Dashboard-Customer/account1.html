@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>Document</title>
+    <link rel="stylesheet" href="account1.css" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manjari:wght@100;400;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="deposit-page">
+      <div class="page-wrapper">
+        <div class="left-side-bar">
+          <div class="customer-options">
+            <div class="customer-options-container">
+              <a id="account-option" href="">Accounts</a>
+            </div>
+            <div class="customer-options-container">
+              <a id="transaction-option" href="transaction1.html"
+                >Transactions</a
+              >
+            </div>
+            <div class="customer-options-container"><a href="">Profile</a></div>
+            <div class="customer-options-container">
+              <a href="">Close Accounts</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="wrapper">
+          <nav class="nav-bar">
+            <input type="text" id="search" placeholder="Search" />
+            <div class="icon-container">
+              <img
+                id="notif"
+                src="/assets/notif-logo.png"
+                alt="Notifications"
+              />
+              <img
+                id="settings"
+                src="/assets/settings-logo.png"
+                alt="Settings"
+              />
+              <img id="log-out" src="/assets/log-out-logo.png" alt="Log Out" />
+            </div>
+          </nav>
+
+          <header class="header">
+            <div class="welcome-message">
+              <h1 class="welcome">
+                Welcome Back, <span class="blue-text">FirstName!</span>
+              </h1>
+              <p>Your last login was at <span>04/06/2024 at 5:60 PM.</span></p>
+            </div>
+            <div class="picture-logo">
+              <img src="/assets/header-logo.png" alt="Header Logo" />
+            </div>
+          </header>
+
+          <div class="progress-container">
+            <div class="progress-line"></div>
+
+            <div class="progress-step active">
+              <div class="circle"></div>
+              <div class="label">Deposits</div>
+            </div>
+            <div class="progress-step">
+              <div class="circle"></div>
+              <div class="label">Cards</div>
+            </div>
+            <div class="progress-step">
+              <div class="circle"></div>
+              <div class="label">Loans</div>
+            </div>
+            <div class="progress-step">
+              <div class="circle"></div>
+              <div class="label">Wealth<br />Management</div>
+            </div>
+            <div class="progress-step">
+              <div class="circle"></div>
+              <div class="label">Insurance</div>
+            </div>
+          </div>
+
+          <div class="page-body">
+            <div class="account-info">
+              <h2>Accounts</h2>
+            </div>
+
+            <div class="right-container">
+              <div class="account-details">
+                <div class="title">
+                  <h2>Account Details</h2>
+                  <img src="/assets/edit-logo.png" alt="Edit" />
+                </div>
+
+                <div class="account-nickname">
+                  <label>Account Nickname</label>
+                  <textarea></textarea>
+                </div>
+
+                <div class="account-number">
+                  <label>Account Number</label>
+                  <textarea></textarea>
+                </div>
+
+                <div class="open-close-date">
+                  <div class="open-date">
+                    <label>Open Date</label>
+                    <textarea></textarea>
+                  </div>
+                  <div class="close-date">
+                    <label>Close Date</label>
+                    <textarea></textarea>
+                  </div>
+                </div>
+
+                <div class="current-balance">
+                  <label>Current Balance</label>
+                  <textarea></textarea>
+                </div>
+
+                <div class="biometrics-type">
+                  <label>Biometrics Type</label>
+                  <textarea></textarea>
+                </div>
+              </div>
+
+              <div class="button">
+                <button id="add-existing-button">+ Add Existing Account</button>
+                <button id="apply-existing-button">
+                  + Apply Existing Account
+                </button>
+              </div>
+
+              <img src="/assets/account-page-logo.png" alt="Account Logo" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
