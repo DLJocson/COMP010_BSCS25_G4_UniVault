@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login - UniVault</title> <link rel="stylesheet" href="login.css" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manjari:wght@100;400;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="log-in-page">
+      <img src="assets/logowtext.png" alt="UniVault Logo" />
+
+      <form id="loginForm" action="/login" method="POST"> <div class="text-box">
+          <input type="text" id="accountNumber" name="accountNumber" placeholder="Enter Account Number" required /> <input class="password" type="password" id="password" name="password" placeholder="Enter Password" required /> </div>
+
+        <div class="button">
+          <button type="submit">Log In</button> </div>
+      </form>
+
+      <div class="forgot-password">
+        <a href="#">Forgot Password</a>
+      </div>
+
+      <p id="errorMessage" style="color: red; margin-top: 10px;"></p> </div>
+
+    <script>
+      // JavaScript to handle form submission (optional, but good for dynamic feedback)
+      document.getElementById('loginForm').addEventListener('submit', async function(event) {
+          event.preventDefault(); // Prevent default form submission
+
+          const accountNumber = document.getElementById('accountNumber').value;
+          const password = document.getElementById('password').value;
+          const errorMessageElement = document.getElementById('errorMessage');
+
+          try {
+              const response = await fetch('/login', {
+                  method: 'POST',
+                  headers: {
+                      'Content-Type': 'application/json'
+                  },
+                  body: JSON.stringify({ accountNumber, password })
+              });
+
+              const data = await response.json();
+
+              if (response.ok) {
+                  // Login successful
+                  errorMessageElement.textContent = ''; // Clear any previous errors
+                  alert(data.message); // Or some other success notification
+                  if (data.redirectUrl) {
+                      window.location.href = data.redirectUrl; // Redirect to dashboard
+                  }
+              } else {
+                  // Login failed
+                  errorMessageElement.textContent = data.message || 'An unknown error occurred.';
+              }
+          } catch (error) {
+              console.error('Error:', error);
+              errorMessageElement.textContent = 'Network error. Please try again.';
+          }
+      });
+    </script>
+  </body>
+</html>
