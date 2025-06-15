@@ -1,0 +1,124 @@
+:root {
+  --primary-color: #1f65b4;
+  --secondary-color: #004ea8;
+  --tertiary-color: #0072d8;
+  --font-family: "Manjari", sans-serif;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: url("/assets/bg.png");
+  z-index: -1;
+  font-family: var(--font-family);
+}
+
+img {
+  width: 1500px;
+  height: 800px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  margin: -200px;
+}
+
+.log-in-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  height: 755px;
+  width: 620px;
+  background-color: white;
+  box-shadow: 0 5px 5px rgba(0, 0, 0, 0.4);
+}
+
+input[type="text"] {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+  width: 550px;
+  height: 50px;
+  font-size: 32px;
+  margin-bottom: 20px;
+  padding-left: 10px;
+  border: 3px solid var(--tertiary-color);
+}
+
+input[type="text"]::placeholder {
+  font-size: 28px;
+}
+
+input[type="password"] {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+  width: 550px;
+  height: 50px;
+  font-size: 32px;
+  margin-bottom: 20px;
+  padding-left: 10px;
+  border: 3px solid var(--tertiary-color);
+}
+
+input[type="password"]::placeholder {
+  font-size: 28px;
+}
+
+.button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding-top: 50px;
+}
+
+.button button {
+  height: 50px;
+  width: 239px;
+  background-color: var(--tertiary-color);
+  color: white;
+  border: 0px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 25px;
+  font-family: var(--font-family);
+}
+
+button:hover {
+  background-color: #5c95ec;
+  scale: 102%;
+}
+
+input[type="text"]:hover,
+input[type="text"]:focus {
+  border-color: #5c95ec;
+  box-shadow: 0 4px 10px rgba(0, 114, 216, 0.1);
+}
+
+input[type="text"]:focus select:focus {
+  border-color: #0053c7;
+  box-shadow: 0 0 8px rgba(0, 114, 216, 0.3);
+}
+
+.forgot-password {
+  padding-top: 20px;
+  padding-bottom: 30px;
+  margin-bottom: 130px;
+}
+
+.forgot-password a {
+  margin-top: 10px;
+  color: var(--secondary-color);
+}
