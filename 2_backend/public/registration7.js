@@ -232,6 +232,7 @@ function handleProceedClick() {
           localStorage.setItem(id, el.value);
         }
       });
+      // Redirect to registration8.html for the next step
       window.location.href = "registration8.html";
     }
   });

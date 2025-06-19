@@ -23,12 +23,14 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   proceedBtn.addEventListener("click", (e) => {
-    const oneChecked = Array.from(checkboxes).some((cb) => cb.checked);
+    const checkedBox = Array.from(checkboxes).find((cb) => cb.checked);
 
-    if (!oneChecked) {
+    if (!checkedBox) {
       e.preventDefault();
       errorMessage.textContent = "Please select one option.";
     } else {
+      // Save selected value to localStorage
+      localStorage.setItem("consent", checkedBox.value);
       errorMessage.textContent = "";
       window.location.href = "registration12.html";
     }

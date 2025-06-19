@@ -431,6 +431,20 @@ CREATE TABLE CUSTOMER_ID (
     CONSTRAINT check_id_storage        CHECK (id_storage REGEXP '^(https?|ftp)://.+' OR id_storage REGEXP '^[A-Za-z]:(\\\\[A-Za-z0-9_\\\\/\\.-]+)+$' OR id_storage REGEXP '^/[A-Za-z0-9_\\/\\.-]+$'),
     CONSTRAINT check_id_date           CHECK (id_expiry_date IS NULL OR id_issue_date < id_expiry_date)
     );
+    
+    -- 23. CUSTOMER_COMPLIANCE_ANSWERS
+-- ===============================
+CREATE TABLE CUSTOMER_COMPLIANCE_ANSWERS (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    cif_number BIGINT UNSIGNED NOT NULL,
+    answer1 VARCHAR(10),
+    answer2 VARCHAR(10),
+    answer3 VARCHAR(10),
+    answer4 VARCHAR(10),
+    answer5 VARCHAR(10),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (cif_number) REFERENCES CUSTOMER(cif_number) ON DELETE CASCADE
+);
 
 
 -- ////////////////

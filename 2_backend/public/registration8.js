@@ -36,9 +36,11 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   proceedBtn.addEventListener("click", (e) => {
+    e.preventDefault();
     let allValid = true;
+    const answers = [];
 
-    checkboxGroups.forEach(({ container, checkbox }) => {
+    checkboxGroups.forEach(({ container, checkbox }, idx) => {
       const containerEl = document.querySelector(container);
       if (!containerEl) return;
       const group = containerEl.querySelector(checkbox);
@@ -47,6 +49,11 @@ document.addEventListener("DOMContentLoaded", () => {
       const no = group.querySelector(".no input[type='checkbox']");
       const errorMsg = containerEl.nextElementSibling;
       if (!yes || !no || !errorMsg) return;
+
+      let answer = null;
+      if (yes.checked) answer = "Yes";
+      else if (no.checked) answer = "No";
+      answers[idx] = answer;
 
       if (!yes.checked && !no.checked) {
         errorMsg.style.display = "block";
@@ -57,9 +64,11 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     if (!allValid) {
-      e.preventDefault();
-    } else {
-      window.location.href = "registration9.html";
+      return;
     }
+
+    // Save answers to localStorage for use in registration13
+    localStorage.setItem("compliance_answers", JSON.stringify(answers));
+    window.location.href = "registration9.html";
   });
 });

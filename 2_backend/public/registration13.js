@@ -43,11 +43,57 @@ document.addEventListener("DOMContentLoaded", () => {
   username.addEventListener("input", validate);
   password.addEventListener("input", validate);
 
-  proceedBtn.addEventListener("click", (e) => {
+  proceedBtn.addEventListener("click", async (e) => {
+    e.preventDefault();
     if (!validate()) {
-      e.preventDefault();
-    } else {
-      window.location.href = "registration14.html";
+      return;
+    }
+
+    // Save username and password to localStorage
+    localStorage.setItem("customer_username", username.value.trim());
+    localStorage.setItem("customer_password", password.value.trim());
+
+    // Collect all registration data from localStorage
+    const registrationData = {
+      customer_type: localStorage.getItem("customer_type"),
+      customer_last_name: localStorage.getItem("customer_last_name"),
+      customer_first_name: localStorage.getItem("customer_first_name"),
+      customer_middle_name: localStorage.getItem("customer_middle_name"),
+      customer_suffix_name: localStorage.getItem("customer_suffix_name"),
+      customer_username: localStorage.getItem("customer_username"),
+      customer_password: localStorage.getItem("customer_password"),
+      birth_date: `${localStorage.getItem("birth_year")}-${localStorage.getItem("birth_month")}-${localStorage.getItem("birth_day")}`,
+      gender: localStorage.getItem("gender"),
+      civil_status_code: localStorage.getItem("civil_status_code"),
+      birth_country: localStorage.getItem("birth_country"),
+      citizenship: localStorage.getItem("citizenship"),
+      // Add all additional fields from previous steps:
+      compliance_answers: JSON.parse(localStorage.getItem("compliance_answers") || "[]"),
+      consent: localStorage.getItem("consent"),
+      selected_option: localStorage.getItem("selected_option"),
+      // Add more fields as needed
+    };
+
+    console.log("Sending registrationData:", registrationData);
+
+    // Send registration data to backend
+    try {
+      const response = await fetch('/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(registrationData)
+      });
+      const result = await response.json();
+      if (response.ok && result.cif_number) {
+        // Store cif_number for next steps
+        localStorage.setItem("cif_number", result.cif_number);
+        // Redirect to the next step (e.g., registration14.html)
+        window.location.href = "registration14.html";
+      } else {
+        errorMessages[0].textContent = result.message || "Registration failed.";
+      }
+    } catch (err) {
+      errorMessages[0].textContent = "Server error. Please try again.";
     }
   });
 });

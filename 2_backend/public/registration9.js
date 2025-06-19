@@ -489,7 +489,23 @@ function initializeFormValidation() {
     console.log("Upload valid:", isUploadValid);
 
     if (isFormValid && isPurposeValid && isUploadValid) {
-      // Remove any existing success message
+    // Save form data to localStorage
+localStorage.setItem("first_name", firstName.value.trim());
+localStorage.setItem("middle_name", middleName.value.trim());
+localStorage.setItem("last_name", lastName.value.trim());
+localStorage.setItem("suffix_name", suffix.value.trim());
+localStorage.setItem("birth_month", monthSelect.value);
+localStorage.setItem("birth_day", daySelect.value);
+localStorage.setItem("birth_year", yearSelect.value);
+localStorage.setItem("id1_type", selectId1.value);
+localStorage.setItem("id1_num", idNum1.value.trim());
+
+// Save purpose checkboxes
+localStorage.setItem("purpose_political", document.getElementById("purpose-political").checked ? "Yes" : "No");
+localStorage.setItem("purpose_fatca", document.getElementById("purpose-fatca").checked ? "Yes" : "No");
+localStorage.setItem("purpose_dnfbp", document.getElementById("purpose-dnfbp").checked ? "Yes" : "No");
+
+// You can also save file names or flags if needed, but not the file content itself
       const existingMessage = document.querySelector(".success-message");
       if (existingMessage) {
         existingMessage.remove();
