@@ -317,6 +317,7 @@ function addInputListeners() {
   const citizenshipSelect = document.getElementById("citizenship");
   const genderSelect = document.getElementById("gender");
   const civilStatusSelect = document.getElementById("civil-status");
+  const residencyStatusSelect = document.getElementById("residency-status");
 
   const resetToDefault = (element) => {
     const inputControl =
@@ -346,6 +347,7 @@ function addInputListeners() {
     citizenshipSelect,
     genderSelect,
     civilStatusSelect,
+    residencyStatusSelect,
   ].forEach((select) => {
     if (select) {
       select.addEventListener("change", () => resetToDefault(select));
@@ -368,6 +370,7 @@ function initializeFormValidation() {
   const genderSelect = document.getElementById("gender");
   const civilStatusSelect = document.getElementById("civil-status");
   const proceedButton = document.getElementById("proceed");
+  const residencyStatusSelect = document.getElementById("residency-status");
 
   console.log("Proceed button found:", !!proceedButton);
 
@@ -475,6 +478,13 @@ function initializeFormValidation() {
       isValid = false;
     } else {
       setSuccess(civilStatusSelect);
+    }
+
+    if (!residencyStatusSelect.value) {
+      setError(residencyStatusSelect, "Civil Status is required");
+      isValid = false;
+    } else {
+      setSuccess(residencyStatusSelect);
     }
 
     return isValid;

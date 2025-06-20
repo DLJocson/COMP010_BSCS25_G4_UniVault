@@ -22,16 +22,20 @@
         <div class="left-side-bar">
           <div class="customer-options">
             <div class="customer-options-container">
-              <a id="account-option" href="">Accounts</a>
+              <a id="account-option" href="account1.html">Accounts</a>
             </div>
             <div class="customer-options-container">
               <a id="transaction-option" href="transaction1.html"
                 >Transactions</a
               >
             </div>
-            <div class="customer-options-container"><a href="">Profile</a></div>
             <div class="customer-options-container">
-              <a href="">Close Accounts</a>
+              <a id="profile-option" href="profile.html">Profile</a>
+            </div>
+            <div class="customer-options-container">
+              <a id="close-account-option" href="close-account.html"
+                >Close Accounts</a
+              >
             </div>
           </div>
         </div>
@@ -40,16 +44,6 @@
           <nav class="nav-bar">
             <input type="text" id="search" placeholder="Search" />
             <div class="icon-container">
-              <img
-                id="notif"
-                src="/assets/notif-logo.png"
-                alt="Notifications"
-              />
-              <img
-                id="settings"
-                src="/assets/settings-logo.png"
-                alt="Settings"
-              />
               <img id="log-out" src="/assets/log-out-logo.png" alt="Log Out" />
             </div>
           </nav>
@@ -74,26 +68,81 @@
               <div class="label">Deposits</div>
             </div>
             <div class="progress-step">
-              <div class="circle"></div>
-              <div class="label">Cards</div>
+              <div
+                onclick="window.location.href='account2.html'"
+                class="circle"
+              ></div>
+              <div onclick="window.location.href='account2.html'" class="label">
+                Cards
+              </div>
             </div>
             <div class="progress-step">
-              <div class="circle"></div>
-              <div class="label">Loans</div>
+              <div
+                onclick="window.location.href='account3.html'"
+                class="circle"
+              ></div>
+              <div onclick="window.location.href='account3.html'" class="label">
+                Loans
+              </div>
             </div>
             <div class="progress-step">
-              <div class="circle"></div>
-              <div class="label">Wealth<br />Management</div>
+              <div
+                onclick="window.location.href='account4.html'"
+                class="circle"
+              ></div>
+              <div onclick="window.location.href='account4.html'" class="label">
+                Wealth <br />
+                Management
+              </div>
             </div>
             <div class="progress-step">
-              <div class="circle"></div>
-              <div class="label">Insurance</div>
+              <div
+                onclick="window.location.href='account5.html'"
+                class="circle"
+              ></div>
+              <div onclick="window.location.href='account5.html'" class="label">
+                Insurance
+              </div>
             </div>
           </div>
 
           <div class="page-body">
             <div class="account-info">
-              <h2>Accounts</h2>
+              <div class="transaction-info">
+                <div class="top-label">
+                  <h2>Accounts</h2>
+                  <div class="top-label-2">
+                    <h5>Account Number</h5>
+                    <h5>Currency</h5>
+                    <h5>Balance</h5>
+                  </div>
+                  <div class="top-label-3">
+                    <h5>Status</h5>
+                  </div>
+                </div>
+
+                <div class="account-info-card">
+                  <div
+                    onclick="location.href='close-account2.html'"
+                    id="savings"
+                    class="account"
+                  >
+                    <img src="/assets/savings.png" alt="" />
+                    <div class="account-name">
+                      <h2 class="account-title">BDO Savings Account</h2>
+                      <h4>Emergency Fund</h4>
+                    </div>
+                    <div class="top-label-2">
+                      <h5>*******9713</h5>
+                      <h5 class="blue-text">USD</h5>
+                      <h5>120, 000</h5>
+                    </div>
+                    <div class="top-label-3">
+                      <h5>Active</h5>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
 
             <div class="right-container">
@@ -136,8 +185,16 @@
               </div>
 
               <div class="button">
-                <button id="add-existing-button">+ Add Existing Account</button>
-                <button id="apply-existing-button">
+                <button
+                  onclick="location.href='add-account1.html'"
+                  id="add-existing-button"
+                >
+                  + Add Existing Account
+                </button>
+                <button
+                  onclick="location.href='apply-account1.html'"
+                  id="apply-existing-button"
+                >
                   + Apply Existing Account
                 </button>
               </div>
