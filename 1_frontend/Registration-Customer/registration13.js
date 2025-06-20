@@ -47,7 +47,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!validate()) {
       e.preventDefault();
     } else {
-      window.location.href = "registration14.html";
+      window.location.href = "registration15.html";
     }
   });
 });
