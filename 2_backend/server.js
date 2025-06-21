@@ -48,9 +48,39 @@ app.use(express.urlencoded({ extended: true }));
 // Serve static files from the 'public' directory inside '2_backend'
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Serve static files for Dashboard-Customer
+app.use('/Dashboard-Customer', express.static(path.join(__dirname, '../1_frontend/Dashboard-Customer')));
+
+// --- Add your dashboard API endpoints here ---
+app.get('/api/accounts/:cif_number', async (req, res) => {
+    // ...fetch accounts from DB...
+});
+app.get('/api/transactions/:cif_number', async (req, res) => {
+    // ...fetch transactions from DB...
+});
+
 // Login POST route (unchanged)
 app.post('/login', async (req, res) => {
-    // 
+    const { customer_username, customer_password } = req.body;
+    try {
+        const [rows] = await pool.query(
+            'SELECT cif_number, customer_password FROM customer WHERE customer_username = ?',
+            [customer_username]
+        );
+        if (rows.length === 0) {
+            return res.status(401).json({ message: 'Invalid username or password.' });
+        }
+        const user = rows[0];
+        const passwordMatch = await bcrypt.compare(customer_password, user.customer_password);
+        if (!passwordMatch) {
+            return res.status(401).json({ message: 'Invalid username or password.' });
+        }
+        // Success: send cif_number (or use a session/token in a real app)
+        res.json({ message: 'Login successful', cif_number: user.cif_number });
+    } catch (err) {
+        console.error('Login error:', err.message);
+        res.status(500).json({ message: 'Server error during login.' });
+    }
 });
 
 // Registration POST route (returns cif_number)
@@ -287,6 +317,52 @@ app.post('/api/save-checkbox-answers', async (req, res) => {
     console.error('Checkbox answers error:', err.message);
     res.status(500).json({ error: "Database error" });
   }
+});
+
+// Get all accounts for a customer
+app.get('/api/accounts/:cif_number', async (req, res) => {
+    const { cif_number } = req.params;
+    try {
+        const [rows] = await pool.query(
+            'SELECT * FROM accounts WHERE cif_number = ?',
+            [cif_number]
+        );
+        res.json(rows);
+    } catch (err) {
+        console.error('Accounts fetch error:', err.message);
+        res.status(500).json({ error: 'Database error' });
+    }
+});
+
+// Get all transactions for a customer
+app.get('/api/transactions/:cif_number', async (req, res) => {
+    const { cif_number } = req.params;
+    try {
+        const [rows] = await pool.query(
+            'SELECT * FROM transactions WHERE cif_number = ?',
+            [cif_number]
+        );
+        res.json(rows);
+    } catch (err) {
+        console.error('Transactions fetch error:', err.message);
+        res.status(500).json({ error: 'Database error' });
+    }
+});
+
+app.get('/api/customer/:cif_number', async (req, res) => {
+    const { cif_number } = req.params;
+    try {
+        const [rows] = await pool.query(
+            'SELECT customer_first_name FROM customer WHERE cif_number = ?',
+            [cif_number]
+        );
+        if (rows.length === 0) {
+            return res.status(404).json({ message: 'Customer not found' });
+        }
+        res.json(rows[0]);
+    } catch (err) {
+        res.status(500).json({ message: 'Database error' });
+    }
 });
 
 // Start the server
