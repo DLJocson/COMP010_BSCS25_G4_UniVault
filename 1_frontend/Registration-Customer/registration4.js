@@ -89,51 +89,39 @@ document.addEventListener("DOMContentLoaded", function () {
       isValid = false;
     }
 
-    if (!unitInput.value.trim()) {
-      showError(unitInput, "Unit is required");
+    // Address: at least one of unit, building, street, subdivision required
+    if (
+      !unitInput.value.trim() &&
+      !buildingInput.value.trim() &&
+      !streetInput.value.trim() &&
+      !subdivisionInput.value.trim()
+    ) {
+      showError(unitInput, "At least one of Unit, Building, Street, or Subdivision is required");
+      showError(buildingInput, "");
+      showError(streetInput, "");
+      showError(subdivisionInput, "");
       isValid = false;
     }
 
-    if (!buildingInput.value.trim()) {
-      showError(buildingInput, "Building is required");
-      isValid = false;
-    }
-
-    if (!streetInput.value.trim()) {
-      showError(streetInput, "Street is required");
-      isValid = false;
-    }
-
-    if (!subdivisionInput.value.trim()) {
-      showError(subdivisionInput, "Subdivision is required");
-      isValid = false;
-    }
-
-    if (!barangayInput.value.trim()) {
-      showError(barangayInput, "Barangay is required");
-      isValid = false;
-    }
-
+    // City, Province, Country, Zip Code are always required
     if (!cityInput.value.trim()) {
       showError(cityInput, "City is required");
       isValid = false;
     }
-
     if (!provinceInput.value.trim()) {
       showError(provinceInput, "Province is required");
       isValid = false;
     }
-
     if (!countryInput.value.trim()) {
       showError(countryInput, "Country is required");
       isValid = false;
     }
-
     if (!zipCode.value.trim()) {
       showError(zipCode, "Zip code is required");
       isValid = false;
     }
 
+    // Alternative address
     if (!isAlternativeCheckbox.checked) {
       const altUnitInput = document.querySelector(
         "#third-container .unit-building-text #unit"
@@ -163,47 +151,34 @@ document.addEventListener("DOMContentLoaded", function () {
         "#third-container .zip-code #zip-code"
       );
 
-      if (altUnitInput && !altUnitInput.value.trim()) {
-        showError(altUnitInput, "Alternate unit is required");
+      // At least one of alt unit, building, street, subdivision required
+      if (
+        (!altUnitInput || !altUnitInput.value.trim()) &&
+        (!altBuildingInput || !altBuildingInput.value.trim()) &&
+        (!altStreetInput || !altStreetInput.value.trim()) &&
+        (!altSubdivisionInput || !altSubdivisionInput.value.trim())
+      ) {
+        if (altUnitInput) showError(altUnitInput, "At least one of Unit, Building, Street, or Subdivision is required");
+        if (altBuildingInput) showError(altBuildingInput, "");
+        if (altStreetInput) showError(altStreetInput, "");
+        if (altSubdivisionInput) showError(altSubdivisionInput, "");
         isValid = false;
       }
 
-      if (altBuildingInput && !altBuildingInput.value.trim()) {
-        showError(altBuildingInput, "Alternate building is required");
-        isValid = false;
-      }
-
-      if (altStreetInput && !altStreetInput.value.trim()) {
-        showError(altStreetInput, "Alternate street is required");
-        isValid = false;
-      }
-
-      if (altSubdivisionInput && !altSubdivisionInput.value.trim()) {
-        showError(altSubdivisionInput, "Alternate subdivision is required");
-        isValid = false;
-      }
-
-      if (altBarangayInput && !altBarangayInput.value.trim()) {
-        showError(altBarangayInput, "Alternate barangay is required");
-        isValid = false;
-      }
-
+      // City, Province, Country, Zip Code are always required for alt address
       if (altCityInput && !altCityInput.value.trim()) {
         showError(altCityInput, "Alternate city is required");
         isValid = false;
       }
-
       if (altProvinceInput && !altProvinceInput.value.trim()) {
         showError(altProvinceInput, "Alternate province is required");
         isValid = false;
       }
-
       if (altCountryInput && !altCountryInput.value.trim()) {
         showError(altCountryInput, "Alternate country is required");
         isValid = false;
       }
-
-      if (!altZipCode.value.trim()) {
+      if (altZipCode && !altZipCode.value.trim()) {
         showError(altZipCode, "Alternate zip code is required");
         isValid = false;
       }
@@ -231,7 +206,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (errorDiv) {
       errorDiv.textContent = message;
-      errorDiv.style.display = "block";
+      errorDiv.style.display = message ? "block" : "none";
       errorDiv.style.color = "#ff3860";
       errorDiv.style.fontSize = "20px";
       errorDiv.style.marginTop = "5px";

@@ -21,7 +21,7 @@ body {
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background: url("/assets/bg.png");
+  background: url("../assets/bg.png");
   z-index: -1;
   font-family: var(--font-family);
 }
@@ -144,4 +144,43 @@ input[type="checkbox"] {
 input[type="checkbox"] {
   width: 30px;
   height: 30px;
+}
+
+/* Fade-in animation for the main container */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(40px);}
+  to { opacity: 1; transform: translateY(0);}
+}
+
+.data-privacy-consent-page {
+  animation: fadeIn 0.8s ease;
+}
+
+/* Slide-in for title */
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-60px);}
+  to { opacity: 1; transform: translateX(0);}
+}
+
+.title {
+  animation: slideInLeft 0.7s 0.2s both;
+}
+
+/* Fade-in for containers */
+.first-container, .second-container {
+  opacity: 0;
+  animation: fadeIn 0.7s 0.4s forwards;
+}
+
+/* Animate checkboxes on hover */
+input[type="checkbox"]:hover {
+  transform: scale(1.15);
+  transition: transform 0.2s;
+}
+
+/* Button pop effect on hover */
+.button button:hover {
+  transform: translateY(-3px) scale(1.04);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+  transition: transform 0.2s, box-shadow 0.2s;
 }

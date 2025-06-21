@@ -21,7 +21,7 @@ body {
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background: url("/assets/bg.png");
+  background: url("../assets/bg.png");
   background-size: cover;
   z-index: -1;
   font-family: var(--font-family);

@@ -25,7 +25,7 @@ body {
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background: url("/assets/bg.png");
+  background: url("../assets/bg.png");
   z-index: -1;
   font-family: var(--font-family);
 }
@@ -514,4 +514,45 @@ select:focus {
   background-color: #d4edda;
   border: 1px solid #c3e6cb;
   border-radius: 5px;
+}
+
+.alias-page {
+  animation: fadeInUp 0.7s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.title-container,
+.first-container,
+.second-container,
+.third-container {
+  animation: fadeIn 1s ease;
+}
+
+.upload-box {
+  animation: fadeIn 1s ease;
+}
+
+.id1,
+.id2 {
+  animation: fadeIn 1s ease;
+}
+
+.button {
+  animation: fadeInUp 0.7s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+input[type="text"],
+input[type="date"],
+select {
+  font-family: "Manjari", sans-serif;
 }

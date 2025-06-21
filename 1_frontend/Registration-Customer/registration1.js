@@ -10,6 +10,7 @@ function handleExclusiveSelection(clickedCheckbox) {
     }
   });
 
+  // Clear error message when a selection is made
   errorMessage.textContent = "";
 }
 
@@ -23,14 +24,11 @@ form.addEventListener("submit", function (event) {
   if (!accountOwner.checked && !businessOwner.checked) {
     errorMessage.textContent =
       "Please select a customer type before proceeding.";
-    return;
+    return; // Stop here, do not proceed
   }
 
-  if (accountOwner.checked) {
-    window.location.href = "registration2.html";
-  } else if (businessOwner.checked) {
-    window.location.href = "registration2.html";
-  }
+  // Only proceed if a selection is made
+  window.location.href = "registration2.html";
 });
 
 document.getElementById("back").addEventListener("click", () => {
