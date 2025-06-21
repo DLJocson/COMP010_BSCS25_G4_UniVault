@@ -118,15 +118,15 @@ CREATE TABLE BIOMETRIC_TYPE (
 -- 8. CUSTOMER_PRODUCT_TYPE
 -- ========================
 CREATE TABLE CUSTOMER_PRODUCT_TYPE (
-    product_id      CHAR(4) NOT NULL,
-    product_type    VARCHAR(30) NOT NULL,
+    product_type_code      	CHAR(4) NOT NULL,
+    product_type_name    	VARCHAR(30) NOT NULL,
     
     -- KEY CONSTRAINTS
-    PRIMARY KEY (product_id),
+    PRIMARY KEY (product_type_code),
     
     -- CHECK CONSTRAINTS
-    CONSTRAINT check_product_id         CHECK (product_id REGEXP '^PR[0-9]{2}$'),
-    CONSTRAINT check_product_type       CHECK (product_type REGEXP '^[A-Za-z /(),&.''-]+$')
+    CONSTRAINT check_product_type_code        	CHECK (product_type_code REGEXP '^PR[0-9]{2}$'),
+    CONSTRAINT check_product_type_name       	CHECK (product_type_name REGEXP '^[A-Za-z /(),&.''-]+$')
     );
 
 
@@ -182,7 +182,7 @@ CREATE TABLE CUSTOMER (
     birth_country                VARCHAR(100) NOT NULL,
     residency_status             VARCHAR(25) NOT NULL,
     citizenship                  VARCHAR(100) NOT NULL,
-    tax_identification_number    BIGINT UNSIGNED NOT NULL,
+    tax_identification_number    VARCHAR(20) NOT NULL,
     customer_status              VARCHAR(20) NOT NULL DEFAULT 'Active',
     remittance_country           VARCHAR(100),
     remittance_purpose           VARCHAR(255),
@@ -203,7 +203,6 @@ CREATE TABLE CUSTOMER (
     CONSTRAINT check_birth_country                  CHECK (birth_country REGEXP '^[A-Za-z''\\- ]+$'),
     CONSTRAINT check_residency_status               CHECK (residency_status IN ('Resident', 'Non-Resident')),
     CONSTRAINT check_citizenship                    CHECK (citizenship REGEXP '^[A-Za-z''\\- ]+$'),
-    CONSTRAINT check_customer_tin                   CHECK (tax_identification_number >= 100000000 AND tax_identification_number <= 999999999999),
     CONSTRAINT check_customer_status                CHECK (customer_status IN ('Active', 'Inactive', 'Suspended')),
     CONSTRAINT check_remittance_conditional         CHECK (remittance_country IS NULL AND remittance_purpose IS NULL OR remittance_country REGEXP '^[A-Za-z ]+$' AND remittance_purpose REGEXP '^[A-Za-z0-9 ,\\.\\-]+$')
     ) AUTO_INCREMENT = 1000000000;
@@ -373,7 +372,7 @@ CREATE TABLE BANK_EMPLOYEE (
 -- ===================
 CREATE TABLE ACCOUNT_DETAILS (
     account_number          BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-    product_id              CHAR(4) NOT NULL,
+    product_type_code       CHAR(4) NOT NULL,
     referral_type           VARCHAR(30) NOT NULL,
     referral_source         VARCHAR(255),
     verified_by_employee    INT NOT NULL,
@@ -385,7 +384,7 @@ CREATE TABLE ACCOUNT_DETAILS (
     
     -- KEY CONSTRAINTS
     PRIMARY KEY (account_number),
-    FOREIGN KEY (product_id) REFERENCES CUSTOMER_PRODUCT_TYPE(product_id) ON UPDATE CASCADE ON DELETE RESTRICT,
+    FOREIGN KEY (product_type_code) REFERENCES CUSTOMER_PRODUCT_TYPE(product_type_code) ON UPDATE CASCADE ON DELETE RESTRICT,
     FOREIGN KEY (verified_by_employee) REFERENCES BANK_EMPLOYEE(employee_id) ON UPDATE CASCADE ON DELETE RESTRICT,
     FOREIGN KEY (approved_by_employee) REFERENCES BANK_EMPLOYEE(employee_id) ON UPDATE CASCADE ON DELETE RESTRICT,
     FOREIGN KEY (biometrics_type_code) REFERENCES BIOMETRIC_TYPE(biometrics_type_code) ON UPDATE CASCADE ON DELETE RESTRICT,
@@ -964,8 +963,8 @@ CREATE PROCEDURE create_account_for_customer (
   IN p_product_id            CHAR(4),
   IN p_referral_type         VARCHAR(30),
   IN p_referral_source       VARCHAR(255),
-  IN p_verified_by_employee  CHAR(7),
-  IN p_approved_by_employee  CHAR(7),
+  IN p_verified_by_employee  INT,
+  IN p_approved_by_employee  INT,
   IN p_account_open_date     DATE,
   IN p_account_status        VARCHAR(10),
   IN p_biometrics_type_code  CHAR(4)

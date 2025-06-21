@@ -1,4 +1,5 @@
 @import url("https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css");
+@import url('https://fonts.googleapis.com/css2?family=Manjari:wght@400;700&display=swap');
 * {
   -webkit-font-smoothing: antialiased;
   box-sizing: border-box;
@@ -887,9 +888,9 @@ a {
 .landing-page .sign-up-learn-more {
   display: flex;
   flex-direction: column;
-  width: 683px;
+  width: 600px;
   align-items: center;
-  gap: 53px;
+  gap: 10px;
   position: relative;
   flex: 0 0 auto;
 }
@@ -905,7 +906,7 @@ a {
   width: 306px;
   top: -1px;
   left: 0;
-  font-family: "Manjari-Regular", Helvetica;
+  font-family: "Manjari", Helvetica, sans-serif;
   font-weight: 400;
   color: transparent;
   font-size: 20px;
@@ -1017,7 +1018,7 @@ a {
   width: 501px;
   top: -1px;
   left: 0;
-  font-family: "Manjari-Regular", Helvetica;
+  font-family: "Manjari", Helvetica, sans-serif;
   font-weight: 400;
   color: var(--variable-collection-004ea8);
   font-size: 48px;
@@ -1123,7 +1124,7 @@ a {
   width: 391px;
   top: -1px;
   left: 0;
-  font-family: "Manjari-Regular", Helvetica;
+  font-family: "Manjari", Helvetica, sans-serif;
   font-weight: 400;
   color: var(--variable-collection-004ea8);
   font-size: 24px;
@@ -1303,7 +1304,7 @@ a {
 
 .landing-page .header-8 {
   width: 501px;
-  font-family: "Manjari-Regular", Helvetica;
+  font-family: "Manjari", Helvetica, sans-serif;
   font-weight: 400;
   color: var(--variable-collection-004ea8);
   font-size: 50px;
@@ -1474,7 +1475,7 @@ a {
 
 .landing-page .normal-text-regular-9 {
   width: 418px;
-  font-family: "Manjari-Regular", Helvetica;
+  font-family: "Manjari", Helvetica, sans-serif;
   font-weight: 400;
   color: var(--variable-collection-004ea8);
   text-align: justify;
@@ -1546,7 +1547,7 @@ a {
 }
 
 .landing-page .text-wrapper-6 {
-  font-family: "Manjari-Regular", Helvetica;
+  font-family: "Manjari", Helvetica, sans-serif;
   font-weight: 400;
   color: #004ea8;
   font-size: 24px;
@@ -1614,7 +1615,7 @@ a {
 
 .landing-page .header-14 {
   width: 501px;
-  font-family: "Manjari-Regular", Helvetica;
+  font-family: "Manjari", Helvetica, sans-serif;
   font-weight: 400;
   color: var(--variable-collection-0072d8);
   font-size: 48px;
@@ -1643,7 +1644,7 @@ a {
 .landing-page .univault-is-an {
   position: relative;
   width: 1610.3px;
-  font-family: "Manjari-Regular", Helvetica;
+  font-family: "Manjari", Helvetica, sans-serif;
   font-weight: 400;
   color: var(--variable-collection-004ea8);
   font-size: 48px;
@@ -1676,7 +1677,7 @@ a {
 
 .landing-page .header-16 {
   width: 501px;
-  font-family: "Manjari-Regular", Helvetica;
+  font-family: "Manjari", Helvetica, sans-serif;
   font-weight: 400;
   color: var(--variable-collection-FFFFFF);
   font-size: 48px;
@@ -1735,7 +1736,7 @@ a {
   width: 346px;
   top: -1px;
   left: 0;
-  font-family: "Manjari-Regular", Helvetica;
+  font-family: "Manjari", Helvetica, sans-serif;
   font-weight: 400;
   color: var(--variable-collection-FFFFFF);
   font-size: 15px;
