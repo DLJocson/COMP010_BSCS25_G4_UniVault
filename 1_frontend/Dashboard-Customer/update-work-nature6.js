@@ -23,17 +23,23 @@ document.addEventListener("DOMContentLoaded", () => {
 
     errorMessages.forEach((msg) => (msg.textContent = ""));
 
+    username.classList.remove("error");
+    password.classList.remove("error");
+
     if (uname === "") {
       errorMessages[0].textContent = "Username is required.";
+      username.classList.add("error");
       isValid = false;
     }
 
     if (pw === "") {
       errorMessages[1].textContent = "Password is required.";
+      password.classList.add("error");
       isValid = false;
     } else if (!isPasswordValid(pw)) {
       errorMessages[1].textContent =
         "Password does not meet the required criteria.";
+      password.classList.add("error");
       isValid = false;
     }
 

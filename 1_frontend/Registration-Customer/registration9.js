@@ -498,21 +498,7 @@ function initializeFormValidation() {
         existingMessage.remove();
       }
 
-      // Create success message
-      const successMessage = document.createElement("div");
-      successMessage.className = "success-message";
-      successMessage.style.cssText = `
-        color: green;
-        font-size: 20px;
-        text-align: center;
-        margin: 20px 0;
-        padding: 10px;
-        background-color: #f8fff9;
-        border: 1px solid #28a745;
-        border-radius: 5px;
-      `;
-      successMessage.textContent =
-        "✓ Form is valid! Ready to proceed to the next step.";
+      window.location.href = "registration10.html";
 
       // Insert success message before the button container
       const buttonContainer = document.querySelector(".button");
@@ -521,9 +507,7 @@ function initializeFormValidation() {
         compliancePage.insertBefore(successMessage, buttonContainer);
       }
 
-      // Navigate to next page after delay
       setTimeout(() => {
-        // window.location.href = "registration10.html";
         console.log("Would navigate to registration10.html");
       }, 1500);
     } else {

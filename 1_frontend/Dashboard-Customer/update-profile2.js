@@ -13,8 +13,14 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function handleFileUploadValidation() {
-  const validTypes = ["image/jpeg", "image/png"];
-  const fileInputs = ["front-id-1", "back-id-1", "front-id-2", "back-id-2"];
+  const validTypes = ["image/jpeg", "image/png", "application/pdf"];
+  const fileInputs = [
+    "front-id-1",
+    "back-id-1",
+    "front-id-2",
+    "back-id-2",
+    "supporting-doc",
+  ];
 
   fileInputs.forEach((id) => {
     const input = document.getElementById(id);
@@ -186,11 +192,17 @@ function validateForm() {
     }
   });
 
-  const fileFields = ["front-id-1", "back-id-1", "front-id-2", "back-id-2"];
+  const fileFields = [
+    "front-id-1",
+    "back-id-1",
+    "front-id-2",
+    "back-id-2",
+    "supporting-doc",
+  ];
   fileFields.forEach((id) => {
     const fileInput = document.getElementById(id);
     if (!fileInput || !fileInput.files.length) {
-      showError(id);
+      showError(id, "File is required.");
       isValid = false;
     }
   });

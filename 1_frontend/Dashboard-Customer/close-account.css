@@ -383,15 +383,15 @@ textarea {
     color 0.3s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
-.account-info-card:hover img {
+.hover-enabled .account-info-card:hover img {
   filter: brightness(0) invert(1);
 }
 
-.account-info-card:hover * {
+.hover-enabled .account-info-card:hover * {
   color: white !important;
 }
 
-.account-info-card:hover {
+.hover-enabled .account-info-card:hover {
   transform: translateY(-6px) scale(1.02);
   background-color: #e53935;
   box-shadow: 0 12px 25px rgba(229, 57, 53, 0.4);
