@@ -33,7 +33,7 @@ body {
   font-size: 45px;
   color: var(--primary-color);
   width: 100%;
-  margin-bottom: 40px;
+  margin-top: 20px;
 }
 
 .enrollment-successful-page {

@@ -153,3 +153,8 @@ input[type="password"]::placeholder {
   text-align: left;
   width: 100%;
 }
+
+input.error {
+  border: 3px solid #ff3860 !important;
+  box-shadow: 0 0 3px #ff3860;
+}
