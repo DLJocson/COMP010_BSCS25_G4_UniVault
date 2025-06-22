@@ -1017,3 +1017,8 @@ select:focus {
     font-size: 20px;
   }
 }
+
+.required-asterisk {
+  color: red;
+  margin-left: 4px;
+}

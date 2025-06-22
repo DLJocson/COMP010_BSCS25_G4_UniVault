@@ -155,8 +155,8 @@ input[type="text"] {
   flex-direction: row;
   justify-content: space-between;
   width: 100%;
-  padding: 25px 25px;
-  margin-bottom: -10px;
+  padding: 10px 25px; /* Adjusted padding to compress vertically */
+  margin-bottom: -15px; /* Adjusted to pull elements closer */
 }
 
 #month,
@@ -167,7 +167,7 @@ input[type="text"] {
   width: 220px;
   height: 50px;
   font-size: 32px;
-  margin-bottom: 10px;
+  margin-bottom: 5px; /* Reduced margin-bottom for individual date selects */
 }
 
 #month-id2,
@@ -178,14 +178,14 @@ input[type="text"] {
   width: 220px;
   height: 50px;
   font-size: 28px;
-  margin-bottom: 10px;
+  margin-bottom: 5px; /* Reduced margin-bottom for individual date selects */
 }
 
 .date label {
   display: block;
   font-size: 32px;
   color: black;
-  margin-bottom: 5px;
+  margin-bottom: 3px; /* Reduced margin-bottom for labels */
   text-align: left;
   width: 100%;
 }
@@ -220,8 +220,8 @@ input[type="text"]::placeholder {
   align-items: center;
   flex-direction: column;
   width: 100%;
-  padding-top: 20px;
-  padding-bottom: 30px;
+  padding-top: 10px; /* Reduced padding-top */
+  padding-bottom: 10px; /* Reduced padding-bottom */
 }
 
 .upload-box {
@@ -312,12 +312,14 @@ input[type="text"]::placeholder {
   text-align: left;
   width: 100%;
   padding-left: 25px;
+  margin-bottom: 5px; /* Reduced margin-bottom */
 }
 
 .id1 {
   display: flex;
   flex-direction: row;
   gap: 50px;
+  margin-bottom: 10px; /* Added to reduce space after ID selection */
 }
 
 #select-id1,
@@ -349,6 +351,7 @@ input[type="text"]::placeholder {
 .id1-expiration {
   display: flex;
   flex-direction: column;
+  margin-top: 10px; /* Added margin-top to separate from issue date better */
 }
 
 .id1-expiration label {
@@ -372,8 +375,8 @@ input[type="date"] {
   align-items: center;
   flex-direction: column;
   width: 100%;
-  padding-top: 20px;
-  padding-bottom: 20px;
+  padding-top: 10px; /* Reduced padding-top */
+  padding-bottom: 10px; /* Reduced padding-bottom */
 }
 
 .third-container h2 {
@@ -382,6 +385,7 @@ input[type="date"] {
   text-align: left;
   width: 100%;
   padding-left: 20px;
+  margin-bottom: 5px; /* Reduced margin-bottom for the ID 2 title */
 }
 
 .id2 {
@@ -390,6 +394,7 @@ input[type="date"] {
   width: 100%;
   gap: 50px;
   padding-left: 20px;
+  margin-bottom: 10px; /* Added to reduce space after ID selection */
 }
 
 .id2 input[type="select"] {
@@ -422,6 +427,7 @@ input[type="date"] {
   flex-direction: column;
   width: 100%;
   justify-content: space-between;
+  margin-top: 10px; /* Added margin-top to separate from issue date better */
 }
 
 input[type="date"] {
@@ -555,4 +561,77 @@ input[type="text"],
 input[type="date"],
 select {
   font-family: "Manjari", sans-serif;
+}
+
+.id1-issue-date,
+.id2-issue-date {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin-bottom: 5px; /* Reduced from 15px */
+}
+
+.id1-issue-date .subtitle,
+.id2-issue-date .subtitle {
+  font-size: 32px;
+  color: var(--primary-color);
+  text-align: left;
+  width: 100%;
+  padding-left: 25px;
+  margin-bottom: 3px; /* Reduced from 5px */
+}
+
+.id1-issue-date .date-container,
+.id2-issue-date .date-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+  padding: 5px 25px; /* Reduced padding from 15px */
+  margin-bottom: -15px; /* Adjusted to pull elements closer */
+}
+
+.id1-issue-date .date,
+.id2-issue-date .date {
+  display: flex;
+  flex-direction: column;
+  width: 220px;
+}
+
+.id1-issue-date label,
+.id2-issue-date label {
+  font-size: 32px;
+  color: black;
+  margin-bottom: 3px; /* Reduced margin-bottom */
+  text-align: left;
+  width: 100%;
+}
+
+#issue-month-id1,
+#issue-day-id1,
+#issue-year-id1,
+#issue-month-id2,
+#issue-day-id2,
+#issue-year-id2 {
+  border: 3px solid var(--tertiary-color);
+  border-radius: 5px;
+  width: 220px;
+  height: 50px;
+  font-size: 28px;
+  margin-bottom: 5px; /* Reduced margin-bottom */
+  padding-left: 10px;
+  font-family: var(--font-family);
+}
+
+.id1-issue-date .error-message,
+.id2-issue-date .error-message {
+  color: red;
+  font-size: 20px;
+  margin-top: 5px;
+  margin-bottom: 10px;
+}
+
+.required-asterisk {
+  color: red;
+  margin-left: 4px;
 }

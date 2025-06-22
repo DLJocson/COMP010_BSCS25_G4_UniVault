@@ -669,3 +669,8 @@ select:focus {
     transform: translateY(0);
   }
 }
+
+.required-asterisk {
+  color: red;
+  margin-left: 4px;
+}

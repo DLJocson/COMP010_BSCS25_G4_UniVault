@@ -257,7 +257,7 @@ function handleProceedClick() {
     const checkbox = document.getElementById("yes");
 
     if (checkbox.checked) {
-      // If "Yes" is checked, validate ALL alias and ID fields
+      // If "Yes" is checked, validate only required alias and ID fields
       if (validateAliasAndIDs()) {
         window.location.href = "registration7.html";
       }
@@ -273,11 +273,11 @@ function validateAliasAndIDs() {
   let isValid = true;
   const containers = document.getElementById("containers"); // Get the container to limit validation to visible fields
 
-  // Alias fields
+  // Required alias fields - only First and Last name
   const aliasFields = [
     { id: "first-name", msg: "Alias first name is required" },
-    { id: "middle-name", msg: "Alias middle name is required" },
     { id: "last-name", msg: "Alias last name is required" }
+    // Removed middle-name as it's not required
   ];
 
   aliasFields.forEach(({ id, msg }) => {
@@ -291,13 +291,13 @@ function validateAliasAndIDs() {
     }
   });
 
-  // ID 1 fields
+  // Required ID 1 fields - only ID Type, ID Number, and Issue Date (Month and Year)
   const id1Fields = [
     { id: "select-id1", msg: "ID 1 type is required" },
     { id: "id1-num", msg: "ID 1 number is required" },
-    { id: "month", msg: "Month is required" },
-    { id: "day", msg: "Day is required" },
-    { id: "year", msg: "Year is required" }
+    { id: "issue-month-id1", msg: "Issue month is required" },
+    { id: "issue-year-id1", msg: "Issue year is required" }
+    // Removed expiration date fields and day field as they're not required
   ];
 
   id1Fields.forEach(({ id, msg }) => {
@@ -311,7 +311,7 @@ function validateAliasAndIDs() {
     }
   });
 
-  // ID 1 file fields
+  // ID 1 file fields - front and back uploads are required
   const id1FileFields = [
     { id: "front-id-1", msg: "Front image of ID 1 is required" },
     { id: "back-id-1", msg: "Back image of ID 1 is required" }
@@ -327,13 +327,13 @@ function validateAliasAndIDs() {
     }
   });
 
-  // ID 2 fields
+  // Required ID 2 fields - only ID Type, ID Number, and Issue Date (Month and Year)
   const id2Fields = [
     { id: "select-id2", msg: "ID 2 type is required" },
     { id: "id2-num", msg: "ID 2 number is required" },
-    { id: "month-id2", msg: "Month is required" },
-    { id: "day-id2", msg: "Day is required" },
-    { id: "year-id2", msg: "Year is required" }
+    { id: "issue-month-id2", msg: "Issue month is required" },
+    { id: "issue-year-id2", msg: "Issue year is required" }
+    // Removed expiration date fields and day field as they're not required
   ];
 
   id2Fields.forEach(({ id, msg }) => {
@@ -346,7 +346,7 @@ function validateAliasAndIDs() {
     }
   });
 
-  // ID 2 file fields
+  // ID 2 file fields - front and back uploads are required
   const id2FileFields = [
     { id: "front-id-2", msg: "Front image of ID 2 is required" },
     { id: "back-id-2", msg: "Back image of ID 2 is required" }
@@ -364,3 +364,41 @@ function validateAliasAndIDs() {
 
   return isValid;
 }
+
+function populateDays(daySelectId, monthSelectId, yearSelectId) {
+  const daySelect = document.getElementById(daySelectId);
+  const monthSelect = document.getElementById(monthSelectId);
+  const yearSelect = document.getElementById(yearSelectId);
+
+  function updateDays() {
+    const month = parseInt(monthSelect.value, 10);
+    let daysInMonth;
+    if (isNaN(month)) {
+      daySelect.innerHTML = '<option value="" disabled selected>Select Day</option>';
+      return;
+    }
+    if (month === 2) {
+      daysInMonth = 29;
+    } else if ([4, 6, 9, 11].includes(month)) {
+      daysInMonth = 30;
+    } else {
+      daysInMonth = 31;
+    }
+    daySelect.innerHTML = '<option value="" disabled selected>Select Day</option>';
+    for (let d = 1; d <= daysInMonth; d++) {
+      const option = document.createElement("option");
+      option.value = d;
+      option.textContent = d;
+      daySelect.appendChild(option);
+    }
+  }
+
+  monthSelect.addEventListener("change", updateDays);
+}
+
+document.addEventListener("DOMContentLoaded", function() {
+  populateDays("issue-day-id1", "issue-month-id1", "issue-year-id1");
+  populateDays("day", "month", "year");
+  populateDays("issue-day-id2", "issue-month-id2", "issue-year-id2");
+  populateDays("day-id2", "month-id2", "year-id2");
+});
