@@ -600,3 +600,92 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 });
 </script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  function addAsterisk(label) {
+    if (!label.querySelector('.required-asterisk')) {
+      const span = document.createElement('span');
+      span.className = 'required-asterisk';
+      span.textContent = '*';
+      label.appendChild(span);
+    }
+  }
+
+  // List of label texts to skip for asterisk
+  const skipAsterisk = [
+    "Are you currently employed?",
+    "Unit",
+    "Building",
+    "Street",
+    "Subdivision",
+    "Barangay"
+  ];
+
+  document.querySelectorAll('label').forEach(label => {
+    // Skip if label text matches any in skipAsterisk
+    if (skipAsterisk.includes(label.textContent.trim())) return;
+
+    const next = label.nextElementSibling;
+    if (
+      next &&
+      (
+        next.tagName === 'INPUT' ||
+        next.tagName === 'SELECT' ||
+        (next.tagName === 'DIV' && next.classList.contains('dropdown-multiselect'))
+      )
+    ) {
+      addAsterisk(label);
+    }
+  });
+
+  document.querySelectorAll('.dropdown-multiselect').forEach(drop => {
+    let prev = drop.previousElementSibling;
+    while (prev && prev.tagName !== 'LABEL') prev = prev.previousElementSibling;
+    if (prev && !skipAsterisk.includes(prev.textContent.trim())) addAsterisk(prev);
+  });
+
+  [
+    '.unit-building',
+    '.street-subdivision',
+    '.barangay-city',
+    '.province-country',
+    '.remittance',
+  ].forEach(selector => {
+    document.querySelectorAll(selector + ' label').forEach(label => {
+      if (!skipAsterisk.includes(label.textContent.trim())) addAsterisk(label);
+    });
+  });
+
+  [
+    '#zip-code',
+    '#gross-income',
+    '#primary-employer',
+    '#tin',
+    '#work-emai',
+    '#work',
+    '#business-number',
+    '#remittance-purpose',
+    '#remittance-country',
+    '#position'
+  ].forEach(id => {
+    const input = document.getElementById(id.replace('#', ''));
+    if (input) {
+      let label = input.parentElement.querySelector('label');
+      if (!label) {
+        let prev = input.previousElementSibling;
+        if (prev && prev.tagName === 'LABEL') label = prev;
+      }
+      if (!label) {
+        let prev = input.parentElement.previousElementSibling;
+        if (prev && prev.tagName === 'LABEL') label = prev;
+      }
+      if (label && !skipAsterisk.includes(label.textContent.trim())) addAsterisk(label);
+    }
+  });
+
+  // Add asterisk to "Work/Business Phone Number" label
+  const phoneLabel = document.querySelector('.work-business-number > label');
+  if (phoneLabel) addAsterisk(phoneLabel);
+});
+</script>

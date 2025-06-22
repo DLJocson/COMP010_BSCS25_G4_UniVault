@@ -528,3 +528,36 @@ document.addEventListener("DOMContentLoaded", () => {
   initializeDateDropdowns();
   initializeFormValidation();
 });
+
+document.getElementById("month").addEventListener("change", function () {
+  const month = parseInt(this.value);
+  const year = parseInt(document.getElementById("year").value) || new Date().getFullYear();
+  const daysInMonth = new Date(year, month, 0).getDate();
+  const daySelect = document.getElementById("day");
+  const previousDay = parseInt(daySelect.value);
+  daySelect.innerHTML = '<option value="">Select Day</option>';
+  for (let i = 1; i <= daysInMonth; i++) {
+    const option = document.createElement("option");
+    option.value = i;
+    option.textContent = i;
+    if (i === previousDay) option.selected = true;
+    daySelect.appendChild(option);
+  }
+});
+
+document.getElementById("year").addEventListener("change", function () {
+  const month = parseInt(document.getElementById("month").value);
+  if (!month) return;
+  const year = parseInt(this.value);
+  const daysInMonth = new Date(year, month, 0).getDate();
+  const daySelect = document.getElementById("day");
+  const previousDay = parseInt(daySelect.value);
+  daySelect.innerHTML = '<option value="">Select Day</option>';
+  for (let i = 1; i <= daysInMonth; i++) {
+    const option = document.createElement("option");
+    option.value = i;
+    option.textContent = i;
+    if (i === previousDay) option.selected = true;
+    daySelect.appendChild(option);
+  }
+});

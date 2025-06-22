@@ -166,3 +166,30 @@
     </div>
   </body>
 </html>
+<script>
+  function addAsterisk(label) {
+    if (label) {
+      const asterisk = document.createElement('span');
+      asterisk.className = 'required-asterisk';
+      asterisk.textContent = '*';
+      label.appendChild(asterisk);
+    }
+  }
+
+  addAsterisk(document.querySelector('label[for="first-name"]'));
+  addAsterisk(document.querySelector('label[for="last-name"]'));
+
+  addAsterisk(document.querySelector('label[for="month"]'));
+  addAsterisk(document.querySelector('label[for="day"]'));
+  addAsterisk(document.querySelector('label[for="year"]'));
+
+  const countryLabels = document.querySelectorAll('.country-label label');
+  addAsterisk(countryLabels[0]);
+  addAsterisk(countryLabels[1]); 
+
+  const genderLabels = document.querySelectorAll('.gender-label label');
+  addAsterisk(genderLabels[0]); // Gender
+  addAsterisk(genderLabels[1]); // Civil Status
+
+  addAsterisk(document.querySelector('label[for="residency-status"]'));
+</script>
