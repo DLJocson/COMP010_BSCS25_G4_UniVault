@@ -80,6 +80,33 @@
             </div>
           </div>
 
+          <div class="id1-issue-date">
+            <h2 class="subtitle">ID 1 Issue Date</h2>
+            <div class="date-container">
+              <div class="date">
+                <label for="issue-month-id1">Month</label>
+                <select id="issue-month-id1">
+                  <option value="" disabled selected>Select Month</option>
+                </select>
+                <div class="error-message" id="error-issue-month-id1"></div>
+              </div>
+              <div class="date">
+                <label for="issue-day-id1">Day</label>
+                <select id="issue-day-id1">
+                  <option value="" disabled selected>Select Day</option>
+                </select>
+                <div class="error-message" id="error-issue-day-id1"></div>
+              </div>
+              <div class="date">
+                <label for="issue-year-id1">Year</label>
+                <select id="issue-year-id1">
+                  <option value="" disabled selected>Select Year</option>
+                </select>
+                <div class="error-message" id="error-issue-year-id1"></div>
+              </div>
+            </div>
+          </div>
+
           <h2 class="subtitle">ID 1 Expiration Date</h2>
           <div class="date-container">
             <div class="date">
@@ -157,6 +184,33 @@
               <label for="">ID Number</label>
               <input id="id2-num" type="text" placeholder="Enter ID Number" />
               <div class="error-message" id="error-id2-num"></div>
+            </div>
+          </div>
+
+          <div class="id2-issue-date">
+            <h2 class="subtitle">ID 2 Issue Date</h2>
+            <div class="date-container">
+              <div class="date">
+                <label for="issue-month-id2">Month</label>
+                <select id="issue-month-id2">
+                  <option value="" disabled selected>Select Month</option>
+                </select>
+                <div class="error-message" id="error-issue-month-id2"></div>
+              </div>
+              <div class="date">
+                <label for="issue-day-id2">Day</label>
+                <select id="issue-day-id2">
+                  <option value="" disabled selected>Select Day</option>
+                </select>
+                <div class="error-message" id="error-issue-day-id2"></div>
+              </div>
+              <div class="date">
+                <label for="issue-year-id2">Year</label>
+                <select id="issue-year-id2">
+                  <option value="" disabled selected>Select Year</option>
+                </select>
+                <div class="error-message" id="error-issue-year-id2"></div>
+              </div>
             </div>
           </div>
 
@@ -238,3 +292,137 @@
     </div>
   </body>
 </html>
+
+<script>
+  function addIdOptions(selectId) {
+    const options = [
+      "PhilSys ID",
+      "New Philippine Passport",
+      "Old Philippine Passport",
+      "Driver's License",
+      "PRC ID",
+      "UMID",
+      "SSS ID",
+      "Postal ID",
+      "TIN ID",
+      "Barangay ID",
+      "GSIS ID",
+      "PhilHealth ID",
+      "OWWA ID",
+      "OFW ID",
+      "IBP ID",
+      "Company ID",
+      "MARINA ID",
+      "Voter's ID",
+      "Senior Citizen ID",
+      "Seaman's Book",
+      "Gov’t / GOCC ID",
+      "DSWD Certification",
+      "NCWDP Certification",
+      "PWD ID"
+    ];
+    const select = document.getElementById(selectId);
+    while (select.options.length > 1) {
+      select.remove(1);
+    }
+    options.forEach(opt => {
+      const option = document.createElement("option");
+      option.value = opt.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+      option.textContent = opt;
+      select.appendChild(option);
+    });
+  }
+
+  document.addEventListener("DOMContentLoaded", function() {
+    addIdOptions("select-id1");
+    addIdOptions("select-id2");
+  });
+</script>
+
+<script>
+  function populateMonths(selectId) {
+    const months = [
+      "January", "February", "March", "April", "May", "June",
+      "July", "August", "September", "October", "November", "December"
+    ];
+    const select = document.getElementById(selectId);
+    while (select.options.length > 1) {
+      select.remove(1);
+    }
+    months.forEach((month, idx) => {
+      const option = document.createElement("option");
+      option.value = idx + 1;
+      option.textContent = month;
+      select.appendChild(option);
+    });
+  }
+
+  function populateYears(selectId) {
+    const select = document.getElementById(selectId);
+    const currentYear = new Date().getFullYear();
+    while (select.options.length > 1) {
+      select.remove(1);
+    }
+    for (let year = currentYear; year >= 1900; year--) {
+      const option = document.createElement("option");
+      option.value = year;
+      option.textContent = year;
+      select.appendChild(option);
+    }
+  }
+
+  document.addEventListener("DOMContentLoaded", function() {
+    populateMonths("issue-month-id1");
+    populateMonths("month");
+    populateMonths("issue-month-id2");
+    populateMonths("month-id2");
+    populateYears("issue-year-id1");
+    populateYears("year");
+    populateYears("issue-year-id2");
+    populateYears("year-id2");
+  });
+</script>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const firstNameLabel = document.querySelector('label[for="first-name"]');
+    const lastNameLabel = document.querySelector('label[for="last-name"]');
+    [firstNameLabel, lastNameLabel].forEach(label => {
+      if (label && !label.querySelector('.required-asterisk')) {
+        label.insertAdjacentHTML('beforeend', '<span class="required-asterisk">*</span>');
+      }
+    });
+
+    const id1IssueDate = document.querySelector('.id1-issue-date .subtitle');
+    const id2IssueDate = document.querySelector('.id2-issue-date .subtitle');
+    [id1IssueDate, id2IssueDate].forEach(label => {
+      if (label && !label.querySelector('.required-asterisk')) {
+        label.insertAdjacentHTML('beforeend', '<span class="required-asterisk">*</span>');
+      }
+    });
+
+    // Add red asterisk to "ID 1" and "ID 2" headings
+    const id1Heading = document.querySelector('.second-container > .subtitle');
+    if (id1Heading && !id1Heading.querySelector('.required-asterisk')) {
+      id1Heading.insertAdjacentHTML('beforeend', '<span class="required-asterisk">*</span>');
+    }
+    const id2Heading = document.querySelector('.third-container > h2');
+    if (id2Heading && !id2Heading.querySelector('.required-asterisk')) {
+      id2Heading.insertAdjacentHTML('beforeend', '<span class="required-asterisk">*</span>');
+    }
+
+    const uploadDirections = [
+      "Upload Front of ID 1",
+      "Upload Back of ID 1",
+      "Upload Front of ID 2",
+      "Upload Back of ID 2"
+    ];
+    uploadDirections.forEach(directionText => {
+      const p = Array.from(document.querySelectorAll('.upload-box .direction'))
+        .find(el => el.textContent.trim() === directionText);
+      if (p && !p.querySelector('.required-asterisk')) {
+        p.insertAdjacentHTML('beforeend', '<span class="required-asterisk">*</span>');
+      }
+    });
+  });
+</script>

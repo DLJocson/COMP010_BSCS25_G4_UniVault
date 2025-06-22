@@ -27,13 +27,39 @@
               <option value="driver">Driver's License</option>
             </select>
             <div class="error-message" id="error-select-id1"></div>
-            <div class="error-message" id="error-select-id1"></div>
           </div>
 
           <div class="id-num">
             <label for="">ID Number</label>
             <input id="id1-num" type="text" placeholder="Enter ID Number" />
             <div class="error-message" id="error-id1-num"></div>
+          </div>
+        </div>
+
+        <h2 class="subtitle">ID 1 Issue Date</h2>
+        <div class="date-container">
+          <div class="date">
+            <label for="issue-month-id1">Month</label>
+            <select id="issue-month-id1">
+              <option value="" disabled selected>Select Month</option>
+            </select>
+            <div class="error-message" id="error-issue-month-id1"></div>
+          </div>
+
+          <div class="date">
+            <label for="issue-day-id1">Day</label>
+            <select id="issue-day-id1">
+              <option value="" disabled selected>Select Day</option>
+            </select>
+            <div class="error-message" id="error-issue-day-id1"></div>
+          </div>
+
+          <div class="date">
+            <label for="issue-year-id1">Year</label>
+            <select id="issue-year-id1">
+              <option value="" disabled selected>Select Year</option>
+            </select>
+            <div class="error-message" id="error-issue-year-id1"></div>
           </div>
         </div>
 
@@ -114,6 +140,33 @@
             <label for="">ID Number</label>
             <input id="id2-num" type="text" placeholder="Enter ID Number" />
             <div class="error-message" id="error-id2-num"></div>
+          </div>
+        </div>
+
+        <h2 class="subtitle">ID 2 Issue Date</h2>
+        <div class="date-container">
+          <div class="date">
+            <label for="issue-month-id2">Month</label>
+            <select id="issue-month-id2">
+              <option value="" disabled selected>Select Month</option>
+            </select>
+            <div class="error-message" id="error-issue-month-id2"></div>
+          </div>
+
+          <div class="date">
+            <label for="issue-day-id2">Day</label>
+            <select id="issue-day-id2">
+              <option value="" disabled selected>Select Day</option>
+            </select>
+            <div class="error-message" id="error-issue-day-id2"></div>
+          </div>
+
+          <div class="date">
+            <label for="issue-year-id2">Year</label>
+            <select id="issue-year-id2">
+              <option value="" disabled selected>Select Year</option>
+            </select>
+            <div class="error-message" id="error-issue-year-id2"></div>
           </div>
         </div>
 
@@ -216,3 +269,91 @@
     </div>
   </body>
 </html>
+
+<script>
+  function addIdTypeOptions(selectId) {
+    const idTypes = [
+      "New Philippine Passport",
+      "Old Philippine Passport",
+      "Driver's License",
+      "PRC ID",
+      "UMID",
+      "SSS ID",
+      "Postal ID",
+      "TIN ID",
+      "Barangay ID",
+      "GSIS ID",
+      "PhilHealth ID",
+      "OWWA ID",
+      "OFW ID",
+      "IBP ID",
+      "Company ID",
+      "MARINA ID",
+      "Voter's ID",
+      "Senior Citizen ID",
+      "Seaman's Book",
+      "Gov't / GOCC ID",
+      "DSWD Certification",
+      "NCWDP Certification",
+      "PWD ID"
+    ];
+    const select = document.getElementById(selectId);
+    while (select.options.length > 1) {
+      select.remove(1);
+    }
+    idTypes.forEach(type => {
+      const option = document.createElement('option');
+      option.value = type;
+      option.textContent = type;
+      select.appendChild(option);
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', function() {
+    addIdTypeOptions('select-id1');
+    addIdTypeOptions('select-id2');
+  });
+</script>
+
+<script>
+  function addAsterisk(label, after = true) {
+    if (!label) return;
+    const asterisk = document.createElement('span');
+    asterisk.className = 'required-asterisk';
+    asterisk.textContent = '*';
+    if (after) {
+      label.appendChild(asterisk);
+    } else {
+      label.insertBefore(asterisk, label.firstChild);
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', function() {
+    addAsterisk(document.querySelector('label[for="select-id1"]'));
+    addAsterisk(document.querySelector('#id1-num').previousElementSibling);
+    addAsterisk(document.querySelector('label[for="issue-month-id1"]'));
+    addAsterisk(document.querySelector('label[for="issue-year-id1"]'));
+
+    // Add asterisk to upload headings instead of labels
+    const uploadFront1 = Array.from(document.querySelectorAll('.upload-box .direction'))
+      .find(el => el.textContent.trim().startsWith('Upload Front of ID 1'));
+    addAsterisk(uploadFront1, false);
+
+    const uploadBack1 = Array.from(document.querySelectorAll('.upload-box .direction'))
+      .find(el => el.textContent.trim().startsWith('Upload Back of ID 1'));
+    addAsterisk(uploadBack1, false);
+
+    addAsterisk(document.querySelector('label[for="select-id2"]'));
+    addAsterisk(document.querySelector('#id2-num').previousElementSibling);
+    addAsterisk(document.querySelector('label[for="issue-month-id2"]'));
+    addAsterisk(document.querySelector('label[for="issue-year-id2"]'));
+
+    const uploadFront2 = Array.from(document.querySelectorAll('.upload-box .direction'))
+      .find(el => el.textContent.trim().startsWith('Upload Front of ID 2'));
+    addAsterisk(uploadFront2, false);
+
+    const uploadBack2 = Array.from(document.querySelectorAll('.upload-box .direction'))
+      .find(el => el.textContent.trim().startsWith('Upload Back of ID 2'));
+    addAsterisk(uploadBack2, false);
+  });
+</script>

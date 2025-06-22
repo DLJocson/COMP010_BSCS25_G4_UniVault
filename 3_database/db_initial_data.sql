@@ -132,7 +132,7 @@ INSERT INTO BIOMETRIC_TYPE (biometrics_type_code, biometric_description) VALUES
 
 -- 8. CUSTOMER_PRODUCT_TYPE
 -- ==============================================
-INSERT INTO CUSTOMER_PRODUCT_TYPE (product_id, product_type) VALUES
+INSERT INTO CUSTOMER_PRODUCT_TYPE (product_type_code, product_type_name) VALUES
 	('PR01', 'Deposits'),
 	('PR02', 'Cards'),
 	('PR03', 'Loans'),
@@ -349,8 +349,8 @@ INSERT INTO CUSTOMER_ID (
 -- 21. ACCOUNT_DETAILS
 -- ==============================================
 INSERT INTO ACCOUNT_DETAILS (
-    account_number, -- ADDED THIS COLUMN
-    product_id, referral_type, referral_source,
+    account_number, 
+    product_type_code, referral_type, referral_source,
     verified_by_employee, approved_by_employee,
     account_open_date, account_close_date, account_status, biometrics_type_code
 ) VALUES

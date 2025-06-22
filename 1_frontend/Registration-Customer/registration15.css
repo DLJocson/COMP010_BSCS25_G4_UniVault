@@ -17,7 +17,7 @@ body {
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background: url("/assets/bg.png");
+  background: url("../assets/bg.png");
   z-index: -1;
   font-family: var(--font-family);
 }
@@ -119,4 +119,37 @@ select:focus {
   padding-left: 10px;
   text-align: left;
   width: 100%;
+}
+
+/* Fade-in animation for the main container */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.add-work-nature-page {
+  animation: fadeInUp 0.7s ease;
+}
+
+/* Smooth transition for select and button hover/focus */
+select,
+.button button {
+  transition: 
+    background-color 0.3s,
+    color 0.3s,
+    box-shadow 0.3s,
+    border 0.3s;
+}
+
+/* Subtle scale animation on button hover */
+.button button:hover {
+  transform: scale(1.04);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.13);
+  transition: transform 0.2s, box-shadow 0.2s;
 }

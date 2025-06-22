@@ -21,7 +21,7 @@ body {
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background: url("/assets/bg.png");
+  background: url("../assets/bg.png");
   z-index: -1;
   font-family: var(--font-family);
 }
@@ -287,4 +287,55 @@ input[type="checkbox"] {
   padding-left: 20px;
   text-align: left;
   width: 100%;
+}
+
+/* Fade-in animation for the main container */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.regulatory-page {
+  animation: fadeInUp 0.7s ease;
+}
+
+/* Button press animation */
+.button button:active {
+  transform: scale(0.97);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+}
+
+/* Smooth hover transitions for checkboxes and labels */
+.checkbox label,
+.third-checkbox label,
+.fourth-checkbox label {
+  transition: color 0.2s;
+}
+
+.checkbox label:hover,
+.third-checkbox label:hover,
+.fourth-checkbox label:hover {
+  color: var(--secondary-color);
+}
+
+/* Fade-in for error messages */
+@keyframes fadeInError {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.error-message {
+  animation: fadeInError 0.4s;
 }

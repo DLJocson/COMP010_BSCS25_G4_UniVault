@@ -236,3 +236,39 @@
     </div>
   </body>
 </html>
+
+<script>
+  function addAsterisk(label) {
+    if (label && !label.querySelector('.required-asterisk')) {
+      const span = document.createElement('span');
+      span.className = 'required-asterisk';
+      span.textContent = '*';
+      label.appendChild(span);
+    }
+  }
+
+  // Phone Number
+  document.querySelectorAll('.phone-number label')[1] && addAsterisk(document.querySelectorAll('.phone-number label')[1]);
+  // Landline Number
+  document.querySelectorAll('.home-landline label')[1] && addAsterisk(document.querySelectorAll('.home-landline label')[1]);
+  // Personal Email Address
+  document.querySelector('.personal-email label') && addAsterisk(document.querySelector('.personal-email label'));
+  // City
+  document.querySelectorAll('.barangay-city label')[1] && addAsterisk(document.querySelectorAll('.barangay-city label')[1]);
+  // Province
+  document.querySelectorAll('.province-country label')[0] && addAsterisk(document.querySelectorAll('.province-country label')[0]);
+  // Country
+  document.querySelectorAll('.province-country label')[1] && addAsterisk(document.querySelectorAll('.province-country label')[1]);
+  // Zip Code
+  document.querySelector('.zip-code label') && addAsterisk(document.querySelector('.zip-code label'));
+
+  // Alternate address section
+  // City
+  document.querySelectorAll('#third-container .barangay-city label')[1] && addAsterisk(document.querySelectorAll('#third-container .barangay-city label')[1]);
+  // Province
+  document.querySelectorAll('#third-container .province-country label')[0] && addAsterisk(document.querySelectorAll('#third-container .province-country label')[0]);
+  // Country
+  document.querySelectorAll('#third-container .province-country label')[1] && addAsterisk(document.querySelectorAll('#third-container .province-country label')[1]);
+  // Zip Code
+  document.querySelector('#third-container .zip-code label') && addAsterisk(document.querySelector('#third-container .zip-code label'));
+</script>
