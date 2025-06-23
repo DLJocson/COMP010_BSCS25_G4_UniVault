@@ -433,6 +433,20 @@ CREATE TABLE CUSTOMER_ID (
     CONSTRAINT check_id_date           CHECK (id_expiry_date IS NULL OR id_issue_date < id_expiry_date)
     );
     
+<<<<<<< HEAD
+    -- 23. CUSTOMER_COMPLIANCE_ANSWERS
+-- ===============================
+CREATE TABLE CUSTOMER_COMPLIANCE_ANSWERS (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    cif_number BIGINT UNSIGNED NOT NULL,
+    answer1 VARCHAR(10),
+    answer2 VARCHAR(10),
+    answer3 VARCHAR(10),
+    answer4 VARCHAR(10),
+    answer5 VARCHAR(10),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (cif_number) REFERENCES CUSTOMER(cif_number) ON DELETE CASCADE
+=======
 -- 23. REVIEW_QUEUE
 -- ===============
 CREATE TABLE REVIEW_QUEUE (
@@ -451,6 +465,7 @@ CREATE TABLE REVIEW_QUEUE (
     FOREIGN KEY (account_number) REFERENCES ACCOUNT_DETAILS(account_number) ON UPDATE CASCADE ON DELETE SET NULL,
     FOREIGN KEY (cif_number) REFERENCES CUSTOMER(cif_number) ON UPDATE CASCADE ON DELETE CASCADE,
     FOREIGN KEY (reviewed_by_employee_id) REFERENCES BANK_EMPLOYEE(employee_id) ON UPDATE CASCADE ON DELETE SET NULL
+>>>>>>> main
 );
 
 

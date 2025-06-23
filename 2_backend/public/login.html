@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login - UniVault</title>
+    <link rel="stylesheet" href="login.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manjari:wght@100;400;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="log-in-page">
+      <img src="assets/logowtext.png" alt="UniVault Logo" />
+
+      <form id="loginForm">
+        <div class="text-box">
+          <input type="text" id="customer_username" name="customer_username" placeholder="Enter Username" required />
+          <input class="password" type="password" id="customer_password" name="customer_password" placeholder="Enter Password" required />
+        </div>
+        <div class="button">
+          <button type="submit">Log In</button>
+        </div>
+      </form>
+
+      <div class="forgot-password">
+        <a href="#">Forgot Password</a>
+      </div>
+
+      <p id="errorMessage" style="color: red; margin-top: 10px;"></p>
+    </div>
+
+    <script>
+      document.getElementById('loginForm').addEventListener('submit', async function(event) {
+        event.preventDefault();
+
+        const customer_username = document.getElementById('customer_username').value;
+        const customer_password = document.getElementById('customer_password').value;
+        const errorMessageElement = document.getElementById('errorMessage');
+
+        try {
+          const response = await fetch('/login', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ customer_username, customer_password })
+          });
+
+          const data = await response.json();
+
+          if (response.ok && data.cif_number) {
+            // Login successful, redirect to dashboard
+            window.location.href = `/Dashboard-Customer/account1.html?cif_number=${data.cif_number}`;
+          } else {
+            // Login failed
+            errorMessageElement.textContent = data.message || 'Invalid username or password.';
+          }
+        } catch (error) {
+          console.error('Error:', error);
+          errorMessageElement.textContent = 'Network error. Please try again.';
+        }
+      });
+    </script>
+  </body>
+</html>
