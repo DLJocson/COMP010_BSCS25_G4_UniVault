@@ -14,21 +14,33 @@ document.addEventListener("DOMContentLoaded", () => {
             otherCb.checked = false;
           }
         });
-        errorMessage.textContent = ""; // Clear error if one is selected
+      }
+      const oneChecked = Array.from(checkboxes).some((box) => box.checked);
+      if (oneChecked) {
+        errorMessage.textContent = "";
       }
     });
   });
 
-  proceedBtn.addEventListener("click", (e) => {
-    const oneChecked = Array.from(checkboxes).some((cb) => cb.checked);
-
-    if (!oneChecked) {
-      e.preventDefault();
-      errorMessage.textContent =
-        "Please select either 'I give consent' or 'I do not give consent.'";
-    } else {
-      errorMessage.textContent = "";
-      window.location.href = "registration11.html";
-    }
-  });
+  if (proceedBtn) {
+    proceedBtn.onclick = function (e) {
+      // Save the user's choice to localStorage
+      let consent = null;
+      checkboxes.forEach((cb) => {
+        if (cb.checked) consent = cb.value || cb.id || "checked";
+      });
+      if (consent) {
+        localStorage.setItem("data-privacy-consent", consent);
+      }
+      const oneChecked = Array.from(checkboxes).some((cb) => cb.checked);
+      if (!oneChecked) {
+        e.preventDefault();
+        errorMessage.textContent =
+          "Please select either 'I give consent' or 'I do not give consent.'";
+      } else {
+        errorMessage.textContent = "";
+        window.location.href = "registration11.html";
+      }
+    };
+  }
 });

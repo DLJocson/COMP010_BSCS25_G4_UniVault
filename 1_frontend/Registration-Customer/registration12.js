@@ -23,15 +23,25 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  proceedBtn.addEventListener("click", (e) => {
-    const oneChecked = Array.from(checkboxes).some((cb) => cb.checked);
+  if (proceedBtn) {
+    proceedBtn.onclick = function (e) {
+      // Save the user's choice to localStorage
+      let consent = null;
+      checkboxes.forEach((cb) => {
+        if (cb.checked) consent = cb.value || cb.id || "checked";
+      });
+      if (consent) {
+        localStorage.setItem("customer-undertaking", consent);
+      }
+      const oneChecked = Array.from(checkboxes).some((cb) => cb.checked);
 
-    if (!oneChecked) {
-      e.preventDefault();
-      errorMessage.textContent = "Please select one option.";
-    } else {
-      errorMessage.textContent = "";
-      window.location.href = "registration13.html";
-    }
-  });
+      if (!oneChecked) {
+        e.preventDefault();
+        errorMessage.textContent = "Please select one option.";
+      } else {
+        errorMessage.textContent = "";
+        window.location.href = "registration13.html";
+      }
+    };
+  }
 });

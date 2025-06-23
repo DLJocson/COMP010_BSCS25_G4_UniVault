@@ -49,11 +49,16 @@ document.addEventListener("DOMContentLoaded", () => {
   username.addEventListener("input", validate);
   password.addEventListener("input", validate);
 
-  proceedBtn.addEventListener("click", (e) => {
-    if (!validate()) {
-      e.preventDefault();
-    } else {
-      window.location.href = "registration15.html";
-    }
-  });
+  if (proceedBtn) {
+    proceedBtn.onclick = function (e) {
+      // Save username and password to localStorage
+      localStorage.setItem("username", username.value);
+      localStorage.setItem("password", password.value);
+      if (!validate()) {
+        e.preventDefault();
+      } else {
+        window.location.href = "registration15.html";
+      }
+    };
+  }
 });
