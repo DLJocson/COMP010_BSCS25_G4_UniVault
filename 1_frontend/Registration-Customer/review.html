@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Review & Submit - UniVault Registration</title>
+    <link rel="stylesheet" href="shared.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manjari:wght@100;400;700&display=swap" rel="stylesheet">
+    <style>
+        .review-section {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .review-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #667eea;
+        }
+        .review-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding: 8px 0;
+            border-bottom: 1px solid #e1e5e9;
+        }
+        .review-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+        .review-label {
+            font-weight: 500;
+            color: #666;
+            flex: 1;
+        }
+        .review-value {
+            font-weight: 600;
+            color: #333;
+            flex: 2;
+            text-align: right;
+        }
+        .edit-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 5px 15px;
+            border-radius: 5px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+        .edit-btn:hover {
+            background: #5a6fd8;
+        }
+        .final-confirmation {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        .terms-agreement {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .checkbox-agreement {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin: 15px 0;
+        }
+        .checkbox-agreement input {
+            margin-top: 3px;
+        }
+        .submit-btn {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(40, 167, 69, 0.3);
+        }
+        .submit-btn:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Progress Bar -->
+        <div class="progress-bar">
+            <div class="progress-info">
+                <span class="step-indicator">Step 16 of 17: Review & Submit</span>
+                <span>94%</span>
+            </div>
+            <div class="progress-track">
+                <div class="progress-fill" style="width: 94%"></div>
+            </div>
+        </div>
+        
+        <!-- Content -->
+        <div class="content">
+            <h1 class="title">Review Your Information</h1>
+            <p class="subtitle">Please review all the information you've provided before submitting your application</p>
+            
+            <!-- Review Sections -->
+            <div id="review-sections">
+                <!-- Content will be populated by JavaScript -->
+            </div>
+            
+            <!-- Terms and Agreement -->
+            <div class="terms-agreement">
+                <h3>Terms and Conditions</h3>
+                <p style="font-size: 0.9rem; line-height: 1.5;">
+                    By submitting this application, you acknowledge that you have read, understood, and agree to:
+                </p>
+                <ul style="font-size: 0.9rem; padding-left: 20px;">
+                    <li>UniVault's Terms of Service and Privacy Policy</li>
+                    <li>BDO Unibank's banking terms and conditions</li>
+                    <li>Data Privacy Act compliance requirements</li>
+                    <li>Account maintenance fees and charges</li>
+                </ul>
+                
+                <div class="checkbox-agreement">
+                    <input type="checkbox" id="terms-agreement" required>
+                    <label for="terms-agreement">
+                        I agree to the terms and conditions stated above and certify that all information provided is true and accurate.
+                    </label>
+                </div>
+                
+                <div class="checkbox-agreement">
+                    <input type="checkbox" id="marketing-consent">
+                    <label for="marketing-consent">
+                        I consent to receiving marketing communications about UniVault products and services.
+                    </label>
+                </div>
+            </div>
+            
+            <!-- Final Confirmation -->
+            <div class="final-confirmation">
+                <h3>Ready to Submit?</h3>
+                <p>Once you submit your application, you'll receive a confirmation email and your application will be processed within 3-5 business days.</p>
+            </div>
+            
+            <!-- Navigation -->
+            <div class="button-container">
+                <button type="button" class="btn btn-secondary" onclick="goBack()">Back</button>
+                <button type="button" class="submit-btn" id="submit-btn" onclick="submitApplication()" disabled>Submit Application</button>
+            </div>
+        </div>
+    </div>
+    
+    <script src="shared.js"></script>
+    <script>
+        const CURRENT_STEP = 16;
+        
+        // Initialize the step
+        document.addEventListener('DOMContentLoaded', function() {
+            UniVaultRegistration.initializeStep(CURRENT_STEP);
+            populateReviewSections();
+            setupAgreementValidation();
+        });
+        
+        function populateReviewSections() {
+            const allData = UniVaultRegistration.getRegistrationData();
+            const reviewContainer = document.getElementById('review-sections');
+            
+            // Define sections to review
+            const sections = [
+                {
+                    title: 'Customer Type & Account Selection',
+                    stepId: 'step_1',
+                    fields: [
+                        { key: 'customer_type', label: 'Customer Type' }
+                    ]
+                },
+                {
+                    title: 'Account Types',
+                    stepId: 'step_2',
+                    fields: [
+                        { key: 'account_types', label: 'Selected Account Types', isArray: true }
+                    ]
+                },
+                {
+                    title: 'Personal Information',
+                    stepId: 'step_3',
+                    fields: [
+                        { key: 'customer_first_name', label: 'First Name' },
+                        { key: 'customer_middle_name', label: 'Middle Name' },
+                        { key: 'customer_last_name', label: 'Last Name' },
+                        { key: 'customer_suffix_name', label: 'Suffix' },
+                        { key: 'birth_date', label: 'Date of Birth' },
+                        { key: 'gender', label: 'Gender' },
+                        { key: 'civil_status_code', label: 'Civil Status' },
+                        { key: 'birth_country', label: 'Country of Birth' },
+                        { key: 'citizenship', label: 'Citizenship' },
+                        { key: 'residency_status', label: 'Residency Status' },
+                        { key: 'tax_identification_number', label: 'TIN' }
+                    ]
+                }
+            ];
+            
+            reviewContainer.innerHTML = '';
+            
+            sections.forEach(section => {
+                const sectionData = allData[section.stepId];
+                if (sectionData) {
+                    const sectionDiv = document.createElement('div');
+                    sectionDiv.className = 'review-section';
+                    
+                    let sectionHTML = `
+                        <div class="review-title">
+                            ${section.title}
+                            <button class="edit-btn" onclick="editSection(${section.stepId.replace('step_', '')})">Edit</button>
+                        </div>
+                    `;
+                    
+                    section.fields.forEach(field => {
+                        const value = sectionData[field.key];
+                        if (value !== undefined && value !== '' && value !== null) {
+                            let displayValue = value;
+                            
+                            if (field.isArray && Array.isArray(value)) {
+                                displayValue = value.join(', ');
+                            }
+                            
+                            sectionHTML += `
+                                <div class="review-item">
+                                    <span class="review-label">${field.label}:</span>
+                                    <span class="review-value">${displayValue}</span>
+                                </div>
+                            `;
+                        }
+                    });
+                    
+                    sectionDiv.innerHTML = sectionHTML;
+                    reviewContainer.appendChild(sectionDiv);
+                }
+            });
+        }
+        
+        function setupAgreementValidation() {
+            const termsCheckbox = document.getElementById('terms-agreement');
+            const submitBtn = document.getElementById('submit-btn');
+            
+            termsCheckbox.addEventListener('change', function() {
+                if (this.checked) {
+                    submitBtn.disabled = false;
+                } else {
+                    submitBtn.disabled = true;
+                }
+            });
+        }
+        
+        function editSection(stepNumber) {
+            const stepConfig = UniVaultRegistration.REGISTRATION_STEPS.find(step => step.id === stepNumber);
+            if (stepConfig) {
+                window.location.href = stepConfig.page;
+            }
+        }
+        
+        function goBack() {
+            UniVaultRegistration.goToPreviousStep(CURRENT_STEP);
+        }
+        
+        async function submitApplication() {
+            const submitBtn = document.getElementById('submit-btn');
+            const originalText = submitBtn.textContent;
+            
+            try {
+                // Show loading state
+                submitBtn.textContent = 'Submitting...';
+                submitBtn.disabled = true;
+                
+                // Collect all data
+                const allData = UniVaultRegistration.getRegistrationData();
+                const marketingConsent = document.getElementById('marketing-consent').checked;
+                
+                // Prepare submission data
+                const submissionData = {
+                    ...allData.step_1,
+                    ...allData.step_2,
+                    ...allData.step_3,
+                    // Add other steps as they're completed
+                    marketing_consent: marketingConsent,
+                    submission_timestamp: new Date().toISOString()
+                };
+                
+                // Simulate API call (replace with actual backend call)
+                await new Promise(resolve => setTimeout(resolve, 2000));
+                
+                // Save submission data
+                localStorage.setItem('univault_submission', JSON.stringify(submissionData));
+                
+                // Redirect to confirmation
+                window.location.href = 'confirmation.html';
+                
+            } catch (error) {
+                console.error('Submission error:', error);
+                alert('There was an error submitting your application. Please try again.');
+                
+                // Restore button state
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
+            }
+        }
+    </script>
+</body>
+</html>

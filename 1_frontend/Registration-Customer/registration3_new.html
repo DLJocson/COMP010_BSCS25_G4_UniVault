@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personal Information - UniVault Registration</title>
+    <link rel="stylesheet" href="shared.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manjari:wght@100;400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- Progress Bar -->
+        <div class="progress-bar">
+            <div class="progress-info">
+                <span class="step-indicator">Step 3 of 15: Personal Information</span>
+                <span>20%</span>
+            </div>
+            <div class="progress-track">
+                <div class="progress-fill" style="width: 20%"></div>
+            </div>
+        </div>
+        
+        <!-- Content -->
+        <div class="content">
+            <h1 class="title">Personal Information</h1>
+            <p class="subtitle">Please provide your basic personal details</p>
+            
+            <form id="step3-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="first-name">First Name *</label>
+                        <input type="text" id="first-name" name="first_name" required>
+                        <div class="error-message"></div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="middle-name">Middle Name</label>
+                        <input type="text" id="middle-name" name="middle_name">
+                        <div class="error-message"></div>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="last-name">Last Name *</label>
+                        <input type="text" id="last-name" name="last_name" required>
+                        <div class="error-message"></div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="suffix">Suffix</label>
+                        <select id="suffix" name="suffix">
+                            <option value="">Select suffix (optional)</option>
+                            <option value="Jr.">Jr.</option>
+                            <option value="Sr.">Sr.</option>
+                            <option value="II">II</option>
+                            <option value="III">III</option>
+                            <option value="IV">IV</option>
+                        </select>
+                        <div class="error-message"></div>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="birth-date">Date of Birth *</label>
+                        <input type="date" id="birth-date" name="birth_date" required>
+                        <div class="error-message"></div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="gender">Gender *</label>
+                        <select id="gender" name="gender" required>
+                            <option value="">Select gender</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Non-Binary/Third Gender">Non-Binary/Third Gender</option>
+                            <option value="Prefer not to say">Prefer not to say</option>
+                            <option value="Other">Other</option>
+                        </select>
+                        <div class="error-message"></div>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="civil-status">Civil Status *</label>
+                        <select id="civil-status" name="civil_status" required>
+                            <option value="">Select civil status</option>
+                            <option value="CS01">Single</option>
+                            <option value="CS02">Married</option>
+                            <option value="CS03">Legally Separated</option>
+                            <option value="CS04">Divorced</option>
+                            <option value="CS05">Annulled</option>
+                            <option value="CS06">Widow/er</option>
+                        </select>
+                        <div class="error-message"></div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="birth-country">Country of Birth *</label>
+                        <input type="text" id="birth-country" name="birth_country" value="Philippines" required>
+                        <div class="error-message"></div>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="citizenship">Citizenship *</label>
+                        <input type="text" id="citizenship" name="citizenship" value="Filipino" required>
+                        <div class="error-message"></div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="residency-status">Residency Status *</label>
+                        <select id="residency-status" name="residency_status" required>
+                            <option value="">Select residency status</option>
+                            <option value="Resident">Resident</option>
+                            <option value="Non-Resident">Non-Resident</option>
+                        </select>
+                        <div class="error-message"></div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="tin">Tax Identification Number (TIN) *</label>
+                    <input type="text" id="tin" name="tax_identification_number" placeholder="e.g. 123-456-789-000" required>
+                    <div class="error-message"></div>
+                </div>
+            </form>
+            
+            <!-- Navigation -->
+            <div class="button-container">
+                <button type="button" class="btn btn-secondary" onclick="goBack()">Back</button>
+                <button type="button" class="btn btn-primary" onclick="proceedToNext()">Continue</button>
+            </div>
+        </div>
+    </div>
+    
+    <script src="shared.js"></script>
+    <script>
+        const CURRENT_STEP = 3;
+        
+        // Initialize the step
+        document.addEventListener('DOMContentLoaded', function() {
+            UniVaultRegistration.initializeStep(CURRENT_STEP);
+            setupValidation();
+        });
+        
+        function setupValidation() {
+            // Real-time validation
+            document.getElementById('birth-date').addEventListener('change', validateAge);
+            document.getElementById('tin').addEventListener('input', formatTIN);
+            
+            // Clear errors on input
+            const inputs = document.querySelectorAll('input, select');
+            inputs.forEach(input => {
+                input.addEventListener('input', () => {
+                    UniVaultRegistration.clearError(input.id);
+                });
+            });
+        }
+        
+        function validateAge() {
+            const birthDate = new Date(document.getElementById('birth-date').value);
+            const today = new Date();
+            const age = today.getFullYear() - birthDate.getFullYear();
+            const monthDiff = today.getMonth() - birthDate.getMonth();
+            
+            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+                age--;
+            }
+            
+            if (age < 18) {
+                UniVaultRegistration.showError('birth-date', 'You must be at least 18 years old to register');
+                return false;
+            }
+            
+            UniVaultRegistration.clearError('birth-date');
+            return true;
+        }
+        
+        function formatTIN(event) {
+            let value = event.target.value.replace(/\D/g, '');
+            if (value.length >= 9) {
+                value = value.replace(/(\d{3})(\d{3})(\d{3})(\d{0,3})/, '$1-$2-$3-$4');
+            }
+            event.target.value = value;
+        }
+        
+        function validateStep() {
+            let isValid = true;
+            
+            // Required fields
+            const requiredFields = [
+                { id: 'first-name', message: 'First name is required' },
+                { id: 'last-name', message: 'Last name is required' },
+                { id: 'birth-date', message: 'Date of birth is required' },
+                { id: 'gender', message: 'Gender is required' },
+                { id: 'civil-status', message: 'Civil status is required' },
+                { id: 'birth-country', message: 'Country of birth is required' },
+                { id: 'citizenship', message: 'Citizenship is required' },
+                { id: 'residency-status', message: 'Residency status is required' },
+                { id: 'tin', message: 'Tax identification number is required' }
+            ];
+            
+            requiredFields.forEach(field => {
+                const element = document.getElementById(field.id);
+                if (!UniVaultRegistration.validateRequired(element.value)) {
+                    UniVaultRegistration.showError(field.id, field.message);
+                    isValid = false;
+                }
+            });
+            
+            // Validate age
+            if (document.getElementById('birth-date').value && !validateAge()) {
+                isValid = false;
+            }
+            
+            // Validate TIN format
+            const tin = document.getElementById('tin').value;
+            if (tin && !/^\d{3}-\d{3}-\d{3}-\d{3}$/.test(tin)) {
+                UniVaultRegistration.showError('tin', 'Please enter a valid TIN format (xxx-xxx-xxx-xxx)');
+                isValid = false;
+            }
+            
+            return isValid;
+        }
+        
+        function saveStepData() {
+            const formData = {
+                customer_first_name: document.getElementById('first-name').value,
+                customer_middle_name: document.getElementById('middle-name').value,
+                customer_last_name: document.getElementById('last-name').value,
+                customer_suffix_name: document.getElementById('suffix').value,
+                birth_date: document.getElementById('birth-date').value,
+                gender: document.getElementById('gender').value,
+                civil_status_code: document.getElementById('civil-status').value,
+                birth_country: document.getElementById('birth-country').value,
+                citizenship: document.getElementById('citizenship').value,
+                residency_status: document.getElementById('residency-status').value,
+                tax_identification_number: document.getElementById('tin').value
+            };
+            
+            UniVaultRegistration.saveFormData(CURRENT_STEP, formData);
+        }
+        
+        function goBack() {
+            UniVaultRegistration.goToPreviousStep(CURRENT_STEP);
+        }
+        
+        function proceedToNext() {
+            if (validateStep()) {
+                saveStepData();
+                UniVaultRegistration.goToNextStep(CURRENT_STEP);
+            }
+        }
+    </script>
+</body>
+</html>

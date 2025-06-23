@@ -1,95 +1,139 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Customer Type Selection</title>
-    <link rel="stylesheet" href="registration1.css" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Manjari:wght@100;400;700&display=swap"
-      rel="stylesheet"
-    />
-  </head>
-  <body>
-    <div class="customer-type-page">
-      <h1 class="direction-text">Customer Type</h1>
-      <script>
-        document.addEventListener('DOMContentLoaded', function() {
-          const accountOwner = document.getElementById('account-owner');
-          const businessOwner = document.getElementById('business-owner');
-          const form = document.querySelector('.checkbox-container');
-          const errorMessage = document.getElementById('error-message');
-
-          accountOwner.addEventListener('change', function() {
-            if (this.checked) {
-              businessOwner.checked = false;
-            }
-            errorMessage.textContent = '';
-          });
-
-          businessOwner.addEventListener('change', function() {
-            if (this.checked) {
-              accountOwner.checked = false;
-            }
-            errorMessage.textContent = '';
-          });
-
-          document.getElementById('back').addEventListener('click', function() {
-            window.location.href = 'entry.html';
-          });
-
-          form.addEventListener('submit', function(e) {
-            if (!accountOwner.checked && !businessOwner.checked) {
-              e.preventDefault();
-              errorMessage.textContent = 'Please select either Account Owner or Business Owner.';
-            }
-          });
-        });
-      </script>
-      <form class="checkbox-container" action="registration2.html">
-        <div class="checkbox">
-          <input type="checkbox" id="account-owner" />
-          <label>
-            <span class="title">Account Owner</span><br />
-            <span class="description">
-              For individuals opening a personal account for their own use.
-            </span>
-          </label>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Type Selection - UniVault Registration</title>
+    <link rel="stylesheet" href="shared.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manjari:wght@100;400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- Progress Bar -->
+        <div class="progress-bar">
+            <div class="progress-info">
+                <span class="step-indicator">Step 1 of 15: Customer Type</span>
+                <span>6.7%</span>
+            </div>
+            <div class="progress-track">
+                <div class="progress-fill" style="width: 6.7%"></div>
+            </div>
         </div>
-
-        <div class="checkbox">
-          <input type="checkbox" id="business-owner" name="customerType" />
-          <label>
-            <span class="title">Business Owner / Officer / Signatory</span
-            ><br />
-            <span class="description">
-              For individuals registering on behalf of a business or
-              organization.
-            </span>
-
-            <h5 class="additional-description">
-              <span class="blue-text">
-                Includes business owners, company officers, or authorized
-                signatories.
-              </span>
-            </h5>
-          </label>
+        
+        <!-- Content -->
+        <div class="content">
+            <h1 class="title">Select Customer Type</h1>
+            <p class="subtitle">Choose the type of account you want to open</p>
+            
+            <form id="step1-form">
+                <div class="checkbox-group">
+                    <div class="checkbox-item" data-value="Account Owner">
+                        <input type="radio" id="account-owner" name="customer_type" value="Account Owner">
+                        <div class="option-content">
+                            <div class="option-title">Account Owner</div>
+                            <div class="option-description">
+                                For individuals opening a personal account for their own use.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="checkbox-item" data-value="Business Owner">
+                        <input type="radio" id="business-owner" name="customer_type" value="Business Owner">
+                        <div class="option-content">
+                            <div class="option-title">Business Owner / Officer / Signatory</div>
+                            <div class="option-description">
+                                For individuals registering on behalf of a business or organization.
+                                Includes business owners, company officers, or authorized signatories.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="error-message" id="customer-type-error"></div>
+            </form>
+            
+            <!-- Navigation -->
+            <div class="button-container">
+                <button type="button" class="btn btn-secondary" onclick="goBack()">Back</button>
+                <button type="button" class="btn btn-primary" onclick="proceedToNext()">Continue</button>
+            </div>
         </div>
-
-        <div
-          id="error-message"
-          class="error-message"
-          style="font-size: 20px; color: red; padding-left: 40px"
-        ></div>
-
-        <div class="button-container">
-          <button id="back" type="button">Back</button>
-          <button id="proceed" type="submit">Proceed</button>
-        </div>
-      </form>
-      <script type="module" src="registration1.js"></script>
     </div>
-  </body>
+    
+    <script src="shared.js"></script>
+    <script>
+        const CURRENT_STEP = 1;
+        
+        // Initialize the step
+        document.addEventListener('DOMContentLoaded', function() {
+            UniVaultRegistration.initializeStep(CURRENT_STEP);
+            setupRadioSelection();
+        });
+        
+        function setupRadioSelection() {
+            const radioButtons = document.querySelectorAll('input[name="customer_type"]');
+            const items = document.querySelectorAll('.checkbox-item');
+            
+            items.forEach((item, index) => {
+                item.addEventListener('click', function() {
+                    radioButtons[index].checked = true;
+                    updateSelection();
+                });
+            });
+            
+            radioButtons.forEach(radio => {
+                radio.addEventListener('change', updateSelection);
+            });
+        }
+        
+        function updateSelection() {
+            const items = document.querySelectorAll('.checkbox-item');
+            const radioButtons = document.querySelectorAll('input[name="customer_type"]');
+            
+            items.forEach((item, index) => {
+                if (radioButtons[index].checked) {
+                    item.classList.add('selected');
+                } else {
+                    item.classList.remove('selected');
+                }
+            });
+            
+            UniVaultRegistration.clearError('customer-type-error');
+        }
+        
+        function validateStep() {
+            const selectedType = document.querySelector('input[name="customer_type"]:checked');
+            
+            if (!selectedType) {
+                UniVaultRegistration.showError('customer-type-error', 'Please select a customer type');
+                return false;
+            }
+            
+            return true;
+        }
+        
+        function saveStepData() {
+            const selectedType = document.querySelector('input[name="customer_type"]:checked');
+            
+            if (selectedType) {
+                UniVaultRegistration.saveFormData(CURRENT_STEP, {
+                    customer_type: selectedType.value
+                });
+            }
+        }
+        
+        function goBack() {
+            window.location.href = 'index.html';
+        }
+        
+        function proceedToNext() {
+            if (validateStep()) {
+                saveStepData();
+                UniVaultRegistration.goToNextStep(CURRENT_STEP);
+            }
+        }
+    </script>
+</body>
 </html>

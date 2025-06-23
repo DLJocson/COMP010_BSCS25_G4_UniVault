@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Application Submitted - UniVault Registration</title>
+    <link rel="stylesheet" href="shared.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manjari:wght@100;400;700&display=swap" rel="stylesheet">
+    <style>
+        .confirmation-container {
+            text-align: center;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        .success-icon {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, #28a745, #20c997);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 30px;
+            animation: bounceIn 0.8s ease-out;
+        }
+        .success-icon::before {
+            content: "✓";
+            color: white;
+            font-size: 3rem;
+            font-weight: bold;
+        }
+        .confirmation-title {
+            font-size: 2.5rem;
+            color: #28a745;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+        .confirmation-subtitle {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+        .reference-box {
+            background: #f8f9fa;
+            border: 2px dashed #667eea;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 30px 0;
+        }
+        .reference-number {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+        .reference-label {
+            font-size: 0.9rem;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .next-steps {
+            background: #e8f4fd;
+            border-radius: 10px;
+            padding: 25px;
+            margin: 30px 0;
+            text-align: left;
+        }
+        .next-steps h3 {
+            color: #333;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        .step-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 15px;
+            gap: 15px;
+        }
+        .step-number {
+            background: #667eea;
+            color: white;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.9rem;
+            flex-shrink: 0;
+        }
+        .step-content {
+            flex: 1;
+        }
+        .step-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        .step-description {
+            color: #666;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+        .contact-info {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 30px 0;
+        }
+        .contact-info h4 {
+            color: #856404;
+            margin-bottom: 10px;
+        }
+        .contact-info p {
+            color: #856404;
+            margin: 5px 0;
+            font-size: 0.9rem;
+        }
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 40px;
+            flex-wrap: wrap;
+        }
+        .btn-outline {
+            background: transparent;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+        .btn-outline:hover {
+            background: #667eea;
+            color: white;
+        }
+        @keyframes bounceIn {
+            0% {
+                transform: scale(0.3);
+                opacity: 0;
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            70% {
+                transform: scale(0.9);
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+        @media (max-width: 768px) {
+            .action-buttons {
+                flex-direction: column;
+            }
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Progress Bar -->
+        <div class="progress-bar">
+            <div class="progress-info">
+                <span class="step-indicator">Application Complete!</span>
+                <span>100%</span>
+            </div>
+            <div class="progress-track">
+                <div class="progress-fill" style="width: 100%"></div>
+            </div>
+        </div>
+        
+        <!-- Content -->
+        <div class="content">
+            <div class="confirmation-container">
+                <div class="success-icon"></div>
+                
+                <h1 class="confirmation-title">Application Submitted!</h1>
+                <p class="confirmation-subtitle">
+                    Thank you for choosing UniVault. Your account application has been successfully submitted and is now being processed.
+                </p>
+                
+                <div class="reference-box">
+                    <div class="reference-label">Application Reference Number</div>
+                    <div class="reference-number" id="reference-number">UV-2025-000000</div>
+                </div>
+                
+                <div class="next-steps">
+                    <h3>What Happens Next?</h3>
+                    
+                    <div class="step-item">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <div class="step-title">Application Review</div>
+                            <div class="step-description">Our team will review your application within 1-2 business days.</div>
+                        </div>
+                    </div>
+                    
+                    <div class="step-item">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <div class="step-title">Document Verification</div>
+                            <div class="step-description">We'll verify your submitted documents and may contact you for additional information.</div>
+                        </div>
+                    </div>
+                    
+                    <div class="step-item">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <div class="step-title">Account Approval</div>
+                            <div class="step-description">Once approved, you'll receive your account details and welcome package.</div>
+                        </div>
+                    </div>
+                    
+                    <div class="step-item">
+                        <div class="step-number">4</div>
+                        <div class="step-content">
+                            <div class="step-title">Account Activation</div>
+                            <div class="step-description">Follow the instructions in your welcome package to activate your account.</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="contact-info">
+                    <h4>Need Help?</h4>
+                    <p><strong>Email:</strong> support@univault.com</p>
+                    <p><strong>Phone:</strong> +63 912 345 6789</p>
+                    <p><strong>Hours:</strong> Monday to Friday, 9:00 AM – 5:00 PM</p>
+                </div>
+                
+                <div class="action-buttons">
+                    <button class="btn btn-primary" onclick="downloadSummary()">Download Summary</button>
+                    <button class="btn btn-outline" onclick="goToLogin()">Go to Login</button>
+                    <button class="btn btn-outline" onclick="startNewApplication()">Start New Application</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Generate reference number
+        document.addEventListener('DOMContentLoaded', function() {
+            generateReferenceNumber();
+            
+            // Clear registration data after successful submission
+            // (keeping submission data for reference)
+            setTimeout(() => {
+                if (confirm('Your application has been submitted successfully. Clear registration data from this browser?')) {
+                    localStorage.removeItem('univault_registration');
+                }
+            }, 5000);
+        });
+        
+        function generateReferenceNumber() {
+            const now = new Date();
+            const year = now.getFullYear();
+            const randomNum = Math.floor(Math.random() * 999999).toString().padStart(6, '0');
+            const refNumber = `UV-${year}-${randomNum}`;
+            
+            document.getElementById('reference-number').textContent = refNumber;
+            
+            // Save reference number
+            const submissionData = JSON.parse(localStorage.getItem('univault_submission') || '{}');
+            submissionData.reference_number = refNumber;
+            localStorage.setItem('univault_submission', JSON.stringify(submissionData));
+        }
+        
+        function downloadSummary() {
+            const submissionData = JSON.parse(localStorage.getItem('univault_submission') || '{}');
+            const refNumber = submissionData.reference_number || 'UV-2025-000000';
+            
+            // Create a simple text summary
+            let summary = `UniVault Account Application Summary\n`;
+            summary += `=====================================\n\n`;
+            summary += `Reference Number: ${refNumber}\n`;
+            summary += `Submission Date: ${new Date().toLocaleDateString()}\n\n`;
+            
+            // Add submitted data
+            Object.entries(submissionData).forEach(([key, value]) => {
+                if (key !== 'reference_number' && key !== 'submission_timestamp') {
+                    summary += `${key.replace(/_/g, ' ').toUpperCase()}: ${Array.isArray(value) ? value.join(', ') : value}\n`;
+                }
+            });
+            
+            summary += `\n\nThank you for choosing UniVault!\n`;
+            summary += `For questions, contact: support@univault.com\n`;
+            
+            // Download as text file
+            const blob = new Blob([summary], { type: 'text/plain' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `UniVault_Application_${refNumber}.txt`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+        }
+        
+        function goToLogin() {
+            window.location.href = 'login.html';
+        }
+        
+        function startNewApplication() {
+            if (confirm('This will start a new application process. Continue?')) {
+                localStorage.removeItem('univault_registration');
+                window.location.href = 'index.html';
+            }
+        }
+    </script>
+</body>
+</html>

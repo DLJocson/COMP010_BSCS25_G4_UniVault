@@ -1,0 +1,26 @@
+{
+  "name": "univault-banking-system",
+  "version": "1.0.0",
+  "description": "Customer information management system for banking",
+  "scripts": {
+    "start": "node 2_backend/server.js",
+    "dev": "nodemon 2_backend/server.js",
+    "db:setup": "mysql -u root -p < 3_database/db_univault_schema.sql",
+    "db:seed": "mysql -u root -p univault_schema < 3_database/db_univault_seed.sql",
+    "build": "echo 'Frontend is static - no build required'",
+    "test": "echo 'No tests configured yet'"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.2",
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "multer": "^2.0.1",
+    "mysql2": "^3.14.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.0"
+  },
+  "keywords": ["banking", "customer-management", "mysql", "nodejs"],
+  "author": "COMP010_BSCS25_G4",
+  "license": "ISC"
+}
