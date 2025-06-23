@@ -554,9 +554,10 @@ input[type="checkbox"] {
 
 .top-label-2 {
   display: flex;
-  font-size: 18px;
+  font-size: 16px;
   align-items: center;
-  gap: 5.8em;
+  gap: 2em;
+  justify-content: space-between;
 }
 
 .account-info-card {
@@ -605,7 +606,12 @@ input[type="checkbox"] {
 
 .top-label-2 > * {
   text-align: center;
-  min-width: 5em;
+  min-width: 8em;
+  max-width: 12em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
 }
 
 .top-label-3 > * {

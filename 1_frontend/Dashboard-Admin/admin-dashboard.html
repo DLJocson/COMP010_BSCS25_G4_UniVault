@@ -46,7 +46,7 @@
           <nav class="nav-bar">
             <input type="text" id="search" placeholder="Search" />
             <div class="icon-container">
-              <img id="log-out" src="/assets/log-out-logo.png" alt="Log Out" />
+              <img id="log-out" src="../assets/log-out-logo.png" alt="Log Out" />
             </div>
           </nav>
 
@@ -64,7 +64,7 @@
               <div class="rejected">
                 <div class="title-logo-container">
                   <div class="logo-container">
-                    <img src="/assets/rejected.png" alt="" />
+                    <img src="../assets/rejected.png" alt="" />
                   </div>
 
                   <div class="title">
@@ -78,7 +78,7 @@
               <div class="pending-applications">
                 <div class="title-logo-container">
                   <div class="logo-container">
-                    <img src="/assets/pending.png" alt="" />
+                    <img src="../assets/pending.png" alt="" />
                   </div>
 
                   <div class="title">
@@ -92,7 +92,7 @@
               <div class="pending-approvals">
                 <div class="title-logo-container">
                   <div class="logo-container">
-                    <img src="/assets/pending-approvals.png" alt="" />
+                    <img src="../assets/pending-approvals.png" alt="" />
                   </div>
 
                   <div class="title">
@@ -105,31 +105,56 @@
               </div>
             </div>
             <div class="second-div">
-              <div class="graph">
+                <div class="graph">
                 <div class="title-logo-container">
                   <div class="logo-container">
-                    <img src="/assets/graph.png" alt="" />
+                  <img src="../assets/graph.png" alt="" />
                   </div>
 
-                  <div class="title">
-                    <h2 class="title-name">Last Month's Statistics</h2>
-
+                    <div class="title">
+                    <h2 class="title-name">Monthly Statistics</h2>
                     <label class="date">as of 06/14/2025</label>
+                    </div>
                   </div>
-                </div>
 
-                <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+                  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-                <div class="container">
-                  <canvas id="myChart" width="600" height="400"></canvas>
-                </div>
-                <script src="try.js"></script>
-              </div>
+                  <div class="container" style="width:100%; max-width:900px; margin:auto;">
+                    <canvas id="myChart" style="width:100%; height:400px; max-height:60vw;"></canvas>
+                  </div>
+                  <script>
+                    document.addEventListener('DOMContentLoaded', function () {
+                    const ctx = document.getElementById('myChart').getContext('2d');
+                    new Chart(ctx, {
+                      type: 'bar',
+                      data: {
+                      labels: ['January', 'February', 'March', 'April', 'May', 'June'],
+                      datasets: [{
+                        label: 'Applications',
+                        data: [12, 19, 14, 17, 10, 15],
+                        backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1
+                      }]
+                      },
+                      options: {
+                      responsive: true,
+                      maintainAspectRatio: false,
+                      scales: {
+                        y: {
+                        beginAtZero: true
+                        }
+                      }
+                      }
+                    });
+                    });
+                  </script>
+                  </div>
               <div class="vertical-div">
                 <div class="new-accounts">
                   <div class="title-logo-container">
                     <div class="logo-container">
-                      <img src="/assets/new-account.png" alt="" />
+                      <img src="../assets/new-account.png" alt="" />
                     </div>
 
                     <div class="title">
@@ -143,7 +168,7 @@
                 <div class="verified">
                   <div class="title-logo-container">
                     <div class="logo-container">
-                      <img src="/assets/verified.png" alt="" />
+                      <img src="../assets/verified.png" alt="" />
                     </div>
 
                     <div class="title">
@@ -157,7 +182,7 @@
                 <div class="total-customers">
                   <div class="title-logo-container">
                     <div class="logo-container">
-                      <img src="/assets/total.png" alt="" />
+                      <img src="../assets/total.png" alt="" />
                     </div>
 
                     <div class="title">
@@ -174,5 +199,6 @@
         </div>
       </div>
     </div>
+    <script src="admin-dashboard.js"></script>
   </body>
 </html>

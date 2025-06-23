@@ -49,11 +49,54 @@ document.addEventListener("DOMContentLoaded", () => {
   username.addEventListener("input", validate);
   password.addEventListener("input", validate);
 
-  proceedBtn.addEventListener("click", (e) => {
+  proceedBtn.addEventListener("click", async (e) => {
+    e.preventDefault();
+    
     if (!validate()) {
-      e.preventDefault();
-    } else {
-      window.location.href = "admin-dashboard.html";
+      return;
+    }
+
+    const uname = username.value.trim();
+    const pw = password.value.trim();
+
+    // Show loading state
+    proceedBtn.disabled = true;
+    proceedBtn.textContent = "Logging In...";
+
+    try {
+      const response = await fetch('/admin/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          employee_username: uname,
+          employee_password: pw
+        })
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        // Store admin session data
+        localStorage.setItem('employee_id', data.employee_id);
+        localStorage.setItem('employee_username', uname);
+        localStorage.setItem('employee_position', data.employee_position);
+
+        // Redirect to dashboard
+        window.location.href = "admin-dashboard.html";
+      } else {
+        // Show error message
+        errorMessages[1].textContent = data.message || 'Login failed';
+        password.classList.add("error");
+      }
+    } catch (error) {
+      console.error('Admin login error:', error);
+      errorMessages[1].textContent = 'Connection error. Please try again.';
+      password.classList.add("error");
+    } finally {
+      proceedBtn.disabled = false;
+      proceedBtn.textContent = "Log In";
     }
   });
 });

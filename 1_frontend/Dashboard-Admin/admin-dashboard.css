@@ -517,6 +517,18 @@ input[type="checkbox"] {
   color: #004ea8;
 }
 
+.orange-text {
+  color: #ff9500;
+}
+
+.red-text {
+  color: #dc3545;
+}
+
+.gray-text {
+  color: #6c757d;
+}
+
 .checkbox label {
   font-size: 32px;
 }
@@ -706,12 +718,59 @@ input[type="checkbox"] {
 
 .number {
   text-align: center;
-  font-size: 75px;
+  font-size: 36px;
   font-weight: bold;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .container {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.welcome {
+  font-size: 42px;
+}
+
+.title h2 {
+  font-size: 28px;
+}
+
+.account-info h2 {
+  font-size: 32px;
+}
+
+.progress-step .label {
+  font-size: 26px;
+}
+
+.account-nickname label,
+.account-number label,
+.open-close-date label,
+.current-balance label,
+.biometrics-type label {
+  font-size: 22px;
+}
+
+.customer-options a {
+  font-size: 22px;
+}
+
+.checkbox label {
+  font-size: 24px;
+}
+
+.number {
+  font-size: 32px;
+}
+
+.title .title-name {
+  font-size: 32px;
+}
+
+.date {
+  font-size: 18px;
 }

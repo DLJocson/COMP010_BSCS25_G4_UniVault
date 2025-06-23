@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>UniVault - Login</title>
     <link rel="stylesheet" href="login.css" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -15,29 +15,103 @@
   </head>
   <body>
     <div class="log-in-page">
-      <img src="../assets/logowtext.png" alt="" />
+      <img src="../assets/logo.png" alt="UniVault Logo" />
 
-      <div class="text-box">
-        <input type="text" placeholder="Enter Account Number" />
-        <input class="password" type="password" placeholder="Enter Password" />
-      </div>
+      <form id="loginForm">
+        <div class="text-box" style="display: flex; flex-direction: column; align-items: center;">
+          <input 
+        type="text" 
+        id="username" 
+        name="username" 
+        placeholder="Enter Username" 
+        required 
+        style="width: 100%; max-width: 300px; text-align: left;"
+          />
+          <input 
+        class="password" 
+        type="password" 
+        id="password" 
+        name="password" 
+        placeholder="Enter Password" 
+        required 
+        style="width: 100%; max-width: 300px; text-align: left; margin-top: 10px;"
+          />
+        </div>
 
-      <div class="button">
-        <button>Log In</button>
-      </div>
+        <div id="error-message" style="color: red; margin: 10px 0; text-align: center; display: none;"></div>
+
+        <div class="button">
+          <button type="submit" id="loginBtn">Log In</button>
+        </div>
+      </form>
 
       <div class="forgot-password">
         <a href="#">Forgot Password</a>
       </div>
+
+      <div style="text-align: center; margin-top: 10px;">
+        <button class="admin-login-btn" onclick="window.location.href='../Dashboard-Admin/admin-login.html'">
+          Admin Login
+        </button>
+      </div>
+
+      <div style="text-align: center; margin-top: 20px;">
+        <a href="registration1.html" style="color: #1976d2; text-decoration: none;">
+          Don't have an account? Register here
+        </a>
+      </div>
     </div>
+
+    <script>
+      document.getElementById('loginForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+        const errorDiv = document.getElementById('error-message');
+        const loginBtn = document.getElementById('loginBtn');
+        
+        // Clear previous errors
+        errorDiv.style.display = 'none';
+        loginBtn.disabled = true;
+        loginBtn.textContent = 'Logging In...';
+        
+        try {
+          const response = await fetch('/login', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              customer_username: username,
+              customer_password: password
+            })
+          });
+          
+          const data = await response.json();
+          
+          if (response.ok) {
+            // Store user info in localStorage
+            localStorage.setItem('cif_number', data.cif_number);
+            localStorage.setItem('customer_username', username);
+            
+            // Redirect to customer dashboard
+            window.location.href = data.redirect;
+          } else {
+            errorDiv.textContent = data.message || 'Login failed';
+            errorDiv.style.display = 'block';
+          }
+        } catch (error) {
+          console.error('Login error:', error);
+          errorDiv.textContent = 'Connection error. Please try again.';
+          errorDiv.style.display = 'block';
+        } finally {
+          loginBtn.disabled = false;
+          loginBtn.textContent = 'Log In';
+        }
+      });
+    </script>
   </body>
 </html>
 
 <style>
-  body {
-    background-image: url('../assets/bg.png');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-  }
-</style>

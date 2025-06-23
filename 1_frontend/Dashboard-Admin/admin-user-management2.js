@@ -8,14 +8,14 @@ document.addEventListener('DOMContentLoaded', function() {
         return;
     }
 
-    // Load customers
-    loadCustomers();
+    // Load employees
+    loadEmployees();
     
     // Set up search functionality
     const searchInput = document.getElementById('search');
     if (searchInput) {
         searchInput.addEventListener('input', debounce(function() {
-            loadCustomers(this.value);
+            loadEmployees(this.value);
         }, 300));
     }
     
@@ -31,61 +31,55 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-async function loadCustomers(searchTerm = '') {
+async function loadEmployees(searchTerm = '') {
     try {
-        let url = '/admin/customers';
+        let url = '/admin/employees';
         if (searchTerm) {
             url += `?search=${encodeURIComponent(searchTerm)}`;
         }
         
         const response = await fetch(url);
-        const customers = await response.json();
+        const employees = await response.json();
         
         if (response.ok) {
-            displayCustomers(customers);
+            displayEmployees(employees);
         } else {
-            console.error('Failed to load customers:', customers.message);
+            console.error('Failed to load employees:', employees.message);
         }
     } catch (error) {
-        console.error('Error loading customers:', error);
+        console.error('Error loading employees:', error);
     }
 }
 
-function displayCustomers(customers) {
+function displayEmployees(employees) {
     const container = document.querySelector('.transaction-info');
     if (!container) return;
     
-    // Clear existing customer cards (keep the header)
+    // Clear existing employee cards (keep the header)
     const existingCards = container.querySelectorAll('.account-info-card');
     existingCards.forEach(card => card.remove());
     
-    customers.forEach(customer => {
-        const customerCard = createCustomerCard(customer);
-        container.appendChild(customerCard);
+    employees.forEach(employee => {
+        const employeeCard = createEmployeeCard(employee);
+        container.appendChild(employeeCard);
     });
 }
 
-function createCustomerCard(customer) {
+function createEmployeeCard(employee) {
     const card = document.createElement('div');
     card.className = 'account-info-card';
-    card.onclick = () => {
-        window.location.href = `admin-customer-profile.html?cif=${customer.cif_number}`;
-    };
     
-    const statusClass = getStatusClass(customer.customer_status);
+    const statusClass = getStatusClass(employee.employee_status);
     
     card.innerHTML = `
         <div class="account">
             <div class="top-label-2">
-                <label>${customer.cif_number}</label>
-                <label>${customer.customer_type}</label>
-                <label>${customer.customer_last_name}</label>
-                <label>${customer.customer_first_name}</label>
-                <label>${customer.customer_middle_name || 'N/A'}</label>
-                <label>${customer.customer_suffix_name || 'N/A'}</label>
-                <label>${customer.email || 'N/A'}</label>
-                <label>${customer.phone || 'N/A'}</label>
-                <label class="${statusClass}">${customer.customer_status}</label>
+                <label>E${employee.employee_id.toString().padStart(6, '0')}</label>
+                <label>${employee.employee_last_name}</label>
+                <label>${employee.employee_first_name}</label>
+                <label>N/A</label>
+                <label>N/A</label>
+                <label class="${statusClass}">${employee.employee_status || 'Active'}</label>
             </div>
         </div>
     `;
@@ -96,10 +90,9 @@ function createCustomerCard(customer) {
 function getStatusClass(status) {
     switch(status) {
         case 'Active': return 'blue-text';
-        case 'Pending Verification': return 'orange-text';
+        case 'Inactive': return 'orange-text';
         case 'Suspended': return 'red-text';
-        case 'Inactive': return 'gray-text';
-        default: return '';
+        default: return 'blue-text';
     }
 }
 

@@ -34,10 +34,12 @@ body {
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  height: 755px;
-  width: 620px;
+  height: auto;
+  min-height: 600px;
+  width: 420px;
   background-color: white;
   box-shadow: 0 5px 5px rgba(0, 0, 0, 0.4);
+  padding: 32px 24px;
   animation: slideUp 0.8s cubic-bezier(.68,-0.55,.27,1.55);
 }
 
@@ -53,12 +55,12 @@ body {
 }
 
 img {
-  width: 1500px;
-  height: 800px;
+  width: 200px;
+  height: auto;
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  margin: -200px;
+  margin: 0 0 24px 0;
   animation: fadeInImg 1.2s 0.2s both;
 }
 
@@ -73,10 +75,11 @@ input[type="password"] {
   justify-content: center;
   align-items: center;
   border-radius: 10px;
-  width: 550px;
-  height: 50px;
-  font-size: 32px;
-  margin-bottom: 20px;
+  width: 90%;
+  max-width: 500px;
+  height: 44px;
+  font-size: 24px;
+  margin-bottom: 16px;
   padding-left: 10px;
   border: 3px solid var(--tertiary-color);
   transition: border-color 0.3s, box-shadow 0.3s, transform 0.2s;
@@ -104,9 +107,9 @@ input[type="password"]:focus {
   transform: scale(1.03);
 }
 
-input[type="text"]:focus select:focus {
+input[type="text"]:focus,
+select:focus {
   border-color: #0053c7;
-  box-shadow: 0 0 8px rgba(0, 114, 216, 0.3);
 }
 
 .button {
@@ -114,7 +117,7 @@ input[type="text"]:focus select:focus {
   justify-content: center;
   align-items: center;
   width: 100%;
-  padding-top: 50px;
+  padding-top: 24px;
   animation: fadeInButton 0.8s 0.3s both;
 }
 
@@ -140,13 +143,12 @@ input[type="text"]:focus select:focus {
 button:hover {
   background-color: #5c95ec;
   scale: 1.04;
-  box-shadow: 0 4px 16px rgba(0,114,216,0.13);
 }
 
 .forgot-password {
-  padding-top: 20px;
-  padding-bottom: 30px;
-  margin-bottom: 130px;
+  padding-top: 12px;
+  padding-bottom: 12px;
+  margin-bottom: 24px;
   animation: fadeInForgot 0.8s 0.5s both;
 }
 
@@ -199,4 +201,75 @@ input[type="password"]:focus::placeholder {
   opacity: 0.5;
   color: #5c95ec;
   transition: color 0.3s, opacity 0.3s;
+}
+
+.admin-login-btn {
+  height: 50px;
+  width: 239px;
+  background-color: var(--secondary-color);
+  color: white;
+  border: 0px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 25px;
+  font-family: var(--font-family);
+  transition: background 0.3s, scale 0.2s, box-shadow 0.2s;
+  box-shadow: 0 2px 8px rgba(0, 78, 168, 0.10);
+  margin-top: 0; /* Remove top margin for tight stacking */
+  margin-bottom: 24px; /* Add space below the button */
+  animation: fadeInButton 0.8s 0.6s both; /* Delay after forgot-password */
+  outline: 2px solid var(--secondary-color);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.admin-login-btn:hover {
+  background-color: var(--tertiary-color);
+  scale: 1.04;
+  box-shadow: 0 4px 16px rgba(0,114,216,0.13);
+}
+
+.log-in-page img,
+img {
+  width: 150px;
+  max-width: 100%;
+  height: auto;
+  background: none;
+  margin-bottom: 50px; /* Increased spacing below image */
+}
+
+.log-in-page input[type="text"],
+.log-in-page input[type="password"] {
+  font-size: 18px;
+  height: 36px;
+  max-width: 400px;
+  padding-left: 8px;
+}
+
+.log-in-page input[type="text"]::placeholder,
+.log-in-page input[type="password"]::placeholder {
+  font-size: 20px;
+}
+
+.log-in-page .button button,
+.log-in-page .admin-login-btn {
+  font-size: 18px;
+  height: 40px;
+  width: 180px;
+  border-radius: 16px;
+}
+
+.log-in-page .forgot-password {
+  font-size: 15px;
+}
+
+.log-in-page,
+.log-in-page * {
+  font-size: 15px;
+}
+
+.log-in-page label,
+.log-in-page a {
+  font-size: 15px;
 }

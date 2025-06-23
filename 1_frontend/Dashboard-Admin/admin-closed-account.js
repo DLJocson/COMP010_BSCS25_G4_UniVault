@@ -8,14 +8,14 @@ document.addEventListener('DOMContentLoaded', function() {
         return;
     }
 
-    // Load customers
-    loadCustomers();
+    // Load closed accounts
+    loadClosedAccounts();
     
     // Set up search functionality
     const searchInput = document.getElementById('search');
     if (searchInput) {
         searchInput.addEventListener('input', debounce(function() {
-            loadCustomers(this.value);
+            loadClosedAccounts(this.value);
         }, 300));
     }
     
@@ -31,76 +31,65 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-async function loadCustomers(searchTerm = '') {
+async function loadClosedAccounts(searchTerm = '') {
     try {
-        let url = '/admin/customers';
-        if (searchTerm) {
-            url += `?search=${encodeURIComponent(searchTerm)}`;
-        }
-        
-        const response = await fetch(url);
-        const customers = await response.json();
+        const response = await fetch('/admin/closed-accounts');
+        const closedAccounts = await response.json();
         
         if (response.ok) {
-            displayCustomers(customers);
+            let filteredAccounts = closedAccounts;
+            if (searchTerm) {
+                filteredAccounts = closedAccounts.filter(account => 
+                    account.customer_first_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    account.customer_last_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    account.cif_number.toString().includes(searchTerm)
+                );
+            }
+            displayClosedAccounts(filteredAccounts);
         } else {
-            console.error('Failed to load customers:', customers.message);
+            console.error('Failed to load closed accounts:', closedAccounts.message);
         }
     } catch (error) {
-        console.error('Error loading customers:', error);
+        console.error('Error loading closed accounts:', error);
     }
 }
 
-function displayCustomers(customers) {
+function displayClosedAccounts(accounts) {
     const container = document.querySelector('.transaction-info');
     if (!container) return;
     
-    // Clear existing customer cards (keep the header)
+    // Clear existing account cards (keep the header)
     const existingCards = container.querySelectorAll('.account-info-card');
     existingCards.forEach(card => card.remove());
     
-    customers.forEach(customer => {
-        const customerCard = createCustomerCard(customer);
-        container.appendChild(customerCard);
+    accounts.forEach(account => {
+        const accountCard = createClosedAccountCard(account);
+        container.appendChild(accountCard);
     });
 }
 
-function createCustomerCard(customer) {
+function createClosedAccountCard(account) {
     const card = document.createElement('div');
     card.className = 'account-info-card';
-    card.onclick = () => {
-        window.location.href = `admin-customer-profile.html?cif=${customer.cif_number}`;
-    };
     
-    const statusClass = getStatusClass(customer.customer_status);
+    const formattedDate = account.closed_date ? new Date(account.closed_date).toLocaleString() : 'N/A';
     
     card.innerHTML = `
         <div class="account">
             <div class="top-label-2">
-                <label>${customer.cif_number}</label>
-                <label>${customer.customer_type}</label>
-                <label>${customer.customer_last_name}</label>
-                <label>${customer.customer_first_name}</label>
-                <label>${customer.customer_middle_name || 'N/A'}</label>
-                <label>${customer.customer_suffix_name || 'N/A'}</label>
-                <label>${customer.email || 'N/A'}</label>
-                <label>${customer.phone || 'N/A'}</label>
-                <label class="${statusClass}">${customer.customer_status}</label>
+                <label>${account.cif_number}</label>
+                <label>${formattedDate}</label>
+                <label>${account.customer_type}</label>
+                <label>${account.customer_last_name}</label>
+                <label>${account.customer_first_name}</label>
+                <label>${account.customer_middle_name || 'N/A'}</label>
+                <label>${account.customer_suffix_name || 'N/A'}</label>
+                <label class="red-text">Closed</label>
             </div>
         </div>
     `;
     
     return card;
-}
-
-function getStatusClass(status) {
-    switch(status) {
-        case 'Active': return 'blue-text';
-        case 'Pending Verification': return 'orange-text';
-        case 'Suspended': return 'red-text';
-        case 'Inactive': return 'gray-text';
-        default: return '';
-    }
 }
 
 function debounce(func, wait) {

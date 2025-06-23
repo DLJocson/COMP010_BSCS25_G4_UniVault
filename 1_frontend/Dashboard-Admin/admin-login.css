@@ -1,0 +1,202 @@
+:root {
+    --primary-color: #1f65b4;
+    --secondary-color: #004ea8;
+    --tertiary-color: #0072d8;
+    --font-family: "Manjari", sans-serif;
+}
+
+/* Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-family);
+    background: url("../assets/bg.png");
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: fadeInBody 1s ease;
+    font-size: 22px; /* Increased base font size */
+}
+
+/* Typography */
+.admin-login-page,
+.admin-login-page * {
+    font-family: var(--font-family) !important;
+    font-size: 22px; /* Increased font size */
+}
+
+/* Animations */
+@keyframes fadeInBody {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+@keyframes slideUp {
+    from { transform: translateY(60px) scale(0.97); opacity: 0; }
+    to { transform: translateY(0) scale(1); opacity: 1; }
+}
+@keyframes fadeInImg {
+    from { opacity: 0; transform: scale(0.98);}
+    to { opacity: 1; transform: scale(1);}
+}
+@keyframes fadeInInput {
+    from { opacity: 0; transform: translateY(30px);}
+    to { opacity: 1; transform: translateY(0);}
+}
+@keyframes fadeInButton {
+    from { opacity: 0; transform: translateY(20px);}
+    to { opacity: 1; transform: translateY(0);}
+}
+@keyframes fadeInForgot {
+    from { opacity: 0; transform: translateY(10px);}
+    to { opacity: 1; transform: translateY(0);}
+}
+
+/* Layout Containers */
+.admin-login-page {
+    width: 100%;
+    max-width: 600px; /* Increased max width */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.login-container {
+    background: #fff;
+    border-radius: 40px; /* Increased border radius */
+    padding: 60px 48px 48px; /* Increased padding */
+    box-shadow: 0 8px 32px rgba(0,0,0,0.15), 0 4px 16px rgba(0,114,216,0.09);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 800px; /* Increased min height */
+    animation: slideUp 0.8s cubic-bezier(.68,-0.55,.27,1.55);
+}
+
+/* Logo Section */
+.logo-section {
+    text-align: center;
+    margin-bottom: 48px; /* Increased margin */
+}
+.logo-section img {
+    width: 220px; /* Increased width */
+    max-width: 100%;
+    height: auto;
+    margin-bottom: 36px; /* Increased margin */
+    animation: fadeInImg 1.2s 0.2s both;
+}
+.logo-section h2 {
+    color: #333;
+    font-weight: 700;
+    font-size: 36px; /* Increased font size */
+}
+
+/* Form Styles */
+.form-group {
+    margin-bottom: 32px; /* Increased margin */
+    width: 100%;
+}
+.form-group label {
+    display: block;
+    margin-bottom: 10px; /* Increased margin */
+    color: #555;
+    font-weight: 600;
+    font-size: 22px; /* Increased font size */
+}
+.form-group input {
+    width: 100%;
+    padding: 18px 18px; /* Increased padding */
+    border: 4px solid var(--tertiary-color); /* Increased border */
+    border-radius: 16px; /* Increased border radius */
+    font-size: 26px; /* Increased font size */
+    transition: border-color 0.3s, box-shadow 0.3s, transform 0.2s;
+    margin-bottom: 8px; /* Increased margin */
+    animation: fadeInInput 0.7s both;
+}
+.form-group input::placeholder {
+    font-size: 26px; /* Increased font size */
+    opacity: 0.7;
+    transition: opacity 0.3s;
+}
+.form-group input:focus {
+    outline: none;
+    border-color: #0053c7;
+    box-shadow: 0 6px 16px rgba(0,114,216,0.13);
+    transform: scale(1.04);
+}
+.form-group input:focus::placeholder {
+    opacity: 0.5;
+    color: #5c95ec;
+}
+
+/* Error Message */
+.error-message {
+    background: #ffe6e6;
+    color: #d00;
+    padding: 18px; /* Increased padding */
+    border-radius: 8px; /* Increased border radius */
+    margin-bottom: 24px; /* Increased margin */
+    font-size: 20px; /* Increased font size */
+    width: 100%;
+    text-align: center;
+}
+
+/* Buttons */
+.login-btn,
+.admin-login-btn {
+    width: 260px; /* Increased width */
+    height: 60px; /* Increased height */
+    background: var(--secondary-color);
+    color: #fff;
+    border: none;
+    border-radius: 24px; /* Increased border radius */
+    font-size: 26px; /* Increased font size */
+    font-weight: 600;
+    cursor: pointer;
+    font-family: var(--font-family);
+    transition: background 0.3s, scale 0.2s, box-shadow 0.2s;
+    box-shadow: 0 4px 16px rgba(0,78,168,0.13);
+    margin-bottom: 36px; /* Increased margin */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: fadeInButton 0.8s 0.3s both;
+    outline: 3px solid var(--secondary-color); /* Increased outline */
+}
+.login-btn:hover,
+.admin-login-btn:hover {
+    background-color: var(--tertiary-color);
+    scale: 1.06;
+    box-shadow: 0 8px 32px rgba(0,114,216,0.15);
+}
+.login-btn:disabled,
+.admin-login-btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+/* Links */
+.forgot-password,
+.back-link {
+    text-align: center;
+    margin-top: 18px; /* Increased margin */
+    margin-bottom: 36px; /* Increased margin */
+    font-size: 20px; /* Increased font size */
+    animation: fadeInForgot 0.8s 0.5s both;
+}
+.forgot-password a,
+.back-link a {
+    color: var(--secondary-color);
+    text-decoration: none;
+    transition: color 0.2s;
+    font-size: 20px; /* Increased font size */
+}
+.forgot-password a:hover,
+.back-link a:hover {
+    color: var(--tertiary-color);
+    text-decoration: underline;
+}
