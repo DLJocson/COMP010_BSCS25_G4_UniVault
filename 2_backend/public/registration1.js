@@ -2,6 +2,7 @@ const accountOwner = document.getElementById("account-owner");
 const businessOwner = document.getElementById("business-owner");
 const form = document.querySelector("form");
 const errorMessage = document.getElementById("error-message");
+let proceedBtn; // Declare proceedBtn here
 
 function handleExclusiveSelection(clickedCheckbox) {
   [accountOwner, businessOwner].forEach((checkbox) => {
@@ -10,6 +11,7 @@ function handleExclusiveSelection(clickedCheckbox) {
     }
   });
 
+  // Clear error message when a selection is made
   errorMessage.textContent = "";
 }
 
@@ -23,9 +25,10 @@ form.addEventListener("submit", function (event) {
   if (!accountOwner.checked && !businessOwner.checked) {
     errorMessage.textContent =
       "Please select a customer type before proceeding.";
-    return;
+    return; // Stop here, do not proceed
   }
 
+<<<<<<< HEAD:2_backend/public/registration1.js
   // Store customer type in localStorage
   if (accountOwner.checked) {
     localStorage.setItem("customer_type", "Account Owner");
@@ -34,8 +37,31 @@ form.addEventListener("submit", function (event) {
     localStorage.setItem("customer_type", "Business Owner");
     window.location.href = "registration2.html";
   }
+=======
+  // Save only customer type to localStorage
+  let customerType = '';
+  if (accountOwner.checked) customerType = 'account_owner';
+  if (businessOwner.checked) customerType = 'business_owner';
+  localStorage.setItem('customer_type', customerType);
+
+  // Only proceed if a selection is made
+  window.location.href = "registration2.html";
+>>>>>>> main:1_frontend/Registration-Customer/registration1.js
 });
 
 document.getElementById("back").addEventListener("click", () => {
   window.location.href = "entry.html";
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+  // Clear all registration-related keys at the start of registration
+  [
+    'customer_first_name', 'customer_middle_name', 'customer_last_name', 'customer_suffix_name',
+    'customer_type', 'customer_username', 'password', 'birth_date', 'gender',
+    'civil_status_code', 'birth_country', 'citizenship'
+  ].forEach(k => localStorage.removeItem(k));
+
+  proceedBtn = document.getElementById("proceed"); // Define proceedBtn here
+  // --- AUTO-FILL REMOVED ---
+  // (No auto-fill code here; user will fill out manually)
 });

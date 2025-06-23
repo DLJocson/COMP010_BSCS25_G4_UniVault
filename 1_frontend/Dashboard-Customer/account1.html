@@ -17,21 +17,45 @@
     />
   </head>
   <body>
+    <!-- Customer Info Section -->
+    <div
+      id="customer-info"
+      style="
+        padding: 24px;
+        background: #e5f5ff;
+        margin-bottom: 16px;
+        border-radius: 10px;
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+      "
+    >
+      <h2>Customer Profile</h2>
+      <ul style="list-style: none; padding: 0;">
+        <li><b>Name:</b> <span id="customer-name"></span></li>
+        <li><b>Account Type:</b> <span id="customer-type"></span></li>
+      </ul>
+    </div>
+
     <div class="deposit-page">
       <div class="page-wrapper">
         <div class="left-side-bar">
           <div class="customer-options">
             <div class="customer-options-container">
-              <a id="account-option" href="">Accounts</a>
+              <a id="account-option" href="account1.html">Accounts</a>
             </div>
             <div class="customer-options-container">
               <a id="transaction-option" href="transaction1.html"
                 >Transactions</a
               >
             </div>
-            <div class="customer-options-container"><a href="">Profile</a></div>
             <div class="customer-options-container">
-              <a href="">Close Accounts</a>
+              <a id="profile-option" href="profile.html">Profile</a>
+            </div>
+            <div class="customer-options-container">
+              <a id="close-account-option" href="close-account.html"
+                >Close Accounts</a
+              >
             </div>
           </div>
         </div>
@@ -40,16 +64,6 @@
           <nav class="nav-bar">
             <input type="text" id="search" placeholder="Search" />
             <div class="icon-container">
-              <img
-                id="notif"
-                src="/assets/notif-logo.png"
-                alt="Notifications"
-              />
-              <img
-                id="settings"
-                src="/assets/settings-logo.png"
-                alt="Settings"
-              />
               <img id="log-out" src="/assets/log-out-logo.png" alt="Log Out" />
             </div>
           </nav>
@@ -74,26 +88,77 @@
               <div class="label">Deposits</div>
             </div>
             <div class="progress-step">
-              <div class="circle"></div>
-              <div class="label">Cards</div>
+              <div
+                onclick="window.location.href='account2.html'"
+                class="circle"
+              ></div>
+              <div onclick="window.location.href='account2.html'" class="label">
+                Cards
+              </div>
             </div>
             <div class="progress-step">
-              <div class="circle"></div>
-              <div class="label">Loans</div>
+              <div
+                onclick="window.location.href='account3.html'"
+                class="circle"
+              ></div>
+              <div onclick="window.location.href='account3.html'" class="label">
+                Loans
+              </div>
             </div>
             <div class="progress-step">
-              <div class="circle"></div>
-              <div class="label">Wealth<br />Management</div>
+              <div
+                onclick="window.location.href='account4.html'"
+                class="circle"
+              ></div>
+              <div onclick="window.location.href='account4.html'" class="label">
+                Wealth <br />
+                Management
+              </div>
             </div>
             <div class="progress-step">
-              <div class="circle"></div>
-              <div class="label">Insurance</div>
+              <div
+                onclick="window.location.href='account5.html'"
+                class="circle"
+              ></div>
+              <div onclick="window.location.href='account5.html'" class="label">
+                Insurance
+              </div>
             </div>
           </div>
 
           <div class="page-body">
             <div class="account-info">
-              <h2>Accounts</h2>
+              <div class="transaction-info">
+                <div class="top-label">
+                  <h2>Accounts</h2>
+                  <div class="top-label-2">
+                    <label>Account Number</label>
+                    <label>Currency</label>
+                    <label>Balance</label>
+                  </div>
+                  <div class="top-label-3">
+                    <label>Status</label>
+                  </div>
+                </div>
+
+                <div class="account-info-card">
+                  <div id="savings" class="account">
+                    <img src="/assets/savings.png" alt="" />
+                    <div class="account-name">
+                      <h2 class="account-title">BDO Savings Account</h2>
+                      <h4>Emergency Fund</h4>
+                    </div>
+                    <div class="top-label-2">
+                      <label>*******9713</label>
+                      <label class="blue-text">USD</label>
+                      <label>120, 000</label>
+                    </div>
+                    <div class="top-label-3">
+                      <label>Active</label>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
 
             <div class="right-container">
@@ -136,8 +201,16 @@
               </div>
 
               <div class="button">
-                <button id="add-existing-button">+ Add Existing Account</button>
-                <button id="apply-existing-button">
+                <button
+                  onclick="location.href='add-account1.html'"
+                  id="add-existing-button"
+                >
+                  + Add Existing Account
+                </button>
+                <button
+                  onclick="location.href='apply-account1.html'"
+                  id="apply-existing-button"
+                >
                   + Apply Existing Account
                 </button>
               </div>
@@ -148,6 +221,7 @@
         </div>
       </div>
     </div>
+<<<<<<< HEAD
     <script>
       // Get cif_number from URL
       const params = new URLSearchParams(window.location.search);
@@ -161,6 +235,69 @@
             document.querySelector('.welcome').innerHTML =
               `Welcome Back, <span class="blue-text">${data.customer_first_name}!</span>`;
           }
+=======
+
+    <script>
+      // Replace with actual cif_number from login/session/localStorage
+      const cif_number = localStorage.getItem('cif_number') || '1000000006';
+      fetch(`/api/customer/${cif_number}`)
+        .then((res) => res.json())
+        .then((data) => {
+          document.getElementById('customer-name').textContent =
+            [
+              data.customer_first_name,
+              data.customer_middle_name,
+              data.customer_last_name,
+              data.customer_suffix_name,
+            ]
+              .filter(Boolean)
+              .join(' ');
+          document.getElementById('customer-type').textContent = data.customer_type;
+          // Removed Username, Birth Date, Gender, Civil Status, Birth Country, Citizenship, CIF Number from display
+          // document.getElementById('customer-username').textContent = data.customer_username;
+          // document.getElementById('customer-birthdate').textContent = data.birth_date;
+          // document.getElementById('customer-gender').textContent = data.gender;
+          // document.getElementById('customer-civil').textContent = data.civil_status_code;
+          // document.getElementById('customer-birthcountry').textContent = data.birth_country;
+          // document.getElementById('customer-citizenship').textContent = data.citizenship;
+          // document.getElementById('customer-cif').textContent = data.cif_number;
+
+          // Display address fields
+          const addressFields = [
+            { label: 'Unit', value: data.address_unit },
+            { label: 'Building', value: data.address_building },
+            { label: 'Street', value: data.address_street },
+            { label: 'Subdivision', value: data.address_subdivision },
+            { label: 'Barangay', value: data.address_barangay },
+            { label: 'City', value: data.address_city },
+            { label: 'Province', value: data.address_province },
+            { label: 'Country', value: data.address_country },
+            { label: 'Zip', value: data.address_zip_code },
+            { label: 'Alternate Address Same As Home', value: data.is_alternate_address_same_as_home },
+            { label: 'Alt Unit', value: data.alt_unit },
+            { label: 'Alt Building', value: data.alt_building },
+            { label: 'Alt Street', value: data.alt_street },
+            { label: 'Alt Subdivision', value: data.alt_subdivision },
+            { label: 'Alt Barangay', value: data.alt_barangay },
+            { label: 'Alt City', value: data.alt_city },
+            { label: 'Alt Province', value: data.alt_province },
+            { label: 'Alt Country', value: data.alt_country },
+            { label: 'Alt Zip', value: data.alt_zip },
+            { label: 'Biometric Type', value: data.biometric_type },
+          ];
+          const infoDiv = document.getElementById('customer-info');
+          const ul = infoDiv.querySelector('ul');
+          addressFields.forEach(f => {
+            if (f.value) {
+              const li = document.createElement('li');
+              li.innerHTML = `<b>${f.label}:</b> <span>${f.value}</span>`;
+              ul.appendChild(li);
+            }
+          });
+        })
+        .catch((err) => {
+          document.getElementById('customer-info').textContent = 'Failed to load customer data.';
+>>>>>>> main
         });
     </script>
   </body>

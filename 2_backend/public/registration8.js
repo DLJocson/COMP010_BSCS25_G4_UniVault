@@ -1,12 +1,13 @@
 document.addEventListener("DOMContentLoaded", () => {
   const proceedBtn = document.getElementById("proceed");
 
+  // Define keys for localStorage for each question
   const checkboxGroups = [
-    { container: ".first-container", checkbox: ".checkbox" },
-    { container: ".second-container", checkbox: ".checkbox" },
-    { container: ".third-container", checkbox: ".third-checkbox" },
-    { container: ".third-container", checkbox: ".checkbox:nth-of-type(2)" }, // 2nd question in third
-    { container: ".fourth-container", checkbox: ".fourth-checkbox" },
+    { container: ".first-container", checkbox: ".checkbox", key: "reg_political_affiliation" },
+    { container: ".second-container", checkbox: ".checkbox", key: "reg_fatca" },
+    { container: ".third-container", checkbox: ".third-checkbox", key: "reg_dnfbp" },
+    { container: ".third-container", checkbox: ".checkbox:nth-of-type(2)", key: "reg_online_gaming" },
+    { container: ".fourth-container", checkbox: ".fourth-checkbox", key: "reg_beneficial_owner" },
   ];
 
   checkboxGroups.forEach(({ container, checkbox }) => {
@@ -35,6 +36,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
+<<<<<<< HEAD:2_backend/public/registration8.js
   proceedBtn.addEventListener("click", (e) => {
     e.preventDefault();
     let allValid = true;
@@ -60,9 +62,38 @@ document.addEventListener("DOMContentLoaded", () => {
         allValid = false;
       } else {
         errorMsg.style.display = "none";
+=======
+  if (proceedBtn) {
+    proceedBtn.onclick = function (e) {
+      let allValid = true;
+      checkboxGroups.forEach(({ container, checkbox, key }) => {
+        const group = document.querySelector(container).querySelector(checkbox);
+        const yes = group.querySelector(".yes input[type='checkbox']");
+        const no = group.querySelector(".no input[type='checkbox']");
+        const errorMsg = document.querySelector(container).nextElementSibling;
+        // Save answer to localStorage
+        if (yes.checked) {
+          localStorage.setItem(key, "Yes");
+        } else if (no.checked) {
+          localStorage.setItem(key, "No");
+        } else {
+          errorMsg.style.display = "block";
+          allValid = false;
+        }
+        if (yes.checked || no.checked) {
+          errorMsg.style.display = "none";
+        }
+      });
+      if (allValid) {
+        window.location.href = "registration9.html";
+      } else {
+        e.preventDefault();
+>>>>>>> main:1_frontend/Registration-Customer/registration8.js
       }
-    });
+    };
+  }
 
+<<<<<<< HEAD:2_backend/public/registration8.js
     if (!allValid) {
       return;
     }
@@ -72,3 +103,16 @@ document.addEventListener("DOMContentLoaded", () => {
     window.location.href = "registration9.html";
   });
 });
+=======
+  // AUTO-FILL TEST DATA (remove/comment out for production)
+  // Simulate all checkboxes as 'yes' for demo
+  document
+    .querySelectorAll(
+      '.checkbox input[type="checkbox"], .third-checkbox input[type="checkbox"], .fourth-checkbox input[type="checkbox"]'
+    )
+    .forEach((cb, i) => {
+      if (cb.classList.contains("yes")) cb.checked = true;
+      else cb.checked = false;
+    });
+});
+>>>>>>> main:1_frontend/Registration-Customer/registration8.js

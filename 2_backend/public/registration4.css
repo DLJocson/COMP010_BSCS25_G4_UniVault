@@ -17,7 +17,7 @@ body {
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background: url("/assets/bg.png");
+  background: url("../assets/bg.png");
   z-index: -1;
   font-family: var(--font-family);
 }
@@ -591,4 +591,86 @@ input[type="text"]:focus {
   background-color: #d4edda;
   border: 1px solid #c3e6cb;
   border-radius: 5px;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+input[type="search"],
+input[type="tel"],
+input[type="url"],
+textarea,
+#landline {
+  font-family: var(--font-family);
+}
+
+.contact-info-page {
+  animation: fadeInUp 0.7s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.title,
+.contact-info,
+.home-address,
+.alternate-address {
+  animation: fadeIn 1s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+select:focus {
+  animation: inputFocusPop 0.2s;
+}
+
+@keyframes inputFocusPop {
+  0% { transform: scale(1); }
+  60% { transform: scale(1.04); }
+  100% { transform: scale(1); }
+}
+
+.button button:hover {
+  animation: buttonPop 0.18s;
+}
+
+@keyframes buttonPop {
+  0% { transform: scale(1); }
+  60% { transform: scale(1.07); }
+  100% { transform: scale(1); }
+}
+
+.error-message,
+.success-message {
+  animation: fadeInDown 0.5s;
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.required-asterisk {
+  color: red;
+  margin-left: 4px;
 }

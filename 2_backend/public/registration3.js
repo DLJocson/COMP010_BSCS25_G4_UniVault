@@ -317,6 +317,7 @@ function addInputListeners() {
   const citizenshipSelect = document.getElementById("citizenship");
   const genderSelect = document.getElementById("gender");
   const civilStatusSelect = document.getElementById("civil-status");
+  const residencyStatusSelect = document.getElementById("residency-status");
 
   const resetToDefault = (element) => {
     const inputControl =
@@ -346,6 +347,7 @@ function addInputListeners() {
     citizenshipSelect,
     genderSelect,
     civilStatusSelect,
+    residencyStatusSelect,
   ].forEach((select) => {
     if (select) {
       select.addEventListener("change", () => resetToDefault(select));
@@ -368,6 +370,7 @@ function initializeFormValidation() {
   const genderSelect = document.getElementById("gender");
   const civilStatusSelect = document.getElementById("civil-status");
   const proceedButton = document.getElementById("proceed");
+  const residencyStatusSelect = document.getElementById("residency-status");
 
   console.log("Proceed button found:", !!proceedButton);
 
@@ -477,6 +480,13 @@ function initializeFormValidation() {
       setSuccess(civilStatusSelect);
     }
 
+    if (!residencyStatusSelect.value) {
+      setError(residencyStatusSelect, "Civil Status is required");
+      isValid = false;
+    } else {
+      setSuccess(residencyStatusSelect);
+    }
+
     return isValid;
   };
 
@@ -486,6 +496,7 @@ proceedButton.addEventListener("click", (e) => {
 
   const isFormValid = validateInputs();
 
+<<<<<<< HEAD:2_backend/public/registration3.js
   if (isFormValid) {
     // Save values to localStorage
     localStorage.setItem("customer_first_name", firstName.value.trim());
@@ -499,6 +510,22 @@ proceedButton.addEventListener("click", (e) => {
     localStorage.setItem("citizenship", citizenshipSelect.value);
     localStorage.setItem("gender", genderSelect.value);
     localStorage.setItem("civil_status_code", civilStatusSelect.value);
+=======
+    if (isFormValid) {
+      // Save all relevant fields to localStorage with backend-compatible keys
+      localStorage.setItem('customer_first_name', firstName.value.trim());
+      localStorage.setItem('customer_middle_name', middleName.value.trim());
+      localStorage.setItem('customer_last_name', lastName.value.trim());
+      localStorage.setItem('customer_suffix_name', suffix.value.trim());
+      localStorage.setItem('birth_date', `${yearSelect.value}-${monthSelect.value}-${daySelect.value}`);
+      localStorage.setItem('gender', genderSelect.value);
+      localStorage.setItem('civil_status_code', civilStatusSelect.value);
+      localStorage.setItem('birth_country', countrySelect.value);
+      localStorage.setItem('citizenship', citizenshipSelect.value);
+      localStorage.setItem('residency_status', residencyStatusSelect.value);
+
+      location.href = "registration4.html";
+>>>>>>> main:1_frontend/Registration-Customer/registration3.js
 
     // Combine date parts for backend
     const birth_date = `${yearSelect.value}-${monthSelect.value.padStart(2, '0')}-${daySelect.value.padStart(2, '0')}`;
@@ -534,4 +561,56 @@ document.addEventListener("DOMContentLoaded", () => {
   populateCitizenshipDropdown();
   initializeDateDropdowns();
   initializeFormValidation();
+});
+
+document.getElementById("month").addEventListener("change", function () {
+  const month = parseInt(this.value);
+  const year = parseInt(document.getElementById("year").value) || new Date().getFullYear();
+  const daysInMonth = new Date(year, month, 0).getDate();
+  const daySelect = document.getElementById("day");
+  const previousDay = parseInt(daySelect.value);
+  daySelect.innerHTML = '<option value="">Select Day</option>';
+  for (let i = 1; i <= daysInMonth; i++) {
+    const option = document.createElement("option");
+    option.value = i;
+    option.textContent = i;
+    if (i === previousDay) option.selected = true;
+    daySelect.appendChild(option);
+  }
+});
+
+document.getElementById("year").addEventListener("change", function () {
+  const month = parseInt(document.getElementById("month").value);
+  if (!month) return;
+  const year = parseInt(this.value);
+  const daysInMonth = new Date(year, month, 0).getDate();
+  const daySelect = document.getElementById("day");
+  const previousDay = parseInt(daySelect.value);
+  daySelect.innerHTML = '<option value="">Select Day</option>';
+  for (let i = 1; i <= daysInMonth; i++) {
+    const option = document.createElement("option");
+    option.value = i;
+    option.textContent = i;
+    if (i === previousDay) option.selected = true;
+    daySelect.appendChild(option);
+  }
+});
+
+const proceedBtn = document.getElementById("proceed");
+if (proceedBtn) {
+  proceedBtn.onclick = function (e) {
+    // Save all relevant fields to localStorage here
+    // Example: localStorage.setItem('birth_date', birthDateInput.value);
+    // Add similar lines for all fields on this page
+    localStorage.setItem('birth_date', `${document.getElementById("year").value}-${document.getElementById("month").value}-${document.getElementById("day").value}`);
+    localStorage.setItem('gender', document.getElementById("gender").value);
+    localStorage.setItem('civil_status_code', document.getElementById("civil-status").value);
+    localStorage.setItem('birth_country', document.getElementById("country").value);
+    localStorage.setItem('citizenship', document.getElementById("citizenship").value);
+  };
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+  // AUTO-FILL TEST DATA (remove/comment out for production)
+  // Removed: No auto-fill, user must enter data manually.
 });

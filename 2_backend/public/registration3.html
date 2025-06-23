@@ -128,6 +128,23 @@
             <div class="error-message" id="error-civil-status"></div>
           </div>
         </div>
+        <div class="residency-status-container">
+          <label for="residency-status">Residency Status</label>
+          <select name="residency-status" id="residency-status">
+            <option value="" disabled selected>Select</option>
+            <option value="citizen">Citizen</option>
+            <option value="permanent-resident">Permanent Resident</option>
+            <option value="temporary-resident">Temporary Resident</option>
+            <option value="foreign-national">Foreign National</option>
+            <option value="dual-citizen">Dual Citizen</option>
+            <option value="refugee">Refugee</option>
+            <option value="student-visa">Student Visa Holder</option>
+            <option value="work-visa">Work Visa Holder</option>
+            <option value="undocumented">Undocumented</option>
+            <option value="other">Other</option>
+          </select>
+          <div class="error-message" id="error-civil-status"></div>
+        </div>
 
         <div class="button">
           <div class="back">
@@ -149,3 +166,30 @@
     </div>
   </body>
 </html>
+<script>
+  function addAsterisk(label) {
+    if (label) {
+      const asterisk = document.createElement('span');
+      asterisk.className = 'required-asterisk';
+      asterisk.textContent = '*';
+      label.appendChild(asterisk);
+    }
+  }
+
+  addAsterisk(document.querySelector('label[for="first-name"]'));
+  addAsterisk(document.querySelector('label[for="last-name"]'));
+
+  addAsterisk(document.querySelector('label[for="month"]'));
+  addAsterisk(document.querySelector('label[for="day"]'));
+  addAsterisk(document.querySelector('label[for="year"]'));
+
+  const countryLabels = document.querySelectorAll('.country-label label');
+  addAsterisk(countryLabels[0]);
+  addAsterisk(countryLabels[1]); 
+
+  const genderLabels = document.querySelectorAll('.gender-label label');
+  addAsterisk(genderLabels[0]); // Gender
+  addAsterisk(genderLabels[1]); // Civil Status
+
+  addAsterisk(document.querySelector('label[for="residency-status"]'));
+</script>

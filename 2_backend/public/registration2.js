@@ -23,8 +23,14 @@ document.getElementById("proceed").addEventListener("click", () => {
 
   errorMessage.textContent = "";
 
+<<<<<<< HEAD:2_backend/public/registration2.js
   // Store selected account type in localStorage
   localStorage.setItem("account_type", checkedBox.value);
+=======
+  // Save account_type to localStorage (do not overwrite customer_type)
+  const accountTypeInput = document.querySelector('input[name="customer_type"]:checked');
+  localStorage.setItem('account_type', accountTypeInput.value.trim());
+>>>>>>> main:1_frontend/Registration-Customer/registration2.js
 
   window.location.href = "registration3.html";
 });

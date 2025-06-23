@@ -1,3 +1,4 @@
+<<<<<<< HEAD:2_backend/public/registration9.js
 function initializeDateDropdowns() {
   const monthSelect = document.getElementById("month");
   const daySelect = document.getElementById("day");
@@ -561,3 +562,6 @@ document.addEventListener("DOMContentLoaded", () => {
   addUploadListeners();
   attachInputListeners();
 });
+=======
+// This file has been removed and is intentionally left blank to prevent errors.
+>>>>>>> main:1_frontend/Registration-Customer/registration9.js

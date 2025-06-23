@@ -17,7 +17,7 @@ body {
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background: url(/assets/bg.png);
+  background: url(../assets/bg.png);
   z-index: -1;
   background-size: cover;
   font-family: var(--font-family);
@@ -218,6 +218,17 @@ select:focus {
   justify-content: space-between;
 }
 
+.residency-status-container label {
+  font-size: 32px;
+}
+
+.residency-status-container {
+  display: flex;
+  width: 100%;
+  padding: 10px 25px;
+  flex-direction: column;
+}
+
 .button {
   display: flex;
   gap: 40px;
@@ -304,4 +315,150 @@ select:focus {
   color: var(--primary-color);
   box-shadow: 0 0 3px var(--tertiary-color);
   outline: none;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.create-account-page {
+  animation: fadeInUp 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+input[type="text"], select {
+  transition: border-color 0.2s, box-shadow 0.2s, color 0.2s, background-color 0.2s;
+}
+
+.button button {
+  transition: background-color 0.3s, color 0.3s, box-shadow 0.3s, transform 0.2s;
+}
+.button button:hover {
+  transform: translateY(-2px) scale(1.03);
+}
+
+@keyframes errorFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+.error-message {
+  animation: errorFadeIn 0.4s;
+}
+
+.first-container,
+.second-container,
+.date-container,
+.country-container,
+.gender-container,
+.residency-status-container {
+  animation: fadeInUp 0.7s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+input[type="text"],
+select,
+#month,
+#day,
+#year {
+  font-family: var(--font-family);
+}
+
+select {
+  background-color: #f8fbff;
+  transition: border-color 0.2s, box-shadow 0.2s, background-color 0.2s, color 0.2s;
+  cursor: pointer;
+}
+
+select:hover,
+select:active {
+  background-color: #e6f0fa;
+  border-color: var(--primary-color);
+  box-shadow: 0 2px 8px rgba(31, 101, 180, 0.08);
+  color: var(--primary-color);
+}
+
+select:focus {
+  background-color: #e6f0fa;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 6px var(--primary-color);
+  color: var(--primary-color);
+  outline: none;
+}
+
+select option {
+  background: #fff;
+  color: #222;
+  font-size: 28px;
+  transition: background 0.2s, color 0.2s;
+}
+
+select option:checked,
+select option:focus {
+  background: #e6f0fa;
+  color: var(--primary-color);
+}
+
+
+.contact-info-page {
+  animation: fadeInUp 0.7s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.title,
+.contact-info,
+.home-address,
+.alternate-address {
+  animation: fadeIn 1s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+select:focus {
+  animation: inputFocusPop 0.2s;
+}
+
+@keyframes inputFocusPop {
+  0% { transform: scale(1); }
+  60% { transform: scale(1.04); }
+  100% { transform: scale(1); }
+}
+
+.button button:hover {
+  animation: buttonPop 0.18s;
+}
+
+@keyframes buttonPop {
+  0% { transform: scale(1); }
+  60% { transform: scale(1.07); }
+  100% { transform: scale(1); }
+}
+
+.error-message,
+.success-message {
+  animation: fadeInDown 0.5s;
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.required-asterisk {
+  color: red;
+  margin-left: 4px;
 }

@@ -23,6 +23,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
+<<<<<<< HEAD:2_backend/public/registration12.js
   proceedBtn.addEventListener("click", (e) => {
     const checkedBox = Array.from(checkboxes).find((cb) => cb.checked);
 
@@ -37,3 +38,27 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 });
+=======
+  if (proceedBtn) {
+    proceedBtn.onclick = function (e) {
+      // Save the user's choice to localStorage
+      let consent = null;
+      checkboxes.forEach((cb) => {
+        if (cb.checked) consent = cb.value || cb.id || "checked";
+      });
+      if (consent) {
+        localStorage.setItem("customer-undertaking", consent);
+      }
+      const oneChecked = Array.from(checkboxes).some((cb) => cb.checked);
+
+      if (!oneChecked) {
+        e.preventDefault();
+        errorMessage.textContent = "Please select one option.";
+      } else {
+        errorMessage.textContent = "";
+        window.location.href = "registration13.html";
+      }
+    };
+  }
+});
+>>>>>>> main:1_frontend/Registration-Customer/registration12.js
