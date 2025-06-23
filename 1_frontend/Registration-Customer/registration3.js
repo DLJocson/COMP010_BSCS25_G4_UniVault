@@ -497,6 +497,18 @@ function initializeFormValidation() {
     const isFormValid = validateInputs();
 
     if (isFormValid) {
+      // Save all relevant fields to localStorage with backend-compatible keys
+      localStorage.setItem('customer_first_name', firstName.value.trim());
+      localStorage.setItem('customer_middle_name', middleName.value.trim());
+      localStorage.setItem('customer_last_name', lastName.value.trim());
+      localStorage.setItem('customer_suffix_name', suffix.value.trim());
+      localStorage.setItem('birth_date', `${yearSelect.value}-${monthSelect.value}-${daySelect.value}`);
+      localStorage.setItem('gender', genderSelect.value);
+      localStorage.setItem('civil_status_code', civilStatusSelect.value);
+      localStorage.setItem('birth_country', countrySelect.value);
+      localStorage.setItem('citizenship', citizenshipSelect.value);
+      localStorage.setItem('residency_status', residencyStatusSelect.value);
+
       location.href = "registration4.html";
 
       const existingMessage = document.querySelector(".success-message");
@@ -560,4 +572,23 @@ document.getElementById("year").addEventListener("change", function () {
     if (i === previousDay) option.selected = true;
     daySelect.appendChild(option);
   }
+});
+
+const proceedBtn = document.getElementById("proceed");
+if (proceedBtn) {
+  proceedBtn.onclick = function (e) {
+    // Save all relevant fields to localStorage here
+    // Example: localStorage.setItem('birth_date', birthDateInput.value);
+    // Add similar lines for all fields on this page
+    localStorage.setItem('birth_date', `${document.getElementById("year").value}-${document.getElementById("month").value}-${document.getElementById("day").value}`);
+    localStorage.setItem('gender', document.getElementById("gender").value);
+    localStorage.setItem('civil_status_code', document.getElementById("civil-status").value);
+    localStorage.setItem('birth_country', document.getElementById("country").value);
+    localStorage.setItem('citizenship', document.getElementById("citizenship").value);
+  };
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+  // AUTO-FILL TEST DATA (remove/comment out for production)
+  // Removed: No auto-fill, user must enter data manually.
 });

@@ -1,35 +1,35 @@
 document.addEventListener("DOMContentLoaded", () => {
   const containers = document.getElementById("containers");
-  const checkbox = document.getElementById("yes");
+  const yesCheckbox = document.getElementById("yes-alias");
+  const noCheckbox = document.getElementById("no-alias");
 
-  // Initial state: Hide the 'containers' div by default
+  // Hide the alias form by default
   if (containers) containers.style.display = "none";
 
-  if (checkbox) {
-    function showHideMainContent() {
-      if (checkbox.checked) {
-        // If "Yes" is checked, show the 'containers' div
-        if (containers) containers.style.display = "block";
-
-        // Initialize the rest of the form only once
-        if (!containers.dataset.initialized) {
-          populateDateDropdowns();
-          attachInputListeners();
-          handleProceedClick(); // Re-attach listener after content is potentially shown
-          handleFileUploadValidation();
-          containers.dataset.initialized = "true";
-        }
-      } else {
-        // If "Yes" is NOT checked, hide the 'containers' div
-        if (containers) containers.style.display = "none";
-        // Optionally, clear any error messages if the user unchecks "Yes" after seeing errors
-        clearAllErrorsInContainers(); // New helper function
-      }
+  function updateAliasForm() {
+    if (yesCheckbox && yesCheckbox.checked) {
+      if (noCheckbox) noCheckbox.checked = false;
+      if (containers) containers.style.display = "block";
+      localStorage.removeItem("alias"); // User will fill alias fields
+    } else if (noCheckbox && noCheckbox.checked) {
+      if (yesCheckbox) yesCheckbox.checked = false;
+      if (containers) containers.style.display = "none";
+      localStorage.setItem("alias", "No");
+      clearAllErrorsInContainers();
+    } else {
+      // If neither is checked, hide the form
+      if (containers) containers.style.display = "none";
+      localStorage.removeItem("alias");
+      clearAllErrorsInContainers();
     }
-    // Run on load in case checkbox is already checked (e.g., after a page refresh preserving state)
-    showHideMainContent();
-    checkbox.addEventListener("change", showHideMainContent);
   }
+
+  if (yesCheckbox) yesCheckbox.addEventListener("change", updateAliasForm);
+  if (noCheckbox) noCheckbox.addEventListener("change", updateAliasForm);
+
+  // On load, ensure correct state
+  updateAliasForm();
+  handleProceedClick(); // <-- Attach the Proceed button logic on page load
 });
 
 // New helper function to clear errors when hiding the form
@@ -244,25 +244,27 @@ function validateForm() {
 
 function handleProceedClick() {
   const proceedBtn = document.getElementById("proceed");
+  const yesCheckbox = document.getElementById("yes-alias");
+  const noCheckbox = document.getElementById("no-alias");
 
-  // Ensure the event listener is only attached once
-  // This check is important because handleProceedClick is called inside showHideMainContent
-  // which might be called multiple times if the checkbox is toggled.
-  if (proceedBtn.dataset.listenerAttached) {
+  if (!proceedBtn || proceedBtn.dataset.listenerAttached) {
       return;
   }
-  proceedBtn.dataset.listenerAttached = "true"; // Mark as attached
+  proceedBtn.dataset.listenerAttached = "true";
 
   proceedBtn.addEventListener("click", () => {
-    const checkbox = document.getElementById("yes");
-
-    if (checkbox.checked) {
-      // If "Yes" is checked, validate only required alias and ID fields
+    if (yesCheckbox && yesCheckbox.checked) {
+      // Validate alias and ID fields if Yes
       if (validateAliasAndIDs()) {
+        // Save all alias fields to localStorage
+        localStorage.setItem("alias_first_name", document.getElementById("first-name").value);
+        localStorage.setItem("alias_middle_name", document.getElementById("middle-name").value);
+        localStorage.setItem("alias_last_name", document.getElementById("last-name").value);
         window.location.href = "registration7.html";
       }
-    } else {
-      // If "Yes" is NOT checked, proceed without validating alias/ID fields
+    } else if (noCheckbox && noCheckbox.checked) {
+      // Allow direct proceed if No
+      localStorage.setItem("alias", "No");
       window.location.href = "registration7.html";
     }
   });
