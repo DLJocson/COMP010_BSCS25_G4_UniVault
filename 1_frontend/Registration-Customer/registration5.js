@@ -1,4 +1,7 @@
 document.addEventListener("DOMContentLoaded", function () {
+  // --- AUTO-FILL REMOVED ---
+  // (No auto-fill code here; user will fill out manually)
+
   const checkbox = document.getElementById("yes");
   const containers = document.querySelector(".containers");
   const containers2 = document.querySelector(".containers2");
@@ -240,13 +243,73 @@ document.addEventListener("DOMContentLoaded", function () {
   // Setup event listeners
   setupEventListeners();
 
-  // Proceed button
+  // --- Validation helpers must be defined before use ---
+  function validateMultiSelect() {
+    const multiSelect = document.getElementById("source-of-funds-multi");
+    if (!multiSelect) return true;
+    if (multiSelect.offsetParent === null) return true;
+    const selected = Array.from(multiSelect.options).filter(opt => opt.selected);
+    if (selected.length === 0) {
+      showError(multiSelect, "Please select at least one source of funds");
+      return false;
+    } else {
+      clearFieldError(multiSelect);
+      return true;
+    }
+  }
+
+  function enhancedValidateForm() {
+    let isValid = validateForm();
+    if (!validateMultiSelect()) isValid = false;
+    return isValid;
+  }
+
+  // --- Only one proceedBtn.onclick assignment ---
   if (proceedBtn) {
     proceedBtn.onclick = function (e) {
       e.preventDefault();
       console.log("Validating form...");
 
-      if (validateForm()) {
+      // Save all relevant fields to localStorage here
+      const fieldsToSave = [
+        "source-of-funds",
+        "business-nature",
+        "position",
+        "gross-income",
+        "work",
+        "business-number",
+        "tin",
+        "zip-code",
+        "work-emai",
+        "primary-employer",
+        "unit",
+        "building",
+        "street",
+        "subdivision",
+        "barangay",
+        "city",
+        "province",
+        "country",
+      ];
+
+      fieldsToSave.forEach((fieldId) => {
+        const field = document.getElementById(fieldId);
+        if (field) {
+          localStorage.setItem(fieldId, field.value);
+        }
+      });
+
+      // Save employment checkbox state
+      const employedCheckbox = document.getElementById("yes");
+      if (employedCheckbox) {
+        if (employedCheckbox.checked) {
+          localStorage.setItem("currentlyEmployed", "Yes");
+        } else {
+          localStorage.setItem("currentlyEmployed", "No");
+        }
+      }
+
+      if (enhancedValidateForm()) {
         console.log("Form valid - redirecting");
         window.location.href = "registration6.html";
       } else {
@@ -319,6 +382,45 @@ function enhancedValidateForm() {
 if (proceedBtn) {
   proceedBtn.onclick = function (e) {
     e.preventDefault();
+    // Save all relevant fields to localStorage here
+    const fieldsToSave = [
+      "source-of-funds",
+      "business-nature",
+      "position",
+      "gross-income",
+      "work",
+      "business-number",
+      "tin",
+      "zip-code",
+      "work-emai",
+      "primary-employer",
+      "unit",
+      "building",
+      "street",
+      "subdivision",
+      "barangay",
+      "city",
+      "province",
+      "country",
+    ];
+
+    fieldsToSave.forEach((fieldId) => {
+      const field = document.getElementById(fieldId);
+      if (field) {
+        localStorage.setItem(fieldId, field.value);
+      }
+    });
+
+    // Save employment checkbox state
+    const employedCheckbox = document.getElementById("yes");
+    if (employedCheckbox) {
+      if (employedCheckbox.checked) {
+        localStorage.setItem("currentlyEmployed", "Yes");
+      } else {
+        localStorage.setItem("currentlyEmployed", "No");
+      }
+    }
+
     if (enhancedValidateForm()) {
       window.location.href = "registration6.html";
     } else {

@@ -9,12 +9,9 @@ document.addEventListener("DOMContentLoaded", () => {
     cb.addEventListener("change", () => {
       if (cb.checked) {
         checkboxes.forEach((otherCb) => {
-          if (otherCb !== cb) {
-            otherCb.checked = false;
-          }
+          if (otherCb !== cb) otherCb.checked = false;
         });
       }
-
       const oneChecked = Array.from(checkboxes).some((box) => box.checked);
       if (oneChecked) {
         errorMessage.textContent = "";
@@ -22,15 +19,24 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  proceedBtn.addEventListener("click", (e) => {
-    const oneChecked = Array.from(checkboxes).some((cb) => cb.checked);
-
-    if (!oneChecked) {
-      e.preventDefault();
-      errorMessage.textContent = "Please select one option.";
-    } else {
-      errorMessage.textContent = "";
-      window.location.href = "registration12.html";
-    }
-  });
+  if (proceedBtn) {
+    proceedBtn.onclick = function (e) {
+      // Save the user's choice to localStorage
+      let consent = null;
+      checkboxes.forEach((cb) => {
+        if (cb.checked) consent = cb.value || cb.id || "checked";
+      });
+      if (consent) {
+        localStorage.setItem("issuance-consent", consent);
+      }
+      const oneChecked = Array.from(checkboxes).some((cb) => cb.checked);
+      if (!oneChecked) {
+        e.preventDefault();
+        errorMessage.textContent = "Please select one option.";
+      } else {
+        errorMessage.textContent = "";
+        window.location.href = "registration12.html";
+      }
+    };
+  }
 });
