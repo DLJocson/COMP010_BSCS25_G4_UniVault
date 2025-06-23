@@ -195,7 +195,7 @@ CREATE TABLE CUSTOMER (
     FOREIGN KEY (civil_status_code) REFERENCES CIVIL_STATUS_TYPE(civil_status_code) ON UPDATE CASCADE ON DELETE RESTRICT,
     
     -- CHECK CONSTRAINTS
-    CONSTRAINT check_customer_type                	CHECK (customer_type IN ('Account Owner', 'Business Owner')),
+    CONSTRAINT check_customer_type                	CHECK (customer_type IN ('Account Owner', 'Business Owner', 'Business Owner / Officer / Signatory', 'Individual', 'Corporate')),
     CONSTRAINT check_customer_last_name           	CHECK (customer_last_name REGEXP '^[A-Za-z \\-]+$'),
     CONSTRAINT check_customer_first_name           	CHECK (customer_first_name REGEXP '^[A-Za-z ]+$'),
     CONSTRAINT check_customer_middle_name          	CHECK (customer_middle_name IS NULL OR customer_middle_name REGEXP '^[A-Za-z ]+$'),

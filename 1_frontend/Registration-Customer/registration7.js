@@ -13,7 +13,7 @@ function handleFileUploadValidation() {
   fileInputs.forEach((id) => {
     const input = document.getElementById(id);
     if (input) {
-      input.addEventListener("change", () => {
+      input.addEventListener("change", async () => {
         const file = input.files[0];
         const errorElement = document.getElementById(`error-${id}`);
         const uploadBox = input.closest(".upload-box");
@@ -37,8 +37,32 @@ function handleFileUploadValidation() {
         errorElement.textContent = "";
         uploadBox.classList.remove("error");
         const direction = uploadBox.querySelector(".direction");
-        direction.textContent = `✓ ${file.name} ready (not uploaded)`;
-        direction.style.color = "green";
+        direction.textContent = `Uploading ${file.name}...`;
+        direction.style.color = "#007bff";
+        // Upload file to backend
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append("field", id); // Optional: send field name
+        try {
+          const response = await fetch("/upload", {
+            method: "POST",
+            body: formData
+          });
+          if (!response.ok) throw new Error("Upload failed");
+          const data = await response.json();
+          if (data && data.filePath) {
+            localStorage.setItem(id + '_path', data.filePath);
+            direction.textContent = `✓ ${file.name} uploaded`;
+            direction.style.color = "green";
+          } else {
+            throw new Error("No file path returned");
+          }
+        } catch (err) {
+          errorElement.textContent = "Upload failed. Please try again.";
+          direction.textContent = "Upload failed.";
+          direction.style.color = "red";
+          localStorage.setItem(id + '_path', null);
+        }
         // Save file name for reference (not uploaded)
         localStorage.setItem(id + '_filename', file.name);
         // Show preview for images
@@ -238,8 +262,9 @@ function validateForm() {
   ];
   id1FileFields.forEach(({ id, msg }) => {
     const fileInput = document.getElementById(id);
-    if (!fileInput || !fileInput.files.length) {
-      showError(id, msg);
+    const filePath = localStorage.getItem(id + '_path');
+    if (!fileInput || !fileInput.files.length || !filePath || filePath === 'null' || filePath === '') {
+      showError(id, msg + ' (Please upload and wait for confirmation)');
       isValid = false;
     }
   });
@@ -276,6 +301,38 @@ function validateForm() {
   return isValid;
 }
 
+function getIdTypeCode(displayName) {
+  // Normalize input
+  const key = displayName.trim().toLowerCase();
+  const map = {
+    "new philippine passport": "PAS",
+    "old philippine passport": "PAS",
+    "passport": "PAS",
+    "driver's license": "DRV",
+    "prc id": "PRC",
+    "umid": "UMI",
+    "sss id": "SSS",
+    "postal id": "POS",
+    "tin id": "TIN",
+    "barangay id": "BRG",
+    "gsis id": "GSI",
+    "philhealth id": "PHI",
+    "owwa id": "OWW",
+    "ofw id": "OFW",
+    "ibp id": "IBP",
+    "company id": "COM",
+    "marina id": "MAR",
+    "voter's id": "VOT",
+    "senior citizen id": "SEN",
+    "seaman's book": "SEA",
+    "gov't / gocc id": "GOV",
+    "dswd certification": "DSW",
+    "ncwdp certification": "NCW",
+    "pwd id": "PWD"
+  };
+  return map[key] || key.substring(0,3).toUpperCase();
+}
+
 function handleProceedClick() {
   const proceedBtn = document.getElementById("proceed");
   if (proceedBtn) {
@@ -283,60 +340,7 @@ function handleProceedClick() {
       // Save all relevant fields to localStorage here
       // ID 1
       const id1TypeRaw = document.getElementById("select-id1").value;
-      let id1Type = "";
-      if (id1TypeRaw) {
-        // Map to 3-letter code for DB
-        switch (id1TypeRaw.trim().toLowerCase()) {
-          case "new philippine passport":
-          case "old philippine passport":
-          case "passport":
-            id1Type = "PAS"; break;
-          case "driver's license":
-            id1Type = "DRV"; break;
-          case "prc id":
-            id1Type = "PRC"; break;
-          case "umid":
-            id1Type = "UMI"; break;
-          case "sss id":
-            id1Type = "SSS"; break;
-          case "postal id":
-            id1Type = "POS"; break;
-          case "tin id":
-            id1Type = "TIN"; break;
-          case "barangay id":
-            id1Type = "BRG"; break;
-          case "gsis id":
-            id1Type = "GSI"; break;
-          case "philhealth id":
-            id1Type = "PHI"; break;
-          case "owwa id":
-            id1Type = "OWW"; break;
-          case "ofw id":
-            id1Type = "OFW"; break;
-          case "ibp id":
-            id1Type = "IBP"; break;
-          case "company id":
-            id1Type = "COM"; break;
-          case "marina id":
-            id1Type = "MAR"; break;
-          case "voter's id":
-            id1Type = "VOT"; break;
-          case "senior citizen id":
-            id1Type = "SEN"; break;
-          case "seaman's book":
-            id1Type = "SEA"; break;
-          case "gov’t / gocc id":
-            id1Type = "GOV"; break;
-          case "dswd certification":
-            id1Type = "DSW"; break;
-          case "ncwdp certification":
-            id1Type = "NCW"; break;
-          case "pwd id":
-            id1Type = "PWD"; break;
-          default:
-            id1Type = id1TypeRaw.substring(0,3).toUpperCase();
-        }
-      }
+      let id1Type = id1TypeRaw ? getIdTypeCode(id1TypeRaw) : "";
       localStorage.setItem("id1Type", id1Type);
       localStorage.setItem("id1Number", document.getElementById("id1-num").value);
       localStorage.setItem("id1IssueMonth", document.getElementById("issue-month-id1").value);
@@ -347,59 +351,7 @@ function handleProceedClick() {
       localStorage.setItem("id1ExpiryYear", document.getElementById("year").value);
       // ID 2
       const id2TypeRaw = document.getElementById("select-id2").value;
-      let id2Type = "";
-      if (id2TypeRaw) {
-        switch (id2TypeRaw.trim().toLowerCase()) {
-          case "new philippine passport":
-          case "old philippine passport":
-          case "passport":
-            id2Type = "PAS"; break;
-          case "driver's license":
-            id2Type = "DRV"; break;
-          case "prc id":
-            id2Type = "PRC"; break;
-          case "umid":
-            id2Type = "UMI"; break;
-          case "sss id":
-            id2Type = "SSS"; break;
-          case "postal id":
-            id2Type = "POS"; break;
-          case "tin id":
-            id2Type = "TIN"; break;
-          case "barangay id":
-            id2Type = "BRG"; break;
-          case "gsis id":
-            id2Type = "GSI"; break;
-          case "philhealth id":
-            id2Type = "PHI"; break;
-          case "owwa id":
-            id2Type = "OWW"; break;
-          case "ofw id":
-            id2Type = "OFW"; break;
-          case "ibp id":
-            id2Type = "IBP"; break;
-          case "company id":
-            id2Type = "COM"; break;
-          case "marina id":
-            id2Type = "MAR"; break;
-          case "voter's id":
-            id2Type = "VOT"; break;
-          case "senior citizen id":
-            id2Type = "SEN"; break;
-          case "seaman's book":
-            id2Type = "SEA"; break;
-          case "gov’t / gocc id":
-            id2Type = "GOV"; break;
-          case "dswd certification":
-            id2Type = "DSW"; break;
-          case "ncwdp certification":
-            id2Type = "NCW"; break;
-          case "pwd id":
-            id2Type = "PWD"; break;
-          default:
-            id2Type = id2TypeRaw.substring(0,3).toUpperCase();
-        }
-      }
+      let id2Type = id2TypeRaw ? getIdTypeCode(id2TypeRaw) : "";
       localStorage.setItem("id2Type", id2Type);
       localStorage.setItem("id2Number", document.getElementById("id2-num").value);
       localStorage.setItem("id2IssueMonth", document.getElementById("issue-month-id2").value);

@@ -273,7 +273,11 @@ document.addEventListener("DOMContentLoaded", function () {
       // Save all relevant fields to localStorage here
       const fieldsToSave = [
         "source-of-funds",
+        "source-of-funds-multi",
+        "remittance-country",
+        "remittance-purpose",
         "business-nature",
+        "business-nature-multi",
         "position",
         "gross-income",
         "work",
@@ -294,7 +298,32 @@ document.addEventListener("DOMContentLoaded", function () {
 
       fieldsToSave.forEach((fieldId) => {
         const field = document.getElementById(fieldId);
-        if (field) {
+        // Handle custom multi-selects and dropdowns
+        if (fieldId === "source-of-funds-multi") {
+          // Native <select multiple> or hidden input for custom dropdown
+          let value = "";
+          if (field && field.tagName === "SELECT") {
+            value = Array.from(field.selectedOptions).map(opt => opt.value).join(",");
+          } else if (field) {
+            value = field.value; // hidden input for custom dropdown
+          }
+          localStorage.setItem(fieldId, value);
+        } else if (fieldId === "business-nature-multi") {
+          // Custom business nature multi-select (hidden input)
+          let value = "";
+          if (field) {
+            value = field.value;
+          }
+          localStorage.setItem(fieldId, value);
+        } else if (fieldId === "remittance-country" || fieldId === "remittance-purpose") {
+          // Standard select or custom dropdown
+          let value = "";
+          if (field) {
+            value = field.value;
+          }
+          localStorage.setItem(fieldId, value);
+        } else if (field) {
+          // Standard input/select
           localStorage.setItem(fieldId, field.value);
         }
       });
@@ -382,17 +411,23 @@ function enhancedValidateForm() {
 if (proceedBtn) {
   proceedBtn.onclick = function (e) {
     e.preventDefault();
+    console.log("Validating form...");
+
     // Save all relevant fields to localStorage here
     const fieldsToSave = [
       "source-of-funds",
+      "source-of-funds-multi",
+      "remittance-country",
+      "remittance-purpose",
       "business-nature",
+      "business-nature-multi",
       "position",
       "gross-income",
       "work",
       "business-number",
       "tin",
       "zip-code",
-      "work-emai",
+      "work-email",
       "primary-employer",
       "unit",
       "building",
@@ -404,12 +439,54 @@ if (proceedBtn) {
       "country",
     ];
 
+    // Save single-value fields
     fieldsToSave.forEach((fieldId) => {
       const field = document.getElementById(fieldId);
-      if (field) {
+      if (field && field.offsetParent !== null) {
         localStorage.setItem(fieldId, field.value);
+        console.log(`Saved ${fieldId}:`, field.value);
       }
     });
+
+    // --- Save multi-select Source(s) of Funds ---
+    let sourceOfFundsMulti = document.getElementById("source-of-funds-multi");
+    let sourceOfFundsMultiValue = "";
+    if (sourceOfFundsMulti && sourceOfFundsMulti.offsetParent !== null) {
+      // Native <select multiple>
+      const selected = Array.from(sourceOfFundsMulti.selectedOptions).map(opt => opt.value);
+      sourceOfFundsMultiValue = selected.join(",");
+      localStorage.setItem("source-of-funds-multi", sourceOfFundsMultiValue);
+      console.log("Saved source-of-funds-multi (native):", sourceOfFundsMultiValue);
+    } else {
+      // Custom multi-checkbox dropdown
+      const dropdownMenu = document.getElementById("dropdownMenu");
+      if (dropdownMenu && dropdownMenu.offsetParent !== null) {
+        const checked = Array.from(dropdownMenu.querySelectorAll('input[type="checkbox"]:checked'));
+        const values = checked.map(cb => cb.value);
+        sourceOfFundsMultiValue = values.join(",");
+        localStorage.setItem("source-of-funds-multi", sourceOfFundsMultiValue);
+        console.log("Saved source-of-funds-multi (custom):", sourceOfFundsMultiValue);
+      }
+    }
+
+    // --- Save business-nature-multi if present ---
+    let businessNatureMulti = document.getElementById("business-nature-multi");
+    if (businessNatureMulti && businessNatureMulti.offsetParent !== null) {
+      const selected = Array.from(businessNatureMulti.selectedOptions).map(opt => opt.value);
+      const value = selected.join(",");
+      localStorage.setItem("business-nature-multi", value);
+      console.log("Saved business-nature-multi (native):", value);
+    } else {
+      // Custom multi-checkbox dropdown for business nature
+      const dropdownMenu = document.getElementById("businessNatureDropdownMenu");
+      if (dropdownMenu && dropdownMenu.offsetParent !== null) {
+        const checked = Array.from(dropdownMenu.querySelectorAll('input[type="checkbox"]:checked'));
+        const values = checked.map(cb => cb.value);
+        const value = values.join(",");
+        localStorage.setItem("business-nature-multi", value);
+        console.log("Saved business-nature-multi (custom):", value);
+      }
+    }
 
     // Save employment checkbox state
     const employedCheckbox = document.getElementById("yes");
