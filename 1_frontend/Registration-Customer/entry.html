@@ -13,13 +13,14 @@
     rel="stylesheet"
   />
   <body>
+    <script src="../js/navigation.js"></script>
     <div class="entry">
       <div class="logo">
         <img src="../assets/logowtext.png" alt="Univault Logo" />
       </div>
 
       <div class="button">
-        <button class="log-in" onclick="location.href='login.html'">
+        <button class="log-in" onclick="Navigation.goto('login');">
           Log In
         </button>
         <div class="or">
@@ -32,7 +33,7 @@
           <p>Not yet a <span class="blue-text">UniVault</span> user?</p>
         </div>
 
-        <button onclick="location.href='registration1.html'" class="register">
+        <button onclick="Navigation.goto('registration1');" class="register">
           Register Now
         </button>
       </div>

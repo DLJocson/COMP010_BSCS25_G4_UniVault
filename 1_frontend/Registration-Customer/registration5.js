@@ -1,3 +1,8 @@
+/**
+ * Registration Step 5: Employment & Financial Data
+ * Connects to the UniVault registration API
+ */
+
 document.addEventListener("DOMContentLoaded", function () {
   const checkbox = document.getElementById("yes");
   const containers = document.querySelector(".containers");
@@ -242,13 +247,33 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Proceed button
   if (proceedBtn) {
-    proceedBtn.onclick = function (e) {
+    proceedBtn.onclick = async function (e) {
       e.preventDefault();
       console.log("Validating form...");
 
       if (validateForm()) {
-        console.log("Form valid - redirecting");
-        window.location.href = "registration6.html";
+        console.log("Form valid - saving data and proceeding");
+        
+        try {
+          // Collect form data
+          const formData = collectFormData();
+          
+          // Save step data to session
+          RegistrationManager.saveStepData(5, formData);
+          
+          // Submit to API if session exists
+          const sessionId = sessionStorage.getItem('registrationSessionId');
+          if (sessionId) {
+            await RegistrationManager.submitStepData(5, formData);
+          }
+          
+          // Navigate to next step
+          window.location.href = "registration6.html";
+          
+        } catch (error) {
+          console.error('Error saving step 5 data:', error);
+          showError(document.getElementById('proceed'), 'Failed to save data. Please try again.');
+        }
       } else {
         console.log("Form invalid - showing errors");
         const firstError = document.querySelector(".error");
@@ -259,6 +284,61 @@ document.addEventListener("DOMContentLoaded", function () {
       }
       return false;
     };
+  }
+
+  // Function to collect all form data
+  function collectFormData() {
+    const formData = {};
+    
+    // Employment status
+    const isEmployed = document.getElementById("yes").checked;
+    formData.is_employed = isEmployed;
+    
+    if (isEmployed) {
+      // Work details
+      formData.work_email = document.getElementById("work-emai").value.trim();
+      formData.work_country_code = document.getElementById("work").value.trim();
+      formData.work_phone = document.getElementById("business-number").value.trim();
+      formData.tin_number = document.getElementById("tin").value.trim();
+      
+      // Work address
+      formData.work_unit = document.getElementById("unit").value.trim();
+      formData.work_building = document.getElementById("building").value.trim();
+      formData.work_street = document.getElementById("street").value.trim();
+      formData.work_subdivision = document.getElementById("subdivision").value.trim();
+      formData.work_barangay = document.getElementById("barangay").value.trim();
+      formData.work_city = document.getElementById("city").value.trim();
+      formData.work_province = document.getElementById("province").value.trim();
+      formData.work_country = document.getElementById("country").value.trim();
+      formData.work_zip_code = document.getElementById("zip-code").value.trim();
+      
+      // Source of funds (multi-select)
+      const sourceOfFundsHidden = document.getElementById("source-of-funds-multi");
+      formData.source_of_funds = sourceOfFundsHidden ? sourceOfFundsHidden.value : '';
+      
+      // Remittance details (if applicable)
+      const remittanceCountry = document.getElementById("remittance-country");
+      const remittancePurpose = document.getElementById("remittance-purpose");
+      if (remittanceCountry && remittanceCountry.value) {
+        formData.remittance_country = remittanceCountry.value;
+      }
+      if (remittancePurpose && remittancePurpose.value) {
+        formData.remittance_purpose = remittancePurpose.value.trim();
+      }
+      
+      // Business nature (multi-select)
+      const businessNatureHidden = document.getElementById("business-nature-multi");
+      formData.business_nature = businessNatureHidden ? businessNatureHidden.value : '';
+      
+      // Primary employer and position
+      formData.primary_employer = document.getElementById("primary-employer").value.trim();
+      formData.position = document.getElementById("position").value;
+      
+      // Gross income
+      formData.gross_income = document.getElementById("gross-income").value.trim();
+    }
+    
+    return formData;
   }
 
   // DIRECT FIX - Manually setup the problematic elements

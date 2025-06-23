@@ -1,30 +1,65 @@
+/**
+ * Registration Step 3: Customer Details
+ * Connects to the UniVault registration API
+ */
+
 const config = {
   cUrl: "https://api.countrystatecity.in/v1/countries",
   ckey: "NHhvOEcyWk50N2Vna3VFTE00bFp3MjFKR0ZEOUhkZlg4RTk1MlJlaA==",
 };
 
-function populateCountryDropdown(selectId) {
+let registrationSessionId = null;
+
+async function populateCountryDropdown(selectId) {
   const selectElement = document.getElementById(selectId);
   if (!selectElement) {
     console.error(`Dropdown with ID '${selectId}' not found.`);
     return;
   }
 
-  fetch(config.cUrl, {
-    headers: { "X-CSCAPI-KEY": config.ckey },
-  })
-    .then((res) => res.json())
-    .then((data) => {
-      data.forEach((country) => {
-        const option = document.createElement("option");
-        option.value = country.iso2;
-        option.textContent = country.name;
-        selectElement.appendChild(option);
-      });
-    })
-    .catch((error) =>
-      console.error(`Error loading countries for ${selectId}:`, error)
-    );
+  try {
+    const response = await fetch(config.cUrl, {
+      headers: { "X-CSCAPI-KEY": config.ckey },
+    });
+    const data = await response.json();
+    
+    data.forEach((country) => {
+      const option = document.createElement("option");
+      option.value = country.iso2;
+      option.textContent = country.name;
+      selectElement.appendChild(option);
+    });
+  } catch (error) {
+    console.error(`Error loading countries for ${selectId}:`, error);
+    UINotifications.error('Failed to load country data. Please refresh the page.');
+  }
+}
+
+// Load civil status options from API
+async function populateCivilStatusDropdown() {
+  const civilStatusSelect = document.getElementById("civil-status");
+  if (!civilStatusSelect) return;
+
+  try {
+    await DropdownManager.populateSelect(civilStatusSelect, '/civil-status', 'civil_status_code', 'description');
+  } catch (error) {
+    console.error('Failed to load civil status options:', error);
+    // Fallback to static options
+    const fallbackOptions = [
+      { code: 'single', description: 'Single' },
+      { code: 'married', description: 'Married' },
+      { code: 'divorced', description: 'Divorced' },
+      { code: 'widowed', description: 'Widowed' },
+      { code: 'separated', description: 'Separated' }
+    ];
+    
+    fallbackOptions.forEach(option => {
+      const optionElement = document.createElement("option");
+      optionElement.value = option.code;
+      optionElement.textContent = option.description;
+      civilStatusSelect.appendChild(optionElement);
+    });
+  }
 }
 
 function populateCitizenshipDropdown() {
@@ -490,43 +525,133 @@ function initializeFormValidation() {
     return isValid;
   };
 
-  proceedButton.addEventListener("click", (e) => {
+  proceedButton.addEventListener("click", async (e) => {
     e.preventDefault();
     console.log("Proceed button clicked!");
 
     const isFormValid = validateInputs();
 
     if (isFormValid) {
-      location.href = "registration4.html";
-
-      const existingMessage = document.querySelector(".success-message");
-      if (existingMessage) {
-        existingMessage.remove();
-      }
-
-      const successMessage = document.createElement("div");
-      successMessage.className = "success-message";
-      successMessage.textContent =
-        "✓ Form is valid! Ready to proceed to the next step.";
-
-      const secondContainer = document.querySelector(".second-container");
-      secondContainer.insertBefore(
-        successMessage,
-        document.querySelector(".button")
-      );
+      await submitStepData();
     } else {
       console.log("Form has validation errors.");
     }
   });
   addInputListeners();
+
+  // Submit step data to API
+  async function submitStepData() {
+    try {
+      LoadingManager.show(proceedButton, 'Processing...');
+      
+      const stepData = {
+        first_name: firstName.value.trim(),
+        middle_name: middleName.value.trim(),
+        last_name: lastName.value.trim(),
+        suffix: suffix.value.trim(),
+        date_of_birth: `${yearSelect.value}-${monthSelect.value.padStart(2, '0')}-${daySelect.value.padStart(2, '0')}`,
+        place_of_birth: countrySelect.value,
+        nationality: citizenshipSelect.value,
+        gender: genderSelect.value,
+        civil_status_code: civilStatusSelect.value,
+        residency_status: residencyStatusSelect.value,
+        timestamp: new Date().toISOString()
+      };
+
+      const response = await APIClient.post('/customers/register/step3', {
+        session_id: registrationSessionId,
+        data: stepData
+      });
+
+      // Store data locally as backup
+      RegistrationManager.saveStepData(3, stepData);
+      
+      UINotifications.success('Personal information saved successfully!');
+      
+      // Navigate to next step
+      setTimeout(() => {
+        Navigation.goto('registration4');
+      }, 1000);
+
+    } catch (error) {
+      console.error('Failed to submit step:', error);
+      LoadingManager.hide(proceedButton);
+      
+      if (error.status === 400) {
+        UINotifications.error(error.details?.message || 'Invalid data. Please check your information.');
+      } else {
+        UINotifications.error('Failed to save your information. Please try again.');
+      }
+    }
+  }
+
+  // Update progress indicator
+  async function updateProgress() {
+    try {
+      if (registrationSessionId) {
+        const response = await APIClient.get(`/customers/register/progress/${registrationSessionId}`);
+        RegistrationManager.updateProgressIndicator(response.current_step || 3);
+      }
+    } catch (error) {
+      console.error('Failed to update progress:', error);
+    }
+  }
+
+  // Restore saved data if available
+  async function restoreData() {
+    registrationSessionId = sessionStorage.getItem('registrationSessionId');
+    
+    if (!registrationSessionId) {
+      UINotifications.error('Session expired. Please start over.');
+      Navigation.goto('registration1');
+      return;
+    }
+
+    try {
+      const response = await APIClient.get(`/customers/register/progress/${registrationSessionId}`);
+      if (response.step_data) {
+        const data = response.step_data;
+        
+        // Populate form fields with saved data
+        if (data.first_name) firstName.value = data.first_name;
+        if (data.middle_name) middleName.value = data.middle_name;
+        if (data.last_name) lastName.value = data.last_name;
+        if (data.suffix) suffix.value = data.suffix;
+        if (data.gender) genderSelect.value = data.gender;
+        if (data.civil_status_code) civilStatusSelect.value = data.civil_status_code;
+        if (data.residency_status) residencyStatusSelect.value = data.residency_status;
+        if (data.place_of_birth) countrySelect.value = data.place_of_birth;
+        if (data.nationality) citizenshipSelect.value = data.nationality;
+        
+        // Handle date of birth
+        if (data.date_of_birth) {
+          const date = new Date(data.date_of_birth);
+          yearSelect.value = date.getFullYear();
+          monthSelect.value = date.getMonth() + 1;
+          daySelect.value = date.getDate();
+          updateDays(); // Update days dropdown
+        }
+      }
+      await updateProgress();
+    } catch (error) {
+      console.error('Failed to restore data:', error);
+      UINotifications.error('Failed to load previous data. Please try again.');
+    }
+  }
 }
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
   console.log("DOM loaded, initializing...");
-  populateCountryDropdown("country");
+  
+  // Initialize dropdowns
+  await populateCountryDropdown("country");
   populateCitizenshipDropdown();
+  await populateCivilStatusDropdown();
   initializeDateDropdowns();
   initializeFormValidation();
+  
+  // Restore data and update progress
+  await restoreData();
 });
 
 document.getElementById("month").addEventListener("change", function () {

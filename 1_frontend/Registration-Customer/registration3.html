@@ -106,10 +106,6 @@
           <div>
             <select name="gender" id="gender">
               <option value="" disabled selected>Select Gender</option>
-              <option value="Male">Male</option>
-              <option value="Female">Female</option>
-              <option value="Non-binary">Non-binary</option>
-              <option value="Prefer not to say">Prefer not to say</option>
             </select>
             <div class="error-message" id="error-gender"></div>
           </div>
@@ -119,11 +115,6 @@
               <option class="default-select" value="" disabled selected>
                 Select Civil Status
               </option>
-              <option value="Single">Single</option>
-              <option value="Married">Married</option>
-              <option value="Divorced">Divorced</option>
-              <option value="Widowed">Widowed</option>
-              <option value="Separated">Separated</option>
             </select>
             <div class="error-message" id="error-civil-status"></div>
           </div>
@@ -192,4 +183,35 @@
   addAsterisk(genderLabels[1]); // Civil Status
 
   addAsterisk(document.querySelector('label[for="residency-status"]'));
+</script>
+
+<!-- UniVault Integration Scripts -->
+<script src="../js/api-config.js"></script>
+<script src="../js/form-utils.js"></script>
+<script src="../js/registration-manager.js"></script>
+<script src="../js/dropdown-config.js"></script>
+<link rel="stylesheet" href="../js/univault-ui.css">
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const form = document.querySelector('form');
+  
+  // Initialize registration manager for step 3
+  RegistrationManager.initializeStepForm(3, form, {
+    first_name: { required: true, name: true, minLength: 2 },
+    last_name: { required: true, name: true, minLength: 2 },
+    middle_name: { name: true },
+    suffix: { name: true },
+    date_of_birth: { required: true, date: true },
+    place_of_birth: { required: true, name: true },
+    country: { required: true },
+    citizenship: { required: true },
+    gender: { required: true },
+    'civil-status': { required: true },
+    'residency-status': { required: true }
+  });
+
+  // Auto-save every 30 seconds
+  RegistrationManager.enableAutoSave(3, form);
+});
 </script>

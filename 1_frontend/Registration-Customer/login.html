@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>UniVault - Login</title>
     <link rel="stylesheet" href="login.css" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -15,21 +15,109 @@
   </head>
   <body>
     <div class="log-in-page">
-      <img src="../assets/logowtext.png" alt="" />
+      <img src="../assets/logowtext.png" alt="UniVault Logo" />
 
-      <div class="text-box">
-        <input type="text" placeholder="Enter Account Number" />
-        <input class="password" type="password" placeholder="Enter Password" />
-      </div>
+      <form id="loginForm" class="login-form">
+        <div id="error-container"></div>
+        <div id="success-container"></div>
+        
+        <div class="text-box">
+          <input 
+            type="text" 
+            id="identifier" 
+            name="identifier"
+            placeholder="Enter Customer ID or Email" 
+            required 
+          />
+          <input 
+            class="password" 
+            type="password" 
+            id="password"
+            name="password"
+            placeholder="Enter Password" 
+            required 
+          />
+        </div>
 
-      <div class="button">
-        <button>Log In</button>
-      </div>
+        <div class="user-type-selection">
+          <label>
+            <input type="radio" name="userType" value="customer" checked> Customer
+          </label>
+          <label>
+            <input type="radio" name="userType" value="admin"> Admin
+          </label>
+        </div>
 
-      <div class="forgot-password">
-        <a href="#">Forgot Password</a>
-      </div>
+        <div class="button">
+          <button type="submit" id="loginBtn">Log In</button>
+        </div>
+
+        <div class="forgot-password">
+          <a href="#" onclick="showForgotPassword()">Forgot Password</a>
+        </div>
+
+        <div class="register-link">
+          <p>Don't have an account? <a href="landing.html">Register here</a></p>
+        </div>
+      </form>
     </div>
+
+    <script src="../js/univault-api.js"></script>
+    <link rel="stylesheet" href="../js/univault-ui.css">
+    <script>
+      // Check if already authenticated
+      if (AuthManager.isAuthenticated()) {
+        const user = AuthManager.getUser();
+        if (user) {
+          AuthManager.redirectToDashboard(user.userType || 'customer');
+        }
+      }
+
+      document.getElementById('loginForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const submitBtn = document.getElementById('loginBtn');
+        const originalText = submitBtn.innerHTML;
+        
+        try {
+          UIHelpers.clearMessages();
+          
+          // Get form data
+          const formData = new FormData(e.target);
+          const identifier = formData.get('identifier');
+          const password = formData.get('password');
+          const userType = formData.get('userType');
+
+          // Validate form
+          if (!identifier || !password) {
+            UIHelpers.showError('Please fill in all required fields.');
+            return;
+          }
+          
+          UIHelpers.showLoading(submitBtn, 'Logging in...');
+
+          const response = await api.login(identifier, password, userType);
+
+          UIHelpers.showSuccess('Login successful! Redirecting...');
+          
+          // Redirect based on user type
+          setTimeout(() => {
+            AuthManager.redirectToDashboard(response.user.userType);
+          }, 1500);
+
+        } catch (error) {
+          UIHelpers.hideLoading(submitBtn, originalText);
+          UIHelpers.showError(error.message || 'Login failed. Please check your credentials.');
+        }
+      });
+
+      function showForgotPassword() {
+        UIHelpers.showError('Password reset functionality will be available soon. Please contact support for assistance.');
+      }
+
+      // Auto-focus on identifier field
+      document.getElementById('identifier').focus();
+    </script>
   </body>
 </html>
 
@@ -39,5 +127,93 @@
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
+  }
+
+  /* Enhanced UI styles */
+  .user-type-selection {
+    margin: 15px 0;
+    text-align: center;
+  }
+
+  .user-type-selection label {
+    margin: 0 15px;
+    color: #2c3e50;
+    font-weight: 500;
+  }
+
+  .user-type-selection input[type="radio"] {
+    margin-right: 5px;
+  }
+
+  .register-link {
+    margin-top: 20px;
+    text-align: center;
+  }
+
+  .register-link p {
+    color: #2c3e50;
+    font-size: 14px;
+  }
+
+  .register-link a {
+    color: #3498db;
+    text-decoration: none;
+    font-weight: 600;
+  }
+
+  .register-link a:hover {
+    text-decoration: underline;
+  }
+
+  /* Alert styles */
+  .alert {
+    padding: 12px;
+    margin: 10px 0;
+    border-radius: 6px;
+    font-size: 14px;
+    text-align: center;
+  }
+
+  .alert-error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f1aeb5;
+  }
+
+  .alert-success {
+    background-color: #d1edff;
+    color: #0f5132;
+    border: 1px solid #a3cfbb;
+  }
+
+  .error-icon, .success-icon {
+    margin-right: 5px;
+  }
+
+  /* Loading spinner */
+  .loading-spinner {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border: 2px solid #f3f3f3;
+    border-top: 2px solid #3498db;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
+  /* Form validation */
+  input.error {
+    border: 2px solid #e74c3c !important;
+    background-color: #fdf2f2;
+  }
+
+  button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
   }
 </style>

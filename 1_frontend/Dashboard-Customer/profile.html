@@ -6,7 +6,7 @@
       name="viewport"
       content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
     />
-    <title>Document</title>
+    <title>UniVault - Customer Profile</title>
     <link rel="stylesheet" href="profile.css" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -44,7 +44,7 @@
           <nav class="nav-bar">
             <input type="text" id="search" placeholder="Search" />
             <div class="icon-container">
-              <img id="log-out" src="/assets/log-out-logo.png" alt="Log Out" />
+              <img id="log-out" src="../assets/log-out-logo.png" alt="Log Out" />
             </div>
           </nav>
 
@@ -434,5 +434,81 @@
         </div>
       </div>
     </div>
+
+    <script src="../js/univault-api.js"></script>
+    <script>
+      // Require authentication
+      if (!UIHelpers.requireAuth()) {
+        // User will be redirected to login
+      }
+
+      // Load customer profile data
+      async function loadProfile() {
+        try {
+          const profile = await api.getProfile();
+          
+          // Update profile information in the UI
+          updateProfileDisplay(profile);
+          
+        } catch (error) {
+          console.error('Failed to load profile:', error);
+          UIHelpers.showError('Failed to load profile data');
+        }
+      }
+
+      function updateProfileDisplay(profile) {
+        // Update personal information fields
+        const fields = {
+          'customer_id': profile.customer_id,
+          'first_name': profile.first_name,
+          'last_name': profile.last_name,
+          'middle_name': profile.middle_name || '',
+          'email': profile.email,
+          'date_of_birth': profile.date_of_birth,
+          'nationality': profile.nationality,
+          'gender': profile.gender,
+          'civil_status_description': profile.civil_status_description || ''
+        };
+
+        // Update DOM elements if they exist
+        Object.keys(fields).forEach(key => {
+          const element = document.getElementById(key) || document.querySelector(`[data-field="${key}"]`);
+          if (element) {
+            if (element.tagName === 'INPUT') {
+              element.value = fields[key] || '';
+            } else {
+              element.textContent = fields[key] || 'Not provided';
+            }
+          }
+        });
+
+        // Update header with customer name
+        const headerName = document.querySelector('.header h1') || document.querySelector('.customer-name');
+        if (headerName) {
+          headerName.textContent = `${profile.first_name} ${profile.last_name}`;
+        }
+      }
+
+      // Logout functionality
+      document.getElementById('log-out').addEventListener('click', async () => {
+        try {
+          await api.logout();
+          window.location.href = '../Registration-Customer/login.html';
+        } catch (error) {
+          console.error('Logout error:', error);
+          // Force logout even if API call fails
+          api.clearAuth();
+          window.location.href = '../Registration-Customer/login.html';
+        }
+      });
+
+      // Load data when page loads
+      document.addEventListener('DOMContentLoaded', () => {
+        loadProfile();
+      });
+
+      // Auto-refresh profile data every 5 minutes
+      setInterval(loadProfile, 5 * 60 * 1000);
+    </script>
   </body>
 </html>

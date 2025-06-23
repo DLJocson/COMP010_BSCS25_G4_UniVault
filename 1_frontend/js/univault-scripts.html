@@ -1,0 +1,68 @@
+<!-- 
+  UniVault Integration Scripts
+  Include this file in all UniVault pages to enable full functionality
+  
+  Usage: Add this before closing </body> tag:
+  <!-- UniVault Integration -->
+  <script>
+    fetch('../js/univault-scripts.html')
+      .then(response => response.text())
+      .then(html => {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, 'text/html');
+        const scripts = doc.querySelectorAll('script, link');
+        scripts.forEach(script => document.head.appendChild(script.cloneNode(true)));
+      });
+  </script>
+-->
+
+<!-- Core API and Configuration -->
+<script src="../js/api-config.js"></script>
+
+<!-- Form Utilities and Validation -->
+<script src="../js/form-utils.js"></script>
+
+<!-- Dropdown Management -->
+<script src="../js/dropdown-config.js"></script>
+
+<!-- Registration Flow Management -->
+<script src="../js/registration-manager.js"></script>
+
+<!-- UI Styles -->
+<link rel="stylesheet" href="../js/univault-ui.css">
+
+<!-- Master Initialization Script -->
+<script src="../js/univault-init.js"></script>
+
+<!-- Integration Testing (Development Only) -->
+<script src="../js/integration-test.js"></script>
+
+<!-- Global Error Handler -->
+<script>
+window.addEventListener('error', (e) => {
+  console.error('UniVault Error:', e.error);
+  if (typeof UINotifications !== 'undefined') {
+    UINotifications.error('An unexpected error occurred. Please refresh the page.');
+  }
+});
+
+window.addEventListener('unhandledrejection', (e) => {
+  console.error('UniVault Promise Rejection:', e.reason);
+  if (typeof UINotifications !== 'undefined') {
+    UINotifications.error('A network error occurred. Please check your connection.');
+  }
+});
+</script>
+
+<!-- Console Welcome Message -->
+<script>
+console.log(`
+🏦 UniVault Banking System
+========================
+✅ Frontend Integration Active
+📱 API Base: ${window.location.origin}/api
+🔧 Debug: IntegrationTester.runAllTests()
+💡 Help: Check README.md for documentation
+========================
+`);
+</script>

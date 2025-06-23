@@ -1,7 +1,15 @@
-document.addEventListener("DOMContentLoaded", function () {
+/**
+ * Registration Step 4: Contact Information and Address
+ * Connects to the UniVault registration API
+ */
+
+document.addEventListener("DOMContentLoaded", async function () {
   const proceedBtn = document.getElementById("proceed");
+  const backBtn = document.getElementById("back");
   const isAlternativeCheckbox = document.getElementById("is-alternative");
   const thirdContainer = document.getElementById("third-container");
+
+  let registrationSessionId = sessionStorage.getItem('registrationSessionId');
 
   thirdContainer.style.display = "flex";
 
@@ -12,6 +20,93 @@ document.addEventListener("DOMContentLoaded", function () {
       thirdContainer.style.display = "flex";
     }
   });
+
+  // Update progress indicator
+  async function updateProgress() {
+    try {
+      if (registrationSessionId) {
+        const response = await APIClient.get(`/customers/register/progress/${registrationSessionId}`);
+        RegistrationManager.updateProgressIndicator(response.current_step || 4);
+      }
+    } catch (error) {
+      console.error('Failed to update progress:', error);
+    }
+  }
+
+  // Load address types from API
+  async function loadAddressTypes() {
+    try {
+      // This would populate any address type dropdowns if they exist
+      const addressTypeSelects = document.querySelectorAll('[name="address_type"]');
+      for (const select of addressTypeSelects) {
+        await DropdownManager.populateSelect(select, '/address-types', 'address_type_code', 'description');
+      }
+    } catch (error) {
+      console.error('Failed to load address types:', error);
+    }
+  }
+
+  // Restore saved data if available
+  async function restoreData() {
+    if (!registrationSessionId) {
+      UINotifications.error('Session expired. Please start over.');
+      Navigation.goto('registration1');
+      return;
+    }
+
+    try {
+      const response = await APIClient.get(`/customers/register/progress/${registrationSessionId}`);
+      if (response.step_data) {
+        const data = response.step_data;
+        
+        // Populate contact fields
+        const personalInput = document.querySelector(".phone-number-text #personal");
+        const phoneInput = document.querySelector(".phone-number-text #phone-num");
+        const homeInput = document.querySelector(".home-landline-text #home");
+        const landlineInput = document.querySelector(".home-landline-text #landline");
+        const emailInput = document.querySelector(".personal-email #email");
+
+        if (data.personal_code && personalInput) personalInput.value = data.personal_code;
+        if (data.phone && phoneInput) phoneInput.value = data.phone;
+        if (data.home_code && homeInput) homeInput.value = data.home_code;
+        if (data.landline && landlineInput) landlineInput.value = data.landline;
+        if (data.email && emailInput) emailInput.value = data.email;
+
+        // Populate address fields
+        const unitInput = document.querySelector(".unit-building-text #unit");
+        const buildingInput = document.querySelector(".unit-building-text #building");
+        const streetInput = document.querySelector(".street-subdivision-text #street");
+        const subdivisionInput = document.querySelector(".street-subdivision-text #subdivision");
+        const barangayInput = document.querySelector(".barangay-city-text #barangay");
+        const cityInput = document.querySelector(".barangay-city-text #city");
+        const provinceInput = document.querySelector(".province-country-text #province");
+        const countryInput = document.querySelector(".province-country-text #country");
+        const zipCode = document.querySelector(".zip-code #zip-code");
+
+        if (data.unit && unitInput) unitInput.value = data.unit;
+        if (data.building && buildingInput) buildingInput.value = data.building;
+        if (data.street && streetInput) streetInput.value = data.street;
+        if (data.subdivision && subdivisionInput) subdivisionInput.value = data.subdivision;
+        if (data.barangay && barangayInput) barangayInput.value = data.barangay;
+        if (data.city && cityInput) cityInput.value = data.city;
+        if (data.province && provinceInput) provinceInput.value = data.province;
+        if (data.country && countryInput) countryInput.value = data.country;
+        if (data.zip_code && zipCode) zipCode.value = data.zip_code;
+
+        // Handle alternative address checkbox
+        if (data.is_alternative_same !== undefined && isAlternativeCheckbox) {
+          isAlternativeCheckbox.checked = data.is_alternative_same;
+          if (data.is_alternative_same) {
+            thirdContainer.style.display = "none";
+          }
+        }
+      }
+      await updateProgress();
+    } catch (error) {
+      console.error('Failed to restore data:', error);
+      UINotifications.error('Failed to load previous data. Please try again.');
+    }
+  }
 
   function validateForm() {
     let isValid = true;
@@ -252,11 +347,11 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   });
 
-  proceedBtn.onclick = function (e) {
+  proceedBtn.onclick = async function (e) {
     e.preventDefault();
 
     if (validateForm()) {
-      window.location.href = "registration5.html";
+      await submitStepData();
     } else {
       const firstError = document.querySelector(".error");
       if (firstError) {
@@ -267,4 +362,114 @@ document.addEventListener("DOMContentLoaded", function () {
 
     return false;
   };
+
+  // Submit step data to API
+  async function submitStepData() {
+    try {
+      LoadingManager.show(proceedBtn, 'Processing...');
+      
+      // Collect contact information
+      const personalInput = document.querySelector(".phone-number-text #personal");
+      const phoneInput = document.querySelector(".phone-number-text #phone-num");
+      const homeInput = document.querySelector(".home-landline-text #home");
+      const landlineInput = document.querySelector(".home-landline-text #landline");
+      const emailInput = document.querySelector(".personal-email #email");
+
+      // Collect address information
+      const unitInput = document.querySelector(".unit-building-text #unit");
+      const buildingInput = document.querySelector(".unit-building-text #building");
+      const streetInput = document.querySelector(".street-subdivision-text #street");
+      const subdivisionInput = document.querySelector(".street-subdivision-text #subdivision");
+      const barangayInput = document.querySelector(".barangay-city-text #barangay");
+      const cityInput = document.querySelector(".barangay-city-text #city");
+      const provinceInput = document.querySelector(".province-country-text #province");
+      const countryInput = document.querySelector(".province-country-text #country");
+      const zipCode = document.querySelector(".zip-code #zip-code");
+
+      const stepData = {
+        // Contact information
+        personal_code: personalInput?.value.trim() || '',
+        phone: `${personalInput?.value.trim() || ''}${phoneInput?.value.trim() || ''}`,
+        home_code: homeInput?.value.trim() || '',
+        landline: `${homeInput?.value.trim() || ''}-${landlineInput?.value.trim() || ''}`,
+        email: emailInput?.value.trim() || '',
+        
+        // Primary address
+        unit: unitInput?.value.trim() || '',
+        building: buildingInput?.value.trim() || '',
+        street: streetInput?.value.trim() || '',
+        subdivision: subdivisionInput?.value.trim() || '',
+        barangay: barangayInput?.value.trim() || '',
+        city: cityInput?.value.trim() || '',
+        province: provinceInput?.value.trim() || '',
+        country: countryInput?.value.trim() || '',
+        zip_code: zipCode?.value.trim() || '',
+        
+        // Alternative address flag
+        is_alternative_same: isAlternativeCheckbox?.checked || false,
+        
+        timestamp: new Date().toISOString()
+      };
+
+      // If alternative address is not the same, collect alternative address data
+      if (!isAlternativeCheckbox.checked) {
+        const altUnitInput = document.querySelector("#third-container .unit-building-text #unit");
+        const altBuildingInput = document.querySelector("#third-container .unit-building-text #building");
+        const altStreetInput = document.querySelector("#third-container .street-subdivision-text #street");
+        const altSubdivisionInput = document.querySelector("#third-container .street-subdivision-text #subdivision");
+        const altBarangayInput = document.querySelector("#third-container .barangay-city-text #barangay");
+        const altCityInput = document.querySelector("#third-container .barangay-city-text #city");
+        const altProvinceInput = document.querySelector("#third-container .province-country-text #province");
+        const altCountryInput = document.querySelector("#third-container .province-country-text #country");
+        const altZipCode = document.querySelector("#third-container .zip-code #zip-code");
+
+        stepData.alt_unit = altUnitInput?.value.trim() || '';
+        stepData.alt_building = altBuildingInput?.value.trim() || '';
+        stepData.alt_street = altStreetInput?.value.trim() || '';
+        stepData.alt_subdivision = altSubdivisionInput?.value.trim() || '';
+        stepData.alt_barangay = altBarangayInput?.value.trim() || '';
+        stepData.alt_city = altCityInput?.value.trim() || '';
+        stepData.alt_province = altProvinceInput?.value.trim() || '';
+        stepData.alt_country = altCountryInput?.value.trim() || '';
+        stepData.alt_zip_code = altZipCode?.value.trim() || '';
+      }
+
+      const response = await APIClient.post('/customers/register/step4', {
+        session_id: registrationSessionId,
+        data: stepData
+      });
+
+      // Store data locally as backup
+      RegistrationManager.saveStepData(4, stepData);
+      
+      UINotifications.success('Contact and address information saved successfully!');
+      
+      // Navigate to next step
+      setTimeout(() => {
+        Navigation.goto('registration5');
+      }, 1000);
+
+    } catch (error) {
+      console.error('Failed to submit step:', error);
+      LoadingManager.hide(proceedBtn);
+      
+      if (error.status === 400) {
+        UINotifications.error(error.details?.message || 'Invalid data. Please check your information.');
+      } else {
+        UINotifications.error('Failed to save your information. Please try again.');
+      }
+    }
+  }
+
+  // Add back button functionality
+  if (backBtn) {
+    backBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      Navigation.goto('registration3');
+    });
+  }
+
+  // Initialize the form
+  await loadAddressTypes();
+  await restoreData();
 });

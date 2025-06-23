@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UniVault Navigation Test</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        button {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #2980b9;
+        }
+        .success { color: #27ae60; }
+        .error { color: #e74c3c; }
+    </style>
+</head>
+<body>
+    <script src="js/navigation.js"></script>
+    
+    <h1>🧭 UniVault Navigation System Test</h1>
+    
+    <div class="test-section">
+        <h2>Main Navigation</h2>
+        <button onclick="Navigation.goto('home')">🏠 Home (Landing)</button>
+        <button onclick="Navigation.goto('login')">🔐 Login</button>
+        <button onclick="Navigation.goto('entry')">📝 Entry</button>
+        <button onclick="Navigation.goto('register')">👤 Register</button>
+    </div>
+
+    <div class="test-section">
+        <h2>Registration Flow</h2>
+        <button onclick="Navigation.goto('registration1')">Step 1</button>
+        <button onclick="Navigation.goto('registration2')">Step 2</button>
+        <button onclick="Navigation.goto('registration3')">Step 3</button>
+        <button onclick="Navigation.nextRegistrationStep(1)">Next Step (from 1)</button>
+        <button onclick="Navigation.prevRegistrationStep(3)">Prev Step (from 3)</button>
+    </div>
+
+    <div class="test-section">
+        <h2>Customer Dashboard</h2>
+        <button onclick="Navigation.goto('customerDashboard')">🏦 Accounts</button>
+        <button onclick="Navigation.goto('customerProfile')">👤 Profile</button>
+        <button onclick="Navigation.goto('addAccount')">➕ Add Account</button>
+        <button onclick="Navigation.goto('closeAccount')">❌ Close Account</button>
+    </div>
+
+    <div class="test-section">
+        <h2>Admin Dashboard</h2>
+        <button onclick="Navigation.goto('adminDashboard')">🛠️ Admin Home</button>
+        <button onclick="Navigation.goto('adminUsers')">👥 User Management</button>
+        <button onclick="Navigation.goto('adminVerification')">✅ Verification</button>
+        <button onclick="Navigation.goto('adminReview')">📋 Review Queue</button>
+    </div>
+
+    <div class="test-section">
+        <h2>Utility Functions</h2>
+        <button onclick="Navigation.back()">⬅️ Go Back</button>
+        <button onclick="Navigation.logout()">🚪 Logout</button>
+        <button onclick="Navigation.redirectToDashboard('customer')">👤 Customer Dashboard</button>
+        <button onclick="Navigation.redirectToDashboard('admin')">🛠️ Admin Dashboard</button>
+    </div>
+
+    <div class="test-section">
+        <h2>Navigation Status</h2>
+        <p id="status">✅ <span class="success">Navigation system loaded successfully!</span></p>
+        <p>Current routes available: <span id="routeCount"></span></p>
+        <button onclick="testNavigation()">🧪 Run Navigation Test</button>
+        <div id="testResults"></div>
+    </div>
+
+    <script>
+        // Display route count
+        document.getElementById('routeCount').textContent = Object.keys(Navigation.routes).length;
+
+        function testNavigation() {
+            const results = document.getElementById('testResults');
+            results.innerHTML = '<h3>Test Results:</h3>';
+            
+            // Test navigation system
+            const tests = [
+                { name: 'Navigation object exists', test: () => typeof Navigation !== 'undefined' },
+                { name: 'Routes defined', test: () => Object.keys(Navigation.routes).length > 0 },
+                { name: 'goto method exists', test: () => typeof Navigation.goto === 'function' },
+                { name: 'Helper functions exist', test: () => typeof Navigation.home === 'function' },
+                { name: 'Registration helpers exist', test: () => typeof Navigation.nextRegistrationStep === 'function' }
+            ];
+
+            tests.forEach(test => {
+                const passed = test.test();
+                const status = passed ? '✅' : '❌';
+                const className = passed ? 'success' : 'error';
+                results.innerHTML += `<p>${status} <span class="${className}">${test.name}</span></p>`;
+            });
+        }
+
+        // Auto-test on load
+        document.addEventListener('DOMContentLoaded', testNavigation);
+    </script>
+</body>
+</html>

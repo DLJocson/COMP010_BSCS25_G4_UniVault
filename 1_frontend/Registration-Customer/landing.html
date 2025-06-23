@@ -13,6 +13,70 @@
     />
   </head>
   <body>
+    <script src="../js/navigation.js"></script>
+    <script>
+      // Robust navigation functions with fallbacks
+      function navigateToEntry() {
+        try {
+          if (typeof Navigation !== 'undefined') {
+            Navigation.goto('entry');
+          } else {
+            window.location.href = 'entry.html';
+          }
+        } catch (error) {
+          console.warn('Navigation system error, using fallback:', error);
+          window.location.href = 'entry.html';
+        }
+      }
+
+      function navigateToLogin() {
+        try {
+          if (typeof Navigation !== 'undefined') {
+            Navigation.goto('login');
+          } else {
+            window.location.href = 'login.html';
+          }
+        } catch (error) {
+          console.warn('Navigation system error, using fallback:', error);
+          window.location.href = 'login.html';
+        }
+      }
+
+      function navigateToRegister() {
+        try {
+          if (typeof Navigation !== 'undefined') {
+            Navigation.goto('registration1');
+          } else {
+            window.location.href = 'registration1.html';
+          }
+        } catch (error) {
+          console.warn('Navigation system error, using fallback:', error);
+          window.location.href = 'registration1.html';
+        }
+      }
+
+      // Debug function to test navigation
+      function testNavigation() {
+        console.log('Navigation object:', typeof Navigation);
+        console.log('Available routes:', Navigation?.routes ? Object.keys(Navigation.routes).length : 'Not available');
+        alert('Navigation test - check console for details');
+      }
+
+      // Ensure scripts load before enabling buttons
+      document.addEventListener('DOMContentLoaded', function() {
+        console.log('Landing page loaded');
+        console.log('Navigation available:', typeof Navigation !== 'undefined');
+        
+        // Add click event listeners as backup
+        const proceedBtn = document.getElementById('proceed');
+        if (proceedBtn) {
+          proceedBtn.addEventListener('click', function(e) {
+            console.log('Get Started button clicked');
+            navigateToEntry();
+          });
+        }
+      });
+    </script>
     <div class="landing-page">
       <header class="header">
         <div class="upper-header">
@@ -72,16 +136,18 @@
               <div class="frame-3">
                 <div class="component-normal-5">
                   <div
-                    onclick="window.location.href='entry.html';"
+                    onclick="navigateToEntry();"
                     class="normal-text-regular-6"
+                    style="cursor: pointer"
                   >
                     Enroll Now!
                   </div>
                 </div>
                 <div class="component-normal-6">
                   <div
-                    onclick="window.location.href='login.html';"
+                    onclick="navigateToLogin();"
                     class="normal-text-regular-7"
+                    style="cursor: pointer"
                   >
                     Log In
                   </div>
@@ -145,7 +211,7 @@
                     <div class="button">
                       <div class="back">
                         <button
-                          onclick="window.location.href='entry.html';"
+                          onclick="navigateToEntry();"
                           id="proceed"
                         >
                           Get Started Now
@@ -436,7 +502,13 @@
             </div>
           </div>
           <div class="small-text-wrapper">
-            <p class="small-text-2">@2025 UniVault. All rights reserved.</p>
+          <p class="small-text-2">@2025 UniVault. All rights reserved.</p>
+          </div>
+            
+              <!-- Debug Section (remove in production) -->
+                <div style="position: fixed; bottom: 10px; right: 10px; background: rgba(0,0,0,0.8); color: white; padding: 10px; border-radius: 5px; font-size: 12px; z-index: 9999;">
+                    <button onclick="testNavigation()" style="background: #3498db; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; margin-right: 5px;">Test Nav</button>
+            <button onclick="navigateToEntry()" style="background: #27ae60; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer;">Test Entry</button>
           </div>
         </div>
       </div>

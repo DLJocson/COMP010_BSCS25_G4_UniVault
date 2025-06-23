@@ -13,42 +13,67 @@
     />
   </head>
   <body>
+    <script src="../js/navigation.js"></script>
     <div class="customer-type-page">
       <h1 class="direction-text">Customer Type</h1>
+      <script src="../js/api-config.js"></script>
+      <script src="../js/form-utils.js"></script>
+      <script src="../js/registration-manager.js"></script>
+      <link rel="stylesheet" href="../js/univault-ui.css">
+      
       <script>
         document.addEventListener('DOMContentLoaded', function() {
           const accountOwner = document.getElementById('account-owner');
           const businessOwner = document.getElementById('business-owner');
           const form = document.querySelector('.checkbox-container');
-          const errorMessage = document.getElementById('error-message');
+
+          // Add hidden input for form data
+          const hiddenInput = document.createElement('input');
+          hiddenInput.type = 'hidden';
+          hiddenInput.name = 'customerType';
+          form.appendChild(hiddenInput);
 
           accountOwner.addEventListener('change', function() {
             if (this.checked) {
               businessOwner.checked = false;
+              hiddenInput.value = 'account_owner';
             }
-            errorMessage.textContent = '';
           });
 
           businessOwner.addEventListener('change', function() {
             if (this.checked) {
               accountOwner.checked = false;
-            }
-            errorMessage.textContent = '';
-          });
-
-          document.getElementById('back').addEventListener('click', function() {
-            window.location.href = 'entry.html';
-          });
-
-          form.addEventListener('submit', function(e) {
-            if (!accountOwner.checked && !businessOwner.checked) {
-              e.preventDefault();
-              errorMessage.textContent = 'Please select either Account Owner or Business Owner.';
+              hiddenInput.value = 'business_owner';
             }
           });
+
+          // Initialize registration manager
+          RegistrationManager.initializeStepForm(1, form, {
+            customerType: { required: true }
+          });
+
+          // Load saved data if any
+          const savedData = RegistrationManager.getStepData(1);
+          if (savedData.customerType) {
+            if (savedData.customerType === 'account_owner') {
+              accountOwner.checked = true;
+            } else if (savedData.customerType === 'business_owner') {
+              businessOwner.checked = true;
+            }
+            hiddenInput.value = savedData.customerType;
+          }
         });
       </script>
-      <form class="checkbox-container" action="registration2.html">
+      
+      <!-- Progress indicator -->
+      <div class="form-progress">
+        <div class="form-progress-bar">
+          <div class="form-progress-fill"></div>
+        </div>
+        <div class="form-progress-text"></div>
+      </div>
+      
+      <form class="checkbox-container">
         <div class="checkbox">
           <input type="checkbox" id="account-owner" />
           <label>
