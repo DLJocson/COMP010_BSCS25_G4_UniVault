@@ -1,167 +1,93 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Account Type Selection - UniVault Registration</title>
-    <link rel="stylesheet" href="shared.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Manjari:wght@100;400;700&display=swap" rel="stylesheet">
-</head>
-<body>
-    <div class="container">
-        <!-- Progress Bar -->
-        <div class="progress-bar">
-            <div class="progress-info">
-                <span class="step-indicator">Step 2 of 15: Account Type</span>
-                <span>13.3%</span>
-            </div>
-            <div class="progress-track">
-                <div class="progress-fill" style="width: 13.3%"></div>
-            </div>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Select Account Type</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manjari:wght@100;400;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="registration2.css" />
+  </head>
+
+  <body>
+    <div class="account-type-page">
+      <h1 class="direction-text">Select Account Type</h1>
+
+      <div class="checkbox-container">
+        <input type="checkbox" id="deposit" name="customer_type" value="deposit" />
+        <label for="deposit" class="label-text">
+          <span class="title">Deposit Account</span><br />
+          <span class="description">Store money safely in your account.</span>
+        </label>
+      </div>
+
+      <div class="checkbox-container">
+        <input type="checkbox" id="card" name="customer_type" value="card" />
+        <label for="card" class="label-text">
+          <span class="title">Card Account</span><br />
+          <span class="description"
+            >Spend or access your money with a secure card.</span
+          >
+        </label>
+      </div>
+
+      <div class="checkbox-container">
+        <input type="checkbox" id="loan" name="customer_type" value="loan" />
+        <label for="loan" class="label-text">
+          <span class="title">Loan Account</span><br />
+          <span class="description"
+            >Borrow money and pay it back over time.</span
+          >
+        </label>
+      </div>
+
+      <div class="checkbox-container">
+        <input type="checkbox" id="wealth-management" name="customer_type" value="wealth-management" />
+        <label for="wealth-management" class="label-text">
+          <span class="title">Wealth Management Account</span><br />
+          <span class="description">Get expert help to grow your savings.</span>
+        </label>
+      </div>
+
+      <div class="checkbox-container">
+        <input type="checkbox" id="insurance" name="customer_type" value="insurance" />
+        <label for="insurance" class="label-text">
+          <span class="title">Insurance Account</span><br />
+          <span class="description"
+            >Protect yourself financially from unexpected events.</span
+          >
+        </label>
+      </div>
+
+      <div
+        id="error-message"
+        class="error-message"
+        style="font-size: 20px; color: red; padding-left: 40px"
+      ></div>
+
+      <div class="button">
+        <div class="back">
+          <button
+            onclick="location.href='registration1.html'"
+            id="back"
+            type="button"
+          >
+            Back
+          </button>
         </div>
-        
-        <!-- Content -->
-        <div class="content">
-            <h1 class="title">Select Account Type</h1>
-            <p class="subtitle">Choose the type of banking account you want to open (select all that apply)</p>
-            
-            <form id="step2-form">
-                <div class="checkbox-group">
-                    <div class="checkbox-item" data-value="Deposit Account">
-                        <input type="checkbox" id="deposit" name="account_types" value="Deposit Account">
-                        <div class="option-content">
-                            <div class="option-title">Deposit Account</div>
-                            <div class="option-description">
-                                Store money safely in your account with competitive interest rates.
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="checkbox-item" data-value="Card Account">
-                        <input type="checkbox" id="card" name="account_types" value="Card Account">
-                        <div class="option-content">
-                            <div class="option-title">Card Account</div>
-                            <div class="option-description">
-                                Spend or access your money with a secure debit or credit card.
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="checkbox-item" data-value="Loan Account">
-                        <input type="checkbox" id="loan" name="account_types" value="Loan Account">
-                        <div class="option-content">
-                            <div class="option-title">Loan Account</div>
-                            <div class="option-description">
-                                Borrow money and pay it back over time with flexible terms.
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="checkbox-item" data-value="Wealth Management Account">
-                        <input type="checkbox" id="wealth-management" name="account_types" value="Wealth Management Account">
-                        <div class="option-content">
-                            <div class="option-title">Wealth Management Account</div>
-                            <div class="option-description">
-                                Get expert help to grow your savings with investment products.
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="checkbox-item" data-value="Insurance Account">
-                        <input type="checkbox" id="insurance" name="account_types" value="Insurance Account">
-                        <div class="option-content">
-                            <div class="option-title">Insurance Account</div>
-                            <div class="option-description">
-                                Protect yourself financially from unexpected events with coverage plans.
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="error-message" id="account-types-error"></div>
-            </form>
-            
-            <!-- Navigation -->
-            <div class="button-container">
-                <button type="button" class="btn btn-secondary" onclick="goBack()">Back</button>
-                <button type="button" class="btn btn-primary" onclick="proceedToNext()">Continue</button>
-            </div>
+
+        <div class="proceed">
+          <button id="proceed" type="button">Proceed</button>
         </div>
+      </div>
     </div>
-    
-    <script src="shared.js"></script>
-    <script>
-        const CURRENT_STEP = 2;
-        
-        // Initialize the step
-        document.addEventListener('DOMContentLoaded', function() {
-            UniVaultRegistration.initializeStep(CURRENT_STEP);
-            setupCheckboxSelection();
-        });
-        
-        function setupCheckboxSelection() {
-            const checkboxes = document.querySelectorAll('input[name="account_types"]');
-            const items = document.querySelectorAll('.checkbox-item');
-            
-            items.forEach((item, index) => {
-                item.addEventListener('click', function() {
-                    checkboxes[index].checked = !checkboxes[index].checked;
-                    updateSelection();
-                });
-            });
-            
-            checkboxes.forEach(checkbox => {
-                checkbox.addEventListener('change', updateSelection);
-            });
-        }
-        
-        function updateSelection() {
-            const items = document.querySelectorAll('.checkbox-item');
-            const checkboxes = document.querySelectorAll('input[name="account_types"]');
-            
-            items.forEach((item, index) => {
-                if (checkboxes[index].checked) {
-                    item.classList.add('selected');
-                } else {
-                    item.classList.remove('selected');
-                }
-            });
-            
-            UniVaultRegistration.clearError('account-types-error');
-        }
-        
-        function validateStep() {
-            const selectedTypes = document.querySelectorAll('input[name="account_types"]:checked');
-            
-            if (selectedTypes.length === 0) {
-                UniVaultRegistration.showError('account-types-error', 'Please select at least one account type');
-                return false;
-            }
-            
-            return true;
-        }
-        
-        function saveStepData() {
-            const selectedTypes = Array.from(document.querySelectorAll('input[name="account_types"]:checked'))
-                .map(checkbox => checkbox.value);
-            
-            UniVaultRegistration.saveFormData(CURRENT_STEP, {
-                account_types: selectedTypes
-            });
-        }
-        
-        function goBack() {
-            UniVaultRegistration.goToPreviousStep(CURRENT_STEP);
-        }
-        
-        function proceedToNext() {
-            if (validateStep()) {
-                saveStepData();
-                UniVaultRegistration.goToNextStep(CURRENT_STEP);
-            }
-        }
-    </script>
-</body>
+
+    <script src="registration2.js"></script>
+  </body>
 </html>

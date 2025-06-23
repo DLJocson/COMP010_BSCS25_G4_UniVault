@@ -1,304 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - UniVault Banking System</title>
-    <link rel="stylesheet" href="shared.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Manjari:wght@100;400;700&display=swap" rel="stylesheet">
-    <style>
-        body {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            margin: 0;
-            padding: 20px;
-        }
-        .login-container {
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-            padding: 40px;
-            max-width: 400px;
-            width: 100%;
-            text-align: center;
-        }
-        .logo {
-            width: 200px;
-            margin-bottom: 30px;
-        }
-        .login-title {
-            font-size: 1.8rem;
-            color: #333;
-            margin-bottom: 30px;
-            font-weight: 600;
-        }
-        .form-group {
-            margin-bottom: 20px;
-            text-align: left;
-        }
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-            color: #333;
-        }
-        .form-group input {
-            width: 100%;
-            padding: 15px;
-            border: 2px solid #e1e5e9;
-            border-radius: 10px;
-            font-size: 1rem;
-            font-family: 'Manjari', sans-serif;
-            transition: border-color 0.3s ease;
-        }
-        .form-group input:focus {
-            outline: none;
-            border-color: #667eea;
-        }
-        .error-message {
-            color: #dc3545;
-            font-size: 0.9rem;
-            margin-top: 5px;
-            display: none;
-        }
-        .error-message.show {
-            display: block;
-        }
-        .login-btn {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            padding: 15px 30px;
-            border-radius: 10px;
-            font-size: 1.1rem;
-            font-family: 'Manjari', sans-serif;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            width: 100%;
-            margin: 20px 0;
-            font-weight: 600;
-        }
-        .login-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-        }
-        .login-btn:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none;
-        }
-        .links {
-            margin-top: 20px;
-        }
-        .links a {
-            color: #667eea;
-            text-decoration: none;
-            margin: 0 10px;
-            font-size: 0.9rem;
-        }
-        .links a:hover {
-            text-decoration: underline;
-        }
-        .divider {
-            margin: 30px 0;
-            text-align: center;
-            position: relative;
-        }
-        .divider::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 0;
-            right: 0;
-            height: 1px;
-            background: #e1e5e9;
-        }
-        .divider span {
-            background: white;
-            padding: 0 20px;
-            color: #666;
-            font-size: 0.9rem;
-        }
-        .register-link {
-            background: transparent;
-            color: #667eea;
-            border: 2px solid #667eea;
-            padding: 12px 30px;
-            border-radius: 10px;
-            font-size: 1rem;
-            font-family: 'Manjari', sans-serif;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-decoration: none;
-            display: inline-block;
-            font-weight: 600;
-        }
-        .register-link:hover {
-            background: #667eea;
-            color: white;
-            transform: translateY(-2px);
-        }
-    </style>
-</head>
-<body>
-    <div class="login-container">
-        <img src="../assets/logowtext.png" alt="UniVault Logo" class="logo">
-        
-        <h1 class="login-title">Welcome Back</h1>
-        
-        <form id="login-form">
-            <div class="form-group">
-                <label for="username">Username</label>
-                <input type="text" id="username" name="customer_username" placeholder="Enter your username" required>
-                <div class="error-message" id="username-error"></div>
-            </div>
-            
-            <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" id="password" name="customer_password" placeholder="Enter your password" required>
-                <div class="error-message" id="password-error"></div>
-            </div>
-            
-            <button type="submit" class="login-btn" id="login-btn">Log In</button>
-            
-            <div class="error-message" id="login-error"></div>
-        </form>
-        
-        <div class="links">
-            <a href="#" onclick="alert('Password reset functionality will be available soon!')">Forgot Password?</a>
-        </div>
-        
-        <div class="divider">
-            <span>or</span>
-        </div>
-        
-        <a href="index.html" class="register-link">Create New Account</a>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="login.css" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manjari:wght@100;400;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="log-in-page">
+      <img src="../assets/logowtext.png" alt="" />
+
+      <div class="text-box">
+        <input type="text" placeholder="Enter Account Number" />
+        <input class="password" type="password" placeholder="Enter Password" />
+      </div>
+
+      <div class="button">
+        <button>Log In</button>
+      </div>
+
+      <div class="forgot-password">
+        <a href="#">Forgot Password</a>
+      </div>
     </div>
-    
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            setupLoginForm();
-        });
-        
-        function setupLoginForm() {
-            const form = document.getElementById('login-form');
-            const loginBtn = document.getElementById('login-btn');
-            
-            form.addEventListener('submit', async function(e) {
-                e.preventDefault();
-                await handleLogin();
-            });
-            
-            // Clear errors on input
-            const inputs = document.querySelectorAll('input');
-            inputs.forEach(input => {
-                input.addEventListener('input', () => {
-                    clearError(input.id + '-error');
-                    clearError('login-error');
-                });
-            });
-        }
-        
-        async function handleLogin() {
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
-            const loginBtn = document.getElementById('login-btn');
-            const originalText = loginBtn.textContent;
-            
-            // Clear previous errors
-            clearAllErrors();
-            
-            // Validate inputs
-            if (!username) {
-                showError('username-error', 'Username is required');
-                return;
-            }
-            
-            if (!password) {
-                showError('password-error', 'Password is required');
-                return;
-            }
-            
-            try {
-                // Show loading state
-                loginBtn.textContent = 'Logging in...';
-                loginBtn.disabled = true;
-                
-                // Prepare login data
-                const loginData = {
-                    customer_username: username,
-                    customer_password: password
-                };
-                
-                // Make API call to backend
-                const response = await fetch('/login', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(loginData)
-                });
-                
-                const result = await response.json();
-                
-                if (response.ok) {
-                    // Successful login
-                    console.log('Login successful:', result);
-                    
-                    // Store user info
-                    localStorage.setItem('univault_user', JSON.stringify({
-                        cif_number: result.cif_number,
-                        username: username,
-                        login_time: new Date().toISOString()
-                    }));
-                    
-                    // Redirect to dashboard
-                    if (result.redirect) {
-                        window.location.href = result.redirect;
-                    } else {
-                        window.location.href = '../Dashboard-Customer/account1.html';
-                    }
-                } else {
-                    // Login failed
-                    showError('login-error', result.message || 'Invalid username or password');
-                }
-                
-            } catch (error) {
-                console.error('Login error:', error);
-                showError('login-error', 'Unable to connect to server. Please try again.');
-            } finally {
-                // Restore button state
-                loginBtn.textContent = originalText;
-                loginBtn.disabled = false;
-            }
-        }
-        
-        function showError(elementId, message) {
-            const errorElement = document.getElementById(elementId);
-            if (errorElement) {
-                errorElement.textContent = message;
-                errorElement.classList.add('show');
-            }
-        }
-        
-        function clearError(elementId) {
-            const errorElement = document.getElementById(elementId);
-            if (errorElement) {
-                errorElement.classList.remove('show');
-            }
-        }
-        
-        function clearAllErrors() {
-            document.querySelectorAll('.error-message.show').forEach(error => {
-                error.classList.remove('show');
-            });
-        }
-    </script>
-</body>
+  </body>
 </html>
 
 <style>
