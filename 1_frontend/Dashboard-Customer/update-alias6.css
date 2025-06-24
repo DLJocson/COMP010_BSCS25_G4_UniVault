@@ -29,6 +29,9 @@ body {
   width: 100%;
   margin-bottom: 40px;
 }
+.red-text {
+  color: red;
+}
 
 .username-password-page {
   display: flex;

@@ -240,7 +240,7 @@ function handleProceedClick() {
     const aliasSkipped = checkbox && checkbox.checked;
 
     if (aliasSkipped || validateForm()) {
-      window.location.href = "update-fund-fource3.html";
+      window.location.href = "update-fund-source3.html";
     }
   });
 }
