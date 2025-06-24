@@ -116,7 +116,7 @@ input[type="checkbox"] {
 
 .work-business-email label {
   display: flex;
-
+  gap: 60px;
   width: 100%;
   padding-left: 15px;
   flex: 1;
@@ -172,6 +172,7 @@ input[type="checkbox"] {
 
 .work-business-number label {
   display: flex;
+  gap: 60px;
   width: 100%;
   padding-left: 25px;
   flex: 1;
@@ -197,7 +198,7 @@ input[type="checkbox"] {
 
 .tin label {
   display: flex;
-
+  gap: 60px;
   width: 100%;
   padding-left: 10px;
   font-size: 32px;
@@ -559,7 +560,7 @@ input[type="checkbox"] {
 
 .business-nature label {
   font-size: 32px;
-
+  color: var(--primary-color);
   margin-bottom: 10px;
 }
 
@@ -588,7 +589,7 @@ input[type="checkbox"] {
 }
 
 #businessNatureDropdownBtn:after {
-  content: "";
+  content: '';
   float: right;
   margin-top: 12px;
   border-width: 10px 7px 0 7px;
@@ -618,7 +619,7 @@ input[type="checkbox"] {
   z-index: 20;
   max-height: 260px;
   overflow-y: auto;
-  box-shadow: 0 8px 24px rgba(31, 101, 180, 0.1);
+  box-shadow: 0 8px 24px rgba(31, 101, 180, 0.10);
   margin-top: 2px;
   animation: fadeInDown 0.3s;
 }
@@ -655,8 +656,7 @@ input[type="checkbox"] {
 }
 
 @media (max-width: 1100px) {
-  #businessNatureDropdownBtn,
-  #businessNatureDropdownMenu label {
+  #businessNatureDropdownBtn, #businessNatureDropdownMenu label {
     font-size: 22px;
     padding: 10px 12px;
   }
@@ -829,12 +829,8 @@ select {
 }
 
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 input[type="text"]:focus,
@@ -843,15 +839,9 @@ select:focus {
 }
 
 @keyframes inputFocusPop {
-  0% {
-    transform: scale(1);
-  }
-  60% {
-    transform: scale(1.04);
-  }
-  100% {
-    transform: scale(1);
-  }
+  0% { transform: scale(1); }
+  60% { transform: scale(1.04); }
+  100% { transform: scale(1); }
 }
 
 .button button:hover {
@@ -859,15 +849,9 @@ select:focus {
 }
 
 @keyframes buttonPop {
-  0% {
-    transform: scale(1);
-  }
-  60% {
-    transform: scale(1.07);
-  }
-  100% {
-    transform: scale(1);
-  }
+  0% { transform: scale(1); }
+  60% { transform: scale(1.07); }
+  100% { transform: scale(1); }
 }
 
 .error-message,
@@ -914,6 +898,7 @@ select:focus {
   padding: 8px 10px;
 }
 
+
 .dropdown-multiselect {
   position: relative;
   width: 100%;
@@ -938,7 +923,7 @@ select:focus {
 }
 
 #dropdownBtn:after {
-  content: "";
+  content: '';
   float: right;
   margin-top: 12px;
   border-width: 10px 7px 0 7px;
@@ -964,7 +949,7 @@ select:focus {
   z-index: 20;
   max-height: 260px;
   overflow-y: auto;
-  box-shadow: 0 8px 24px rgba(31, 101, 180, 0.1);
+  box-shadow: 0 8px 24px rgba(31, 101, 180, 0.10);
   margin-top: 2px;
   animation: fadeInDown 0.3s;
 }
@@ -1002,7 +987,7 @@ select:focus {
 
 .source-of-funds label {
   font-size: 32px;
-
+  color: var(--primary-color);
   margin-bottom: 10px;
 }
 
@@ -1024,8 +1009,7 @@ select:focus {
 }
 
 @media (max-width: 1100px) {
-  #dropdownBtn,
-  #dropdownMenu label {
+  #dropdownBtn, #dropdownMenu label {
     font-size: 22px;
     padding: 10px 12px;
   }

@@ -1,0 +1,690 @@
+document.addEventListener("DOMContentLoaded", function () {
+  // --- AUTO-FILL REMOVED ---
+  // (No auto-fill code here; user will fill out manually)
+
+  const checkbox = document.getElementById("yes");
+  const containers = document.querySelector(".containers");
+  const containers2 = document.querySelector(".containers2");
+
+  if (checkbox) {
+    checkbox.addEventListener("change", () => {
+      if (containers && containers2) {
+        containers.style.display = checkbox.checked ? "block" : "none";
+        containers2.style.display = checkbox.checked ? "block" : "none";
+      }
+    });
+  }
+
+  const employmentPage = document.querySelector(".employment-page");
+  if (employmentPage) {
+    employmentPage.classList.add("error");
+  }
+
+  const proceedBtn = document.getElementById("proceed");
+
+  function clearFieldError(field) {
+    if (!field) return;
+    field.style.borderColor = "#0072d8";
+    field.classList.remove("error");
+    const parent = field.parentNode;
+    if (parent) {
+      const errorMsg = parent.querySelector(".error-message");
+      if (errorMsg) {
+        errorMsg.textContent = "";
+        errorMsg.style.display = "none";
+      }
+      let next = field.nextElementSibling;
+      if (next && next.classList && next.classList.contains("error-message")) {
+        next.textContent = "";
+        next.style.display = "none";
+      }
+    }
+  }
+
+  function showError(input, message) {
+    if (!input) return;
+    input.style.borderColor = "#ff3860";
+    input.classList.add("error");
+    const parent = input.parentNode;
+    let errorDiv = parent.querySelector(".error-message");
+    if (!errorDiv) {
+      errorDiv = document.createElement("div");
+      errorDiv.className = "error-message";
+      parent.appendChild(errorDiv);
+    }
+    errorDiv.textContent = message;
+    errorDiv.style.display = "block";
+    errorDiv.style.color = "#ff3860";
+    errorDiv.style.fontSize = "20px";
+    errorDiv.style.marginTop = "5px";
+    errorDiv.style.marginBottom = "10px";
+  }
+
+  function clearErrors() {
+    const inputs = document.querySelectorAll(
+      'input[type="text"], input[type="email"], select'
+    );
+    inputs.forEach((input) => clearFieldError(input));
+  }
+
+  function isSelectInvalid(selectElement) {
+    if (!selectElement) return true;
+    const value = selectElement.value;
+    return !value || value.trim() === "";
+  }
+
+  function validateForm() {
+    let isValid = true;
+    clearErrors();
+
+    // Get the value(s) of source-of-funds (could be select or multi-select)
+    let sourceOfFundsInput = document.getElementById("source-of-funds");
+    let sourceOfFundsMulti = document.getElementById("source-of-funds-multi");
+    let sourceOfFundsValues = [];
+
+    if (sourceOfFundsMulti && sourceOfFundsMulti.offsetParent !== null) {
+      // Multi-select (native <select multiple>)
+      sourceOfFundsValues = Array.from(sourceOfFundsMulti.selectedOptions).map(
+        (opt) => opt.value
+      );
+    } else if (sourceOfFundsInput && sourceOfFundsInput.offsetParent !== null) {
+      // Single select
+      sourceOfFundsValues = [sourceOfFundsInput.value];
+    } else {
+      // Custom multi-checkbox dropdown
+      const dropdownMenu = document.getElementById("dropdownMenu");
+      if (dropdownMenu && dropdownMenu.offsetParent !== null) {
+        const checked = Array.from(
+          dropdownMenu.querySelectorAll('input[type="checkbox"]:checked')
+        );
+        sourceOfFundsValues = checked.map((cb) => cb.value);
+      }
+    }
+
+    // Helper: check if "Remittances" is selected
+    const hasRemittances = sourceOfFundsValues.some(
+      (val) => val.trim().toLowerCase() === "remittances"
+    );
+
+    const elements = [
+      { id: "source-of-funds", name: "Source of funds" },
+      // Remittance fields will be conditionally validated below
+      { id: "business-nature", name: "Nature of work" },
+      { id: "position", name: "Position" },
+      {
+        id: "gross-income",
+        name: "Gross income",
+        regex: /^\d+(\.\d{1,2})?$/,
+        regexMessage: "Please enter a valid amount",
+      },
+      { id: "work", name: "Country code" },
+      {
+        id: "business-number",
+        name: "Business number",
+      },
+      { id: "tin", name: "TIN" },
+      { id: "zip-code", name: "Zip code" },
+      {
+        id: "work-email", // <-- fixed typo here
+        name: "Work email",
+        regex: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+        regexMessage: "Please enter a valid email address",
+      },
+      { id: "primary-employer", name: "Primary employer" },
+
+      { id: "city", name: "City" },
+      { id: "province", name: "Province" },
+      { id: "country", name: "Country" },
+    ];
+
+    elements.forEach(({ id, name, regex, regexMessage }) => {
+      const input = document.getElementById(id);
+      if (!input) return;
+      if (input.offsetParent === null) return;
+      const isEmpty =
+        input.tagName === "SELECT"
+          ? isSelectInvalid(input)
+          : !input.value.trim();
+      if (isEmpty) {
+        showError(input, `${name} is required`);
+        isValid = false;
+      } else if (regex && !regex.test(input.value.trim())) {
+        showError(input, regexMessage);
+        isValid = false;
+      }
+    });
+
+    // Conditionally validate Remittance Country and Purpose
+    if (hasRemittances) {
+      const remittanceCountry = document.getElementById("remittance-country");
+      const remittancePurpose = document.getElementById("remittance-purpose");
+
+      if (
+        remittanceCountry &&
+        remittanceCountry.offsetParent !== null &&
+        isSelectInvalid(remittanceCountry)
+      ) {
+        showError(remittanceCountry, "Remittance country is required");
+        isValid = false;
+      }
+      if (
+        remittancePurpose &&
+        remittancePurpose.offsetParent !== null &&
+        isSelectInvalid(remittancePurpose)
+      ) {
+        showError(remittancePurpose, "Remittance purpose is required");
+        isValid = false;
+      }
+    }
+
+    return isValid;
+  }
+
+  function setupEventListeners() {
+    const allSelects = document.querySelectorAll("select");
+    allSelects.forEach((select) => {
+      select.addEventListener("change", function () {
+        if (this.value && this.value.trim() !== "") {
+          clearFieldError(this);
+        }
+      });
+    });
+
+    const allInputs = document.querySelectorAll(
+      'input[type="text"], input[type="email"]'
+    );
+    allInputs.forEach((input) => {
+      input.addEventListener("input", function () {
+        if (this.value.trim()) {
+          clearFieldError(this);
+        }
+      });
+    });
+  }
+
+  setupEventListeners();
+
+<<<<<<< HEAD:2_backend/public/registration5.js
+=======
+  // --- Validation helpers must be defined before use ---
+  function validateMultiSelect() {
+    const multiSelect = document.getElementById("source-of-funds-multi");
+    if (!multiSelect) return true;
+    if (multiSelect.offsetParent === null) return true;
+    const selected = Array.from(multiSelect.options).filter(opt => opt.selected);
+    if (selected.length === 0) {
+      showError(multiSelect, "Please select at least one source of funds");
+      return false;
+    } else {
+      clearFieldError(multiSelect);
+      return true;
+    }
+  }
+
+  function enhancedValidateForm() {
+    let isValid = validateForm();
+    if (!validateMultiSelect()) isValid = false;
+    return isValid;
+  }
+
+  // --- Only one proceedBtn.onclick assignment ---
+>>>>>>> main:1_frontend/Registration-Customer/registration5.js
+  if (proceedBtn) {
+    proceedBtn.onclick = function (e) {
+      e.preventDefault();
+
+<<<<<<< HEAD:2_backend/public/registration5.js
+      if (validateForm()) {
+        // Save all form values to localStorage
+        const elements = [
+          "source-of-funds",
+          "remittance-country",
+          "remittance-purpose",
+          "business-nature",
+          "position",
+          "gross-income",
+          "work",
+          "business-number",
+          "tin",
+          "zip-code",
+          "work-email",
+          "primary-employer",
+          "unit",
+          "building",
+          "street",
+          "subdivision",
+          "barangay",
+          "city",
+          "province",
+          "country",
+        ];
+        elements.forEach((id) => {
+          const input = document.getElementById(id);
+          if (input && input.value !== undefined) {
+            localStorage.setItem(id, input.value.trim());
+          }
+        });
+
+=======
+      // Save all relevant fields to localStorage here
+      const fieldsToSave = [
+        "source-of-funds",
+        "business-nature",
+        "position",
+        "gross-income",
+        "work",
+        "business-number",
+        "tin",
+        "zip-code",
+        "work-emai",
+        "primary-employer",
+        "unit",
+        "building",
+        "street",
+        "subdivision",
+        "barangay",
+        "city",
+        "province",
+        "country",
+      ];
+
+      fieldsToSave.forEach((fieldId) => {
+        const field = document.getElementById(fieldId);
+        if (field) {
+          localStorage.setItem(fieldId, field.value);
+        }
+      });
+
+      // Save employment checkbox state
+      const employedCheckbox = document.getElementById("yes");
+      if (employedCheckbox) {
+        if (employedCheckbox.checked) {
+          localStorage.setItem("currentlyEmployed", "Yes");
+        } else {
+          localStorage.setItem("currentlyEmployed", "No");
+        }
+      }
+
+      if (enhancedValidateForm()) {
+        console.log("Form valid - redirecting");
+>>>>>>> main:1_frontend/Registration-Customer/registration5.js
+        window.location.href = "registration6.html";
+      } else {
+        const firstError = document.querySelector(".error");
+        if (firstError) {
+          firstError.scrollIntoView({ behavior: "smooth", block: "center" });
+          firstError.focus();
+        }
+      }
+      return false;
+    };
+  }
+
+  setTimeout(() => {
+    const sourceOfFunds = document.getElementById("source-of-funds");
+    const businessNature = document.getElementById("business-nature");
+
+    if (sourceOfFunds) {
+      sourceOfFunds.onchange = function () {
+        if (this.value && this.value.trim() !== "") {
+          clearFieldError(this);
+        }
+      };
+    }
+    if (businessNature) {
+      businessNature.onchange = function () {
+        if (this.value && this.value.trim() !== "") {
+          clearFieldError(this);
+        }
+      };
+    }
+  }, 500);
+<<<<<<< HEAD:2_backend/public/registration5.js
+});
+=======
+});
+
+function validateMultiSelect() {
+  const multiSelect = document.getElementById("source-of-funds-multi");
+  if (!multiSelect) return true;
+
+  if (multiSelect.offsetParent === null) return true;
+
+  const selected = Array.from(multiSelect.options).filter(
+    (opt) => opt.selected
+  );
+  if (selected.length === 0) {
+    showError(multiSelect, "Please select at least one source of funds");
+    return false;
+  } else {
+    clearFieldError(multiSelect);
+    return true;
+  }
+}
+
+const originalValidateForm = validateForm;
+function enhancedValidateForm() {
+  let isValid = originalValidateForm();
+  if (!validateMultiSelect()) isValid = false;
+  return isValid;
+}
+
+if (proceedBtn) {
+  proceedBtn.onclick = function (e) {
+    e.preventDefault();
+    // Save all relevant fields to localStorage here
+    const fieldsToSave = [
+      "source-of-funds",
+      "business-nature",
+      "position",
+      "gross-income",
+      "work",
+      "business-number",
+      "tin",
+      "zip-code",
+      "work-emai",
+      "primary-employer",
+      "unit",
+      "building",
+      "street",
+      "subdivision",
+      "barangay",
+      "city",
+      "province",
+      "country",
+    ];
+
+    fieldsToSave.forEach((fieldId) => {
+      const field = document.getElementById(fieldId);
+      if (field) {
+        localStorage.setItem(fieldId, field.value);
+      }
+    });
+
+    // Save employment checkbox state
+    const employedCheckbox = document.getElementById("yes");
+    if (employedCheckbox) {
+      if (employedCheckbox.checked) {
+        localStorage.setItem("currentlyEmployed", "Yes");
+      } else {
+        localStorage.setItem("currentlyEmployed", "No");
+      }
+    }
+
+    if (enhancedValidateForm()) {
+      window.location.href = "registration6.html";
+    } else {
+      const firstError = document.querySelector(".error");
+      if (firstError) {
+        firstError.scrollIntoView({ behavior: "smooth", block: "center" });
+        firstError.focus();
+      }
+    }
+    return false;
+  };
+}
+
+const multiSelect = document.getElementById("source-of-funds-multi");
+if (multiSelect) {
+  multiSelect.addEventListener("change", function () {
+    if (Array.from(this.options).some((opt) => opt.selected)) {
+      clearFieldError(this);
+    }
+
+    let summary = document.getElementById("source-of-funds-multi-summary");
+    if (!summary) {
+      summary = document.createElement("div");
+      summary.id = "source-of-funds-multi-summary";
+      summary.style.fontSize = "14px";
+      summary.style.marginTop = "4px";
+      this.parentNode.appendChild(summary);
+    }
+    const selected = Array.from(this.selectedOptions).map((opt) => opt.text);
+    summary.textContent = selected.length
+      ? `Selected: ${selected.join(", ")}`
+      : "";
+  });
+}
+
+(function () {
+  const dropdownBtn = document.getElementById("dropdownBtn");
+  const dropdownMenu = document.getElementById("dropdownMenu");
+  const hiddenInput = document.getElementById("source-of-funds-multi");
+  const errorDiv = document.querySelector(
+    "#businessNatureDropdownMenu .error-message"
+  );
+
+  // Utility: Get all checked values and labels
+  function getCheckedOptions() {
+    const checkboxes = dropdownMenu.querySelectorAll('input[type="checkbox"]');
+    const checked = Array.from(checkboxes).filter((cb) => cb.checked);
+    return {
+      values: checked.map((cb) => cb.value),
+      labels: checked.map((cb) => cb.parentNode.textContent.trim()),
+    };
+  }
+
+  // Update hidden input and button label
+  function updateSelectionDisplay() {
+    const { values, labels } = getCheckedOptions();
+    hiddenInput.value = values.join(",");
+    dropdownBtn.textContent = labels.length
+      ? `Selected: ${labels.join(", ")}`
+      : "Select Source(s) of Funds";
+    // Remove error if at least one selected
+    if (labels.length) {
+      clearFieldError(hiddenInput);
+      if (errorDiv) {
+        errorDiv.textContent = "";
+        errorDiv.style.display = "none";
+      }
+    }
+  }
+
+  // Show/hide dropdown menu
+  if (dropdownBtn && dropdownMenu) {
+    dropdownBtn.addEventListener("click", function (e) {
+      e.stopPropagation();
+      dropdownMenu.style.display =
+        dropdownMenu.style.display === "block" ? "none" : "block";
+    });
+
+    // Hide dropdown when clicking outside
+    document.addEventListener("click", function (e) {
+      if (!dropdownMenu.contains(e.target) && e.target !== dropdownBtn) {
+        dropdownMenu.style.display = "none";
+      }
+    });
+  }
+
+  // Checkbox change events
+  if (dropdownMenu) {
+    dropdownMenu.addEventListener("change", function (e) {
+      if (e.target.type === "checkbox") {
+        updateSelectionDisplay();
+      }
+    });
+  }
+
+  // Validation: override validateMultiSelect to use checkboxes
+  function validateMultiSelectEnhanced() {
+    const { values } = getCheckedOptions();
+    if (dropdownMenu.offsetParent === null) return true;
+    if (values.length === 0) {
+      showError(hiddenInput, "Please select at least one source of funds");
+      // Also show error visually on dropdown
+      dropdownBtn.style.borderColor = "#ff3860";
+      if (errorDiv) {
+        errorDiv.textContent = "Please select at least one source of funds";
+        errorDiv.style.display = "block";
+        errorDiv.style.color = "#ff3860";
+        errorDiv.style.fontSize = "20px";
+        errorDiv.style.marginTop = "5px";
+        errorDiv.style.marginBottom = "10px";
+      }
+      return false;
+    } else {
+      clearFieldError(hiddenInput);
+      dropdownBtn.style.borderColor = "";
+      if (errorDiv) {
+        errorDiv.textContent = "";
+        errorDiv.style.display = "none";
+      }
+      return true;
+    }
+  }
+
+  // Patch enhancedValidateForm to use enhanced multi-select validation
+  if (typeof enhancedValidateForm === "function") {
+    const origEnhancedValidateForm = enhancedValidateForm;
+    window.enhancedValidateForm = function () {
+      let isValid = origEnhancedValidateForm();
+      if (!validateMultiSelectEnhanced()) isValid = false;
+      return isValid;
+    };
+  }
+
+  // Clear error on manual interaction
+  if (dropdownMenu) {
+    dropdownMenu.addEventListener("click", function () {
+      if (getCheckedOptions().values.length) {
+        clearFieldError(hiddenInput);
+        dropdownBtn.style.borderColor = "";
+        if (errorDiv) {
+          errorDiv.textContent = "";
+          errorDiv.style.display = "none";
+        }
+      }
+    });
+  }
+
+  // Keyboard accessibility: close on Escape
+  if (dropdownMenu) {
+    dropdownMenu.addEventListener("keydown", function (e) {
+      if (e.key === "Escape") {
+        dropdownMenu.style.display = "none";
+        dropdownBtn.focus();
+      }
+    });
+  }
+
+  // Initial display update
+  updateSelectionDisplay();
+})();
+
+(function () {
+  const dropdownBtn = document.getElementById("businessNatureDropdownBtn");
+  const dropdownMenu = document.getElementById("businessNatureDropdownMenu");
+  const hiddenInput = document.getElementById("business-nature-multi");
+  const errorDiv = document.querySelector(".business-nature .error-message");
+
+  function getCheckedOptions() {
+    if (!dropdownMenu) return { values: [], labels: [] };
+    const checkboxes = dropdownMenu.querySelectorAll('input[type="checkbox"]');
+    const checked = Array.from(checkboxes).filter((cb) => cb.checked);
+    return {
+      values: checked.map((cb) => cb.value),
+      labels: checked.map((cb) => cb.parentNode.textContent.trim()),
+    };
+  }
+
+  function updateSelectionDisplay() {
+    if (!hiddenInput || !dropdownBtn) return;
+    const { values, labels } = getCheckedOptions();
+    hiddenInput.value = values.join(",");
+    dropdownBtn.textContent = labels.length
+      ? `Selected: ${labels.join(", ")}`
+      : "Select Work/Business Nature";
+    if (labels.length) {
+      clearFieldError(hiddenInput);
+      dropdownBtn.style.borderColor = "";
+      if (errorDiv) {
+        errorDiv.textContent = "";
+        errorDiv.style.display = "none";
+      }
+    }
+  }
+
+  if (dropdownBtn && dropdownMenu) {
+    dropdownBtn.addEventListener("click", function (e) {
+      e.stopPropagation();
+      dropdownMenu.style.display =
+        dropdownMenu.style.display === "block" ? "none" : "block";
+    });
+
+    document.addEventListener("click", function (e) {
+      if (!dropdownMenu.contains(e.target) && e.target !== dropdownBtn) {
+        dropdownMenu.style.display = "none";
+      }
+    });
+  }
+
+  if (dropdownMenu && dropdownBtn && hiddenInput) {
+    dropdownMenu.addEventListener("change", function (e) {
+      if (e.target.type === "checkbox") {
+        updateSelectionDisplay();
+      }
+    });
+    dropdownMenu.addEventListener("click", function () {
+      if (getCheckedOptions().values.length) {
+        clearFieldError(hiddenInput);
+        dropdownBtn.style.borderColor = "";
+        if (errorDiv) {
+          errorDiv.textContent = "";
+          errorDiv.style.display = "none";
+        }
+      }
+    });
+    dropdownMenu.addEventListener("keydown", function (e) {
+      if (e.key === "Escape") {
+        dropdownMenu.style.display = "none";
+        dropdownBtn.focus();
+      }
+    });
+  }
+
+  function validateBusinessNatureMultiSelect() {
+    if (!dropdownMenu || !dropdownBtn || !hiddenInput) return true;
+    const { values } = getCheckedOptions();
+    if (dropdownMenu.offsetParent === null) return true;
+    if (values.length === 0) {
+      showError(hiddenInput, "Please select at least one work/business nature");
+      dropdownBtn.style.borderColor = "#ff3860";
+      if (errorDiv) {
+        errorDiv.textContent =
+          "Please select at least one work/business nature";
+        errorDiv.style.display = "block";
+        errorDiv.style.color = "#ff3860";
+        errorDiv.style.fontSize = "20px";
+        errorDiv.style.marginTop = "5px";
+        errorDiv.style.marginBottom = "10px";
+      }
+      return false;
+    } else {
+      clearFieldError(hiddenInput);
+      dropdownBtn.style.borderColor = "";
+      if (errorDiv) {
+        errorDiv.textContent = "";
+        errorDiv.style.display = "none";
+      }
+      return true;
+    }
+  }
+
+  // Patch enhancedValidateForm to include business-nature-multi validation
+  if (typeof enhancedValidateForm === "function") {
+    const origEnhancedValidateForm = enhancedValidateForm;
+    window.enhancedValidateForm = function () {
+      let isValid = origEnhancedValidateForm();
+      if (!validateBusinessNatureMultiSelect()) isValid = false;
+      return isValid;
+    };
+  }
+
+  // Initial display update
+  updateSelectionDisplay();
+})();
+<<<<<<< HEAD:1_frontend/Registration-Customer/registration5.js
+=======
+>>>>>>> main:1_frontend/Registration-Customer/registration5.js
+>>>>>>> 31125a608a20536a7ea110043595514d34ccee82:2_backend/public/registration5.js

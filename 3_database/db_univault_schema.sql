@@ -1,4 +1,5 @@
 CREATE DATABASE IF NOT EXISTS univault_schema;
+SET SESSION TRANSACTION ISOLATION LEVEL READ COMMITTED;
 SET sql_mode = 'STRICT_TRANS_TABLES,NO_ZERO_DATE,NO_ZERO_IN_DATE,ERROR_FOR_DIVISION_BY_ZERO';
 USE univault_schema;
 
@@ -71,17 +72,13 @@ CREATE TABLE EMPLOYMENT_POSITION (
 
 
 -- 5. FUND_SOURCE_TYPE
--- ===================
+-- ===================================
 CREATE TABLE FUND_SOURCE_TYPE (
-    fund_source_code        CHAR(5) NOT NULL,
-    source_description      VARCHAR(100) NOT NULL,
-    
-    -- KEY CONSTRAINTS
+    fund_source_code            CHAR(5) NOT NULL,
+    fund_source                 VARCHAR(100) NOT NULL,
     PRIMARY KEY (fund_source_code),
-    
-    -- CHECK CONSTRAINTS
-    CONSTRAINT check_fund_source_code         CHECK (fund_source_code REGEXP '^FS[0-9]{3}$'),
-    CONSTRAINT chk_source_desccription        CHECK (source_description REGEXP '^[A-Za-z0-9 /(),\\-]+$')
+    CONSTRAINT check_fund_source_code              CHECK (fund_source_code REGEXP '^FS[0-9]{3}$'),
+    CONSTRAINT check_fund_source                   CHECK (fund_source REGEXP '^[A-Za-z /(),&.''-]+$')
     );
 
 
@@ -183,9 +180,15 @@ CREATE TABLE CUSTOMER (
     residency_status             VARCHAR(25) NOT NULL,
     citizenship                  VARCHAR(100) NOT NULL,
     tax_identification_number    VARCHAR(20) NOT NULL,
-    customer_status              VARCHAR(20) NOT NULL DEFAULT 'Active',
+    customer_status              ENUM('Pending Verification', 'Active', 'Inactive', 'Suspended', 'Dormant') NOT NULL DEFAULT 'Pending Verification',
     remittance_country           VARCHAR(100),
     remittance_purpose           VARCHAR(255),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    created_by INT,
+    is_deleted BOOLEAN DEFAULT FALSE,
+    deleted_at TIMESTAMP NULL,
+    deleted_by INT,
     
     -- KEY CONSTRAINTS
     PRIMARY KEY (cif_number),
@@ -198,12 +201,11 @@ CREATE TABLE CUSTOMER (
     CONSTRAINT check_customer_middle_name          	CHECK (customer_middle_name IS NULL OR customer_middle_name REGEXP '^[A-Za-z ]+$'),
     CONSTRAINT check_customer_suffix_name          	CHECK (customer_suffix_name IS NULL OR customer_suffix_name REGEXP '^[A-Za-z\\.]+$'),
     CONSTRAINT check_customer_username             CHECK (customer_username REGEXP '^[A-Za-z0-9._-]+$'),
-    CONSTRAINT check_customer_password             	CHECK (customer_password REGEXP '^(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9]).{8,}$'),
+    CONSTRAINT check_customer_password             	CHECK (LENGTH(customer_password) > 8),
     CONSTRAINT check_gender                         CHECK (gender IN ('Male', 'Female', 'Non-Binary/Third Gender', 'Prefer not to say', 'Other')),
     CONSTRAINT check_birth_country                  CHECK (birth_country REGEXP '^[A-Za-z''\\- ]+$'),
     CONSTRAINT check_residency_status               CHECK (residency_status IN ('Resident', 'Non-Resident')),
     CONSTRAINT check_citizenship                    CHECK (citizenship REGEXP '^[A-Za-z''\\- ]+$'),
-    CONSTRAINT check_customer_status                CHECK (customer_status IN ('Active', 'Inactive', 'Suspended')),
     CONSTRAINT check_remittance_conditional         CHECK (remittance_country IS NULL AND remittance_purpose IS NULL OR remittance_country REGEXP '^[A-Za-z ]+$' AND remittance_purpose REGEXP '^[A-Za-z0-9 ,\\.\\-]+$')
     ) AUTO_INCREMENT = 1000000000;
 
@@ -270,7 +272,7 @@ CREATE TABLE CUSTOMER_EMPLOYMENT_INFORMATION (
     FOREIGN KEY (position_code) REFERENCES EMPLOYMENT_POSITION(position_code) ON UPDATE CASCADE ON DELETE RESTRICT,
     
     -- CHECK CONSTRAINTS
-    CONSTRAINT check_employer_business_name     CHECK (employer_business_name REGEXP '^[A-Za-z0-9 ,.\\-()&]+$'),
+    CONSTRAINT check_employer_business_name     CHECK (employer_business_name REGEXP '^[A-Za-z0-9 .,&()''/-]+$'),
     CONSTRAINT check_employment_status          CHECK (employment_status IN ('Current', 'Previous')),
     CONSTRAINT check_employment_dates           CHECK (employment_end_date IS NULL OR employment_end_date >= employment_start_date),
     CONSTRAINT check_income_positive            CHECK (income_monthly_gross >= 0)
@@ -379,7 +381,7 @@ CREATE TABLE ACCOUNT_DETAILS (
     approved_by_employee    INT NOT NULL,
     account_open_date       DATE NOT NULL,
     account_close_date      DATE,
-    account_status          VARCHAR(10) NOT NULL,
+    account_status          VARCHAR(30) NOT NULL, -- Increased length to accommodate 'Pending Verification'
     biometrics_type_code    CHAR(4) NOT NULL,
     
     -- KEY CONSTRAINTS
@@ -393,7 +395,7 @@ CREATE TABLE ACCOUNT_DETAILS (
     CONSTRAINT check_referral_type1                CHECK (referral_type REGEXP '^[A-Za-z\\-]+$'),
     CONSTRAINT check_referral_type2                CHECK (referral_type IN ('Walk-in', 'Referred')),
     CONSTRAINT check_referral_source_condition     CHECK ((referral_type = 'Referred' AND referral_source IS NOT NULL AND referral_source REGEXP '^[A-Za-z ]+$') OR(referral_type = 'Walk-in' AND referral_source IS NULL)),
-    CONSTRAINT check_account_status               CHECK (account_status IN ('Active', 'Dormant', 'Closed', 'Suspended'))
+    CONSTRAINT check_account_status               CHECK (account_status IN ('Active', 'Dormant', 'Closed', 'Suspended', 'Pending Verification')) -- Added 'Pending Verification'
     ) AUTO_INCREMENT = 100000000000;
 
 
@@ -430,6 +432,41 @@ CREATE TABLE CUSTOMER_ID (
     CONSTRAINT check_id_storage        CHECK (id_storage REGEXP '^(https?|ftp)://.+' OR id_storage REGEXP '^[A-Za-z]:(\\\\[A-Za-z0-9_\\\\/\\.-]+)+$' OR id_storage REGEXP '^/[A-Za-z0-9_\\/\\.-]+$'),
     CONSTRAINT check_id_date           CHECK (id_expiry_date IS NULL OR id_issue_date < id_expiry_date)
     );
+    
+<<<<<<< HEAD
+    -- 23. CUSTOMER_COMPLIANCE_ANSWERS
+-- ===============================
+CREATE TABLE CUSTOMER_COMPLIANCE_ANSWERS (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    cif_number BIGINT UNSIGNED NOT NULL,
+    answer1 VARCHAR(10),
+    answer2 VARCHAR(10),
+    answer3 VARCHAR(10),
+    answer4 VARCHAR(10),
+    answer5 VARCHAR(10),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (cif_number) REFERENCES CUSTOMER(cif_number) ON DELETE CASCADE
+=======
+-- 23. REVIEW_QUEUE
+-- ===============
+CREATE TABLE REVIEW_QUEUE (
+    review_id                   INT AUTO_INCREMENT PRIMARY KEY,
+    account_number              BIGINT UNSIGNED,
+    cif_number                  BIGINT UNSIGNED,
+    request_type                VARCHAR(50) NOT NULL,
+    request_timestamp           DATETIME NOT NULL,
+    request_details             TEXT,
+    review_status               VARCHAR(20) NOT NULL DEFAULT 'PENDING',
+    reviewed_by_employee_id     INT,
+    review_comment              TEXT,
+    review_date                 DATE,
+
+    -- KEY CONSTRAINTS
+    FOREIGN KEY (account_number) REFERENCES ACCOUNT_DETAILS(account_number) ON UPDATE CASCADE ON DELETE SET NULL,
+    FOREIGN KEY (cif_number) REFERENCES CUSTOMER(cif_number) ON UPDATE CASCADE ON DELETE CASCADE,
+    FOREIGN KEY (reviewed_by_employee_id) REFERENCES BANK_EMPLOYEE(employee_id) ON UPDATE CASCADE ON DELETE SET NULL
+>>>>>>> main
+);
 
 
 -- ////////////////
@@ -476,7 +513,7 @@ BEGIN
     DECLARE src_desc VARCHAR(100);
 
     -- Retrieve the human‐readable description of this fund source
-    SELECT source_description
+    SELECT fund_source
       INTO src_desc
       FROM FUND_SOURCE_TYPE
       WHERE fund_source_code = NEW.fund_source_code;
@@ -507,13 +544,13 @@ BEGIN
         SIGNAL SQLSTATE '45000'
         SET MESSAGE_TEXT = 'Employment start date cannot be in the future';
     END IF;
-    
+
     IF NEW.employment_end_date IS NOT NULL THEN
         IF NEW.employment_end_date > CURRENT_DATE() THEN
             SIGNAL SQLSTATE '45000'
             SET MESSAGE_TEXT = 'Employment end date cannot be in the future';
         END IF;
-        
+
         IF NEW.employment_end_date < NEW.employment_start_date THEN
             SIGNAL SQLSTATE '45000'
             SET MESSAGE_TEXT = 'Employment end date cannot be before start date';
@@ -527,6 +564,33 @@ DELIMITER ;
 -- Description: BEFORE UPDATE on CUSTOMER_EMPLOYMENT_INFORMATION - validates updated start/end dates are not in the future and end_date ≥ start_date
 DELIMITER $$
 CREATE TRIGGER trg_employment_date_update_check
+BEFORE UPDATE ON CUSTOMER_EMPLOYMENT_INFORMATION
+FOR EACH ROW
+BEGIN
+    IF NEW.employment_start_date > CURRENT_DATE() THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Employment start date cannot be in the future';
+    END IF;
+
+    IF NEW.employment_end_date IS NOT NULL THEN
+        IF NEW.employment_end_date > CURRENT_DATE() THEN
+            SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = 'Employment end date cannot be in the future';
+        END IF;
+
+        IF NEW.employment_end_date < NEW.employment_start_date THEN
+            SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = 'Employment end date cannot be before start date';
+        END IF;
+    END IF;
+END$$
+DELIMITER ;
+
+
+-- Table: CUSTOMER_EMPLOYMENT_INFORMATION, Trigger: trg_employment_date_update_check
+-- Description: BEFORE UPDATE on CUSTOMER_EMPLOYMENT_INFORMATION - validates updated start/end dates are not in the future and end_date ≥ start_date
+DELIMITER $$
+CREATE TRIGGER trg_employment_date_validation_on_update
 BEFORE UPDATE ON CUSTOMER_EMPLOYMENT_INFORMATION
 FOR EACH ROW
 BEGIN
@@ -553,7 +617,7 @@ DELIMITER ;
 -- Table: CUSTOMER_EMPLOYMENT_INFORMATION, Trigger: trg_employment_no_status_update
 -- Description: BEFORE UPDATE on CUSTOMER_EMPLOYMENT_INFORMATION - prohibits changing employment_status or employment_end_date; new record must be inserted instead
 DELIMITER $$
-CREATE TRIGGER trg_employment_no_status_update
+CREATE TRIGGER trg_employment_status_immutability_on_update
 BEFORE UPDATE ON CUSTOMER_EMPLOYMENT_INFORMATION
 FOR EACH ROW
 BEGIN
@@ -691,10 +755,10 @@ CREATE TRIGGER trg_customer_account_insert_validation
     BEFORE INSERT ON ACCOUNT_DETAILS
     FOR EACH ROW
 BEGIN
-    IF NEW.account_number < 100000000000 OR NEW.account_number > 999999999999 THEN
-        SIGNAL SQLSTATE '45000' 
-        SET MESSAGE_TEXT = 'Account number must be exactly 12 digits (100000000000-999999999999)';
-    END IF;
+    -- REMOVED: IF NEW.account_number < 100000000000 OR NEW.account_number > 999999999999 THEN
+    -- REMOVED:    SIGNAL SQLSTATE '45000' 
+    -- REMOVED:    SET MESSAGE_TEXT = 'Account number must be exactly 12 digits (100000000000-999999999999)';
+    -- REMOVED: END IF;
     
     IF NEW.account_open_date > CURDATE() THEN
         SIGNAL SQLSTATE '45000' 
@@ -873,27 +937,26 @@ END$$
 DELIMITER ;
 
 
--- Procedure: create_customer
--- Description: Creates a new CUSTOMER row and all needed information.
 DELIMITER $$
+
 CREATE PROCEDURE create_customer (
-  IN p_customer_type            VARCHAR(25),
-  IN p_customer_last_name       CHAR(255),
-  IN p_customer_first_name      CHAR(255),
-  IN p_customer_middle_name     CHAR(255),
-  IN p_customer_suffix_name     CHAR(255),
-  IN p_customer_username        VARCHAR(50),
-  IN p_customer_password        VARCHAR(255),
-  IN p_birth_date               DATE,
-  IN p_gender                   VARCHAR(25),
-  IN p_civil_status_code        CHAR(4),
-  IN p_birth_country            VARCHAR(100),
-  IN p_residency_status         VARCHAR(25),
-  IN p_citizenship              VARCHAR(100),
-  IN p_tax_identification_number BIGINT UNSIGNED,
-  IN p_remittance_country       VARCHAR(100),
-  IN p_remittance_purpose       VARCHAR(255),
-  IN p_fund_source_code         CHAR(5)
+  IN p_customer_type                 VARCHAR(25),
+  IN p_customer_last_name            CHAR(255),
+  IN p_customer_first_name           CHAR(255),
+  IN p_customer_middle_name          CHAR(255),
+  IN p_customer_suffix_name          CHAR(255),
+  IN p_customer_username             VARCHAR(50),
+  IN p_customer_password             VARCHAR(255),
+  IN p_birth_date                    DATE,
+  IN p_gender                        VARCHAR(25),
+  IN p_civil_status_code             CHAR(4),
+  IN p_birth_country                 VARCHAR(100),
+  IN p_residency_status              VARCHAR(25),
+  IN p_citizenship                   VARCHAR(100),
+  IN p_tax_identification_number     BIGINT UNSIGNED,
+  IN p_remittance_country            VARCHAR(100),
+  IN p_remittance_purpose            VARCHAR(255),
+  IN p_fund_source_code              CHAR(5)
 )
 BEGIN
   DECLARE EXIT HANDLER FOR SQLEXCEPTION
@@ -921,7 +984,8 @@ BEGIN
     citizenship,
     tax_identification_number,
     remittance_country,
-    remittance_purpose
+    remittance_purpose,
+    customer_status -- Explicitly include customer_status
   ) VALUES (
     p_customer_type,
     p_customer_last_name,
@@ -938,7 +1002,8 @@ BEGIN
     p_citizenship,
     p_tax_identification_number,
     p_remittance_country,
-    p_remittance_purpose
+    p_remittance_purpose,
+    DEFAULT -- Use the default value for customer_status ('Pending Verification')
   );
 
   SET @new_cif := LAST_INSERT_ID();
@@ -960,7 +1025,7 @@ DELIMITER ;
 DELIMITER $$
 CREATE PROCEDURE create_account_for_customer (
   IN p_cif_number            BIGINT UNSIGNED,
-  IN p_product_id            CHAR(4),
+  IN p_product_type_code     CHAR(4),
   IN p_referral_type         VARCHAR(30),
   IN p_referral_source       VARCHAR(255),
   IN p_verified_by_employee  INT,
@@ -980,7 +1045,7 @@ BEGIN
   START TRANSACTION;
 
   INSERT INTO ACCOUNT_DETAILS (
-    product_id,
+    product_type_code,
     referral_type,
     referral_source,
     verified_by_employee,
@@ -989,7 +1054,7 @@ BEGIN
     account_status,
     biometrics_type_code
   ) VALUES (
-    p_product_id,
+    p_product_type_code,
     p_referral_type,
     p_referral_source,
     p_verified_by_employee,
@@ -1012,3 +1077,7 @@ BEGIN
   COMMIT;
 END$$
 DELIMITER ;
+
+CREATE INDEX idx_customer_username ON CUSTOMER(customer_username);
+CREATE INDEX idx_employee_username ON BANK_EMPLOYEE(employee_username);
+CREATE INDEX idx_customer_address_cif ON CUSTOMER_ADDRESS(cif_number);

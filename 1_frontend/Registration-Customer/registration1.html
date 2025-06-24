@@ -15,7 +15,39 @@
   <body>
     <div class="customer-type-page">
       <h1 class="direction-text">Customer Type</h1>
+      <script>
+        document.addEventListener('DOMContentLoaded', function() {
+          const accountOwner = document.getElementById('account-owner');
+          const businessOwner = document.getElementById('business-owner');
+          const form = document.querySelector('.checkbox-container');
+          const errorMessage = document.getElementById('error-message');
 
+          accountOwner.addEventListener('change', function() {
+            if (this.checked) {
+              businessOwner.checked = false;
+            }
+            errorMessage.textContent = '';
+          });
+
+          businessOwner.addEventListener('change', function() {
+            if (this.checked) {
+              accountOwner.checked = false;
+            }
+            errorMessage.textContent = '';
+          });
+
+          document.getElementById('back').addEventListener('click', function() {
+            window.location.href = 'entry.html';
+          });
+
+          form.addEventListener('submit', function(e) {
+            if (!accountOwner.checked && !businessOwner.checked) {
+              e.preventDefault();
+              errorMessage.textContent = 'Please select either Account Owner or Business Owner.';
+            }
+          });
+        });
+      </script>
       <form class="checkbox-container" action="registration2.html">
         <div class="checkbox">
           <input type="checkbox" id="account-owner" />

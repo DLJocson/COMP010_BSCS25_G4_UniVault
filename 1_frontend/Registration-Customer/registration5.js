@@ -92,9 +92,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (sourceOfFundsMulti && sourceOfFundsMulti.offsetParent !== null) {
       // Multi-select (native <select multiple>)
-      sourceOfFundsValues = Array.from(sourceOfFundsMulti.selectedOptions).map(
-        (opt) => opt.value
-      );
+      sourceOfFundsValues = Array.from(sourceOfFundsMulti.selectedOptions).map(opt => opt.value);
     } else if (sourceOfFundsInput && sourceOfFundsInput.offsetParent !== null) {
       // Single select
       sourceOfFundsValues = [sourceOfFundsInput.value];
@@ -102,16 +100,14 @@ document.addEventListener("DOMContentLoaded", function () {
       // Custom multi-checkbox dropdown
       const dropdownMenu = document.getElementById("dropdownMenu");
       if (dropdownMenu && dropdownMenu.offsetParent !== null) {
-        const checked = Array.from(
-          dropdownMenu.querySelectorAll('input[type="checkbox"]:checked')
-        );
-        sourceOfFundsValues = checked.map((cb) => cb.value);
+        const checked = Array.from(dropdownMenu.querySelectorAll('input[type="checkbox"]:checked'));
+        sourceOfFundsValues = checked.map(cb => cb.value);
       }
     }
 
     // Helper: check if "Remittances" is selected
-    const hasRemittances = sourceOfFundsValues.some(
-      (val) => val.trim().toLowerCase() === "remittances"
+    const hasRemittances = sourceOfFundsValues.some(val =>
+      val.trim().toLowerCase() === "remittances"
     );
 
     const elements = [
@@ -129,6 +125,8 @@ document.addEventListener("DOMContentLoaded", function () {
       {
         id: "business-number",
         name: "Business number",
+        regex: /^\d{10,15}$/,
+        regexMessage: "Business number must be 10-15 digits",
       },
       { id: "tin", name: "TIN" },
       { id: "zip-code", name: "Zip code" },
@@ -139,7 +137,11 @@ document.addEventListener("DOMContentLoaded", function () {
         regexMessage: "Please enter a valid email address",
       },
       { id: "primary-employer", name: "Primary employer" },
-
+      { id: "unit", name: "Unit" },
+      { id: "building", name: "Building" },
+      { id: "street", name: "Street" },
+      { id: "subdivision", name: "Subdivision" },
+      { id: "barangay", name: "Barangay" },
       { id: "city", name: "City" },
       { id: "province", name: "Province" },
       { id: "country", name: "Country" },
@@ -290,15 +292,14 @@ document.addEventListener("DOMContentLoaded", function () {
   }, 500);
 });
 
+
 function validateMultiSelect() {
   const multiSelect = document.getElementById("source-of-funds-multi");
   if (!multiSelect) return true;
 
   if (multiSelect.offsetParent === null) return true;
 
-  const selected = Array.from(multiSelect.options).filter(
-    (opt) => opt.selected
-  );
+  const selected = Array.from(multiSelect.options).filter(opt => opt.selected);
   if (selected.length === 0) {
     showError(multiSelect, "Please select at least one source of funds");
     return false;
@@ -334,7 +335,7 @@ if (proceedBtn) {
 const multiSelect = document.getElementById("source-of-funds-multi");
 if (multiSelect) {
   multiSelect.addEventListener("change", function () {
-    if (Array.from(this.options).some((opt) => opt.selected)) {
+    if (Array.from(this.options).some(opt => opt.selected)) {
       clearFieldError(this);
     }
 
@@ -346,7 +347,7 @@ if (multiSelect) {
       summary.style.marginTop = "4px";
       this.parentNode.appendChild(summary);
     }
-    const selected = Array.from(this.selectedOptions).map((opt) => opt.text);
+    const selected = Array.from(this.selectedOptions).map(opt => opt.text);
     summary.textContent = selected.length
       ? `Selected: ${selected.join(", ")}`
       : "";
@@ -357,17 +358,15 @@ if (multiSelect) {
   const dropdownBtn = document.getElementById("dropdownBtn");
   const dropdownMenu = document.getElementById("dropdownMenu");
   const hiddenInput = document.getElementById("source-of-funds-multi");
-  const errorDiv = document.querySelector(
-    "#businessNatureDropdownMenu .error-message"
-  );
+  const errorDiv = document.querySelector("#source-of .error-message");
 
   // Utility: Get all checked values and labels
   function getCheckedOptions() {
     const checkboxes = dropdownMenu.querySelectorAll('input[type="checkbox"]');
-    const checked = Array.from(checkboxes).filter((cb) => cb.checked);
+    const checked = Array.from(checkboxes).filter(cb => cb.checked);
     return {
-      values: checked.map((cb) => cb.value),
-      labels: checked.map((cb) => cb.parentNode.textContent.trim()),
+      values: checked.map(cb => cb.value),
+      labels: checked.map(cb => cb.parentNode.textContent.trim())
     };
   }
 
@@ -488,10 +487,10 @@ if (multiSelect) {
   function getCheckedOptions() {
     if (!dropdownMenu) return { values: [], labels: [] };
     const checkboxes = dropdownMenu.querySelectorAll('input[type="checkbox"]');
-    const checked = Array.from(checkboxes).filter((cb) => cb.checked);
+    const checked = Array.from(checkboxes).filter(cb => cb.checked);
     return {
-      values: checked.map((cb) => cb.value),
-      labels: checked.map((cb) => cb.parentNode.textContent.trim()),
+      values: checked.map(cb => cb.value),
+      labels: checked.map(cb => cb.parentNode.textContent.trim())
     };
   }
 
@@ -558,8 +557,7 @@ if (multiSelect) {
       showError(hiddenInput, "Please select at least one work/business nature");
       dropdownBtn.style.borderColor = "#ff3860";
       if (errorDiv) {
-        errorDiv.textContent =
-          "Please select at least one work/business nature";
+        errorDiv.textContent = "Please select at least one work/business nature";
         errorDiv.style.display = "block";
         errorDiv.style.color = "#ff3860";
         errorDiv.style.fontSize = "20px";

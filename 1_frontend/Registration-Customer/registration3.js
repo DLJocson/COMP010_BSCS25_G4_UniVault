@@ -417,6 +417,13 @@ function initializeFormValidation() {
       setSuccess(firstName);
     }
 
+    if (!middleName.value.trim()) {
+      setError(middleName, "Middle Name is required");
+      isValid = false;
+    } else {
+      setSuccess(middleName);
+    }
+
     if (!lastName.value.trim()) {
       setError(lastName, "Last Name is required");
       isValid = false;
@@ -524,8 +531,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 document.getElementById("month").addEventListener("change", function () {
   const month = parseInt(this.value);
-  const year =
-    parseInt(document.getElementById("year").value) || new Date().getFullYear();
+  const year = parseInt(document.getElementById("year").value) || new Date().getFullYear();
   const daysInMonth = new Date(year, month, 0).getDate();
   const daySelect = document.getElementById("day");
   const previousDay = parseInt(daySelect.value);

@@ -34,42 +34,32 @@ document.addEventListener("DOMContentLoaded", () => {
 
 // New helper function to clear errors when hiding the form
 function clearAllErrorsInContainers() {
-  const containers = document.getElementById("containers");
-  if (containers) {
-    const errorMessages = containers.querySelectorAll(".error-message");
-    errorMessages.forEach((errorEl) => {
-      errorEl.textContent = "";
-    });
-    const errorInputs = containers.querySelectorAll(
-      "input.error, select.error, .upload-box.error"
-    );
-    errorInputs.forEach((inputEl) => {
-      inputEl.classList.remove("error");
-    });
-    // Also reset file upload text if needed
-    const fileUploadDirections = containers.querySelectorAll(
-      ".upload-box .direction"
-    );
-    fileUploadDirections.forEach((directionEl) => {
-      // You might need to adjust this to your default text
-      if (directionEl.textContent.startsWith("✓")) {
-        // Only reset if it shows an uploaded file
-        const inputId = directionEl
-          .closest(".upload-box")
-          .querySelector("input[type='file']").id;
-        if (inputId === "front-id-1")
-          directionEl.textContent = "Upload Front of ID 1";
-        else if (inputId === "back-id-1")
-          directionEl.textContent = "Upload Back of ID 1";
-        else if (inputId === "front-id-2")
-          directionEl.textContent = "Upload Front of ID 2";
-        else if (inputId === "back-id-2")
-          directionEl.textContent = "Upload Back of ID 2";
-        directionEl.style.color = ""; // Remove green color
-      }
-    });
-  }
+    const containers = document.getElementById("containers");
+    if (containers) {
+        const errorMessages = containers.querySelectorAll(".error-message");
+        errorMessages.forEach(errorEl => {
+            errorEl.textContent = "";
+        });
+        const errorInputs = containers.querySelectorAll("input.error, select.error, .upload-box.error");
+        errorInputs.forEach(inputEl => {
+            inputEl.classList.remove("error");
+        });
+        // Also reset file upload text if needed
+        const fileUploadDirections = containers.querySelectorAll(".upload-box .direction");
+        fileUploadDirections.forEach(directionEl => {
+            // You might need to adjust this to your default text
+            if (directionEl.textContent.startsWith("✓")) { // Only reset if it shows an uploaded file
+                const inputId = directionEl.closest(".upload-box").querySelector("input[type='file']").id;
+                if (inputId === "front-id-1") directionEl.textContent = "Upload Front of ID 1";
+                else if (inputId === "back-id-1") directionEl.textContent = "Upload Back of ID 1";
+                else if (inputId === "front-id-2") directionEl.textContent = "Upload Front of ID 2";
+                else if (inputId === "back-id-2") directionEl.textContent = "Upload Back of ID 2";
+                directionEl.style.color = ""; // Remove green color
+            }
+        });
+    }
 }
+
 
 function handleFileUploadValidation() {
   const validTypes = ["image/jpeg", "image/png"];
@@ -80,7 +70,7 @@ function handleFileUploadValidation() {
 
     // Check if input element exists before adding event listener
     if (input) {
-      input.addEventListener("change", () => {
+        input.addEventListener("change", () => {
         const file = input.files[0];
         const errorElement = document.getElementById(`error-${id}`);
         const uploadBox = input.closest(".upload-box");
@@ -88,18 +78,18 @@ function handleFileUploadValidation() {
         if (!file) return;
 
         if (!validTypes.includes(file.type)) {
-          errorElement.textContent = "Only JPG and PNG files are allowed.";
-          input.value = ""; // Clear the selected file
-          uploadBox.classList.add("error");
+            errorElement.textContent = "Only JPG and PNG files are allowed.";
+            input.value = ""; // Clear the selected file
+            uploadBox.classList.add("error");
         } else {
-          errorElement.textContent = "";
-          uploadBox.classList.remove("error");
+            errorElement.textContent = "";
+            uploadBox.classList.remove("error");
 
-          const direction = uploadBox.querySelector(".direction");
-          direction.textContent = `✓ ${file.name} uploaded`;
-          direction.style.color = "green";
+            const direction = uploadBox.querySelector(".direction");
+            direction.textContent = `✓ ${file.name} uploaded`;
+            direction.style.color = "green";
         }
-      });
+        });
     }
   });
 }
@@ -143,6 +133,7 @@ function populateDateDropdowns() {
     });
   }
 
+
   if (yearSelect1 && yearSelect2) {
     for (let y = new Date().getFullYear(); y >= 1900; y--) {
       const option1 = document.createElement("option");
@@ -157,17 +148,16 @@ function populateDateDropdowns() {
     }
   }
 
+
   function updateDays(monthSelect, yearSelect, daySelect) {
     if (!monthSelect || !yearSelect || !daySelect) return; // Ensure elements exist
 
     const month = parseInt(monthSelect.value);
     const year = parseInt(yearSelect.value);
     // Handle cases where month/year might not be selected yet (value is NaN)
-    if (isNaN(month) || isNaN(year) || month === 0) {
-      // month === 0 if "Select Month" is chosen after initial load
-      daySelect.innerHTML =
-        '<option value="" disabled selected>Select Day</option>';
-      return;
+    if (isNaN(month) || isNaN(year) || month === 0) { // month === 0 if "Select Month" is chosen after initial load
+        daySelect.innerHTML = '<option value="" disabled selected>Select Day</option>';
+        return;
     }
 
     const daysInMonth = new Date(year, month, 0).getDate();
@@ -192,6 +182,7 @@ function populateDateDropdowns() {
     );
   }
 
+
   if (monthSelect2 && yearSelect2 && daySelect2) {
     monthSelect2.addEventListener("change", () =>
       updateDays(monthSelect2, yearSelect2, daySelect2)
@@ -203,9 +194,7 @@ function populateDateDropdowns() {
 }
 
 function attachInputListeners() {
-  const inputs = document.querySelectorAll(
-    "#containers input, #containers select"
-  ); // Target inputs only within #containers
+  const inputs = document.querySelectorAll("#containers input, #containers select"); // Target inputs only within #containers
   inputs.forEach((input) => {
     input.addEventListener("input", () => clearError(input.id));
     input.addEventListener("change", () => clearError(input.id));
@@ -260,7 +249,7 @@ function handleProceedClick() {
   // This check is important because handleProceedClick is called inside showHideMainContent
   // which might be called multiple times if the checkbox is toggled.
   if (proceedBtn.dataset.listenerAttached) {
-    return;
+      return;
   }
   proceedBtn.dataset.listenerAttached = "true"; // Mark as attached
 
@@ -279,6 +268,7 @@ function handleProceedClick() {
   });
 }
 
+
 function validateAliasAndIDs() {
   let isValid = true;
   const containers = document.getElementById("containers"); // Get the container to limit validation to visible fields
@@ -286,7 +276,7 @@ function validateAliasAndIDs() {
   // Required alias fields - only First and Last name
   const aliasFields = [
     { id: "first-name", msg: "Alias first name is required" },
-    { id: "last-name", msg: "Alias last name is required" },
+    { id: "last-name", msg: "Alias last name is required" }
     // Removed middle-name as it's not required
   ];
 
@@ -294,10 +284,10 @@ function validateAliasAndIDs() {
     const el = document.getElementById(id);
     // Only validate if the element exists and is inside the visible 'containers'
     if (el && containers.contains(el)) {
-      if (el.value.trim() === "") {
-        showError(id, msg);
-        isValid = false;
-      }
+        if (el.value.trim() === "") {
+            showError(id, msg);
+            isValid = false;
+        }
     }
   });
 
@@ -306,34 +296,34 @@ function validateAliasAndIDs() {
     { id: "select-id1", msg: "ID 1 type is required" },
     { id: "id1-num", msg: "ID 1 number is required" },
     { id: "issue-month-id1", msg: "Issue month is required" },
-    { id: "issue-year-id1", msg: "Issue year is required" },
+    { id: "issue-year-id1", msg: "Issue year is required" }
     // Removed expiration date fields and day field as they're not required
   ];
 
   id1Fields.forEach(({ id, msg }) => {
     const el = document.getElementById(id);
     if (el && containers.contains(el)) {
-      // For select dropdowns, check if a valid option is selected (value is not empty)
-      if (!el.value || el.value === "" || el.value === null) {
-        showError(id, msg);
-        isValid = false;
-      }
+        // For select dropdowns, check if a valid option is selected (value is not empty)
+        if (!el.value || el.value === "" || el.value === null) {
+            showError(id, msg);
+            isValid = false;
+        }
     }
   });
 
   // ID 1 file fields - front and back uploads are required
   const id1FileFields = [
     { id: "front-id-1", msg: "Front image of ID 1 is required" },
-    { id: "back-id-1", msg: "Back image of ID 1 is required" },
+    { id: "back-id-1", msg: "Back image of ID 1 is required" }
   ];
 
   id1FileFields.forEach(({ id, msg }) => {
     const el = document.getElementById(id);
     if (el && containers.contains(el)) {
-      if (!el.files || !el.files.length) {
-        showError(id, msg);
-        isValid = false;
-      }
+        if (!el.files || !el.files.length) {
+            showError(id, msg);
+            isValid = false;
+        }
     }
   });
 
@@ -342,33 +332,33 @@ function validateAliasAndIDs() {
     { id: "select-id2", msg: "ID 2 type is required" },
     { id: "id2-num", msg: "ID 2 number is required" },
     { id: "issue-month-id2", msg: "Issue month is required" },
-    { id: "issue-year-id2", msg: "Issue year is required" },
+    { id: "issue-year-id2", msg: "Issue year is required" }
     // Removed expiration date fields and day field as they're not required
   ];
 
   id2Fields.forEach(({ id, msg }) => {
     const el = document.getElementById(id);
     if (el && containers.contains(el)) {
-      if (!el.value || el.value === "" || el.value === null) {
-        showError(id, msg);
-        isValid = false;
-      }
+        if (!el.value || el.value === "" || el.value === null) {
+            showError(id, msg);
+            isValid = false;
+        }
     }
   });
 
   // ID 2 file fields - front and back uploads are required
   const id2FileFields = [
     { id: "front-id-2", msg: "Front image of ID 2 is required" },
-    { id: "back-id-2", msg: "Back image of ID 2 is required" },
+    { id: "back-id-2", msg: "Back image of ID 2 is required" }
   ];
 
   id2FileFields.forEach(({ id, msg }) => {
     const el = document.getElementById(id);
     if (el && containers.contains(el)) {
-      if (!el.files || !el.files.length) {
-        showError(id, msg);
-        isValid = false;
-      }
+        if (!el.files || !el.files.length) {
+            showError(id, msg);
+            isValid = false;
+        }
     }
   });
 
@@ -384,8 +374,7 @@ function populateDays(daySelectId, monthSelectId, yearSelectId) {
     const month = parseInt(monthSelect.value, 10);
     let daysInMonth;
     if (isNaN(month)) {
-      daySelect.innerHTML =
-        '<option value="" disabled selected>Select Day</option>';
+      daySelect.innerHTML = '<option value="" disabled selected>Select Day</option>';
       return;
     }
     if (month === 2) {
@@ -395,8 +384,7 @@ function populateDays(daySelectId, monthSelectId, yearSelectId) {
     } else {
       daysInMonth = 31;
     }
-    daySelect.innerHTML =
-      '<option value="" disabled selected>Select Day</option>';
+    daySelect.innerHTML = '<option value="" disabled selected>Select Day</option>';
     for (let d = 1; d <= daysInMonth; d++) {
       const option = document.createElement("option");
       option.value = d;
@@ -408,7 +396,7 @@ function populateDays(daySelectId, monthSelectId, yearSelectId) {
   monthSelect.addEventListener("change", updateDays);
 }
 
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", function() {
   populateDays("issue-day-id1", "issue-month-id1", "issue-year-id1");
   populateDays("day", "month", "year");
   populateDays("issue-day-id2", "issue-month-id2", "issue-year-id2");

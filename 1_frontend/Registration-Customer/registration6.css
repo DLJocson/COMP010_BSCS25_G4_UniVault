@@ -25,12 +25,12 @@ body {
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background: url("/assets/bg.png");
+  background: url("../assets/bg.png");
   z-index: -1;
   font-family: var(--font-family);
 }
 
-.update-alias-page {
+.alias-page {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -155,8 +155,8 @@ input[type="text"] {
   flex-direction: row;
   justify-content: space-between;
   width: 100%;
-  padding: 25px 25px;
-  margin-bottom: -10px;
+  padding: 10px 25px; /* Adjusted padding to compress vertically */
+  margin-bottom: -15px; /* Adjusted to pull elements closer */
 }
 
 #month,
@@ -167,7 +167,7 @@ input[type="text"] {
   width: 220px;
   height: 50px;
   font-size: 32px;
-  margin-bottom: 10px;
+  margin-bottom: 5px; /* Reduced margin-bottom for individual date selects */
 }
 
 #month-id2,
@@ -178,14 +178,14 @@ input[type="text"] {
   width: 220px;
   height: 50px;
   font-size: 28px;
-  margin-bottom: 10px;
+  margin-bottom: 5px; /* Reduced margin-bottom for individual date selects */
 }
 
 .date label {
   display: block;
   font-size: 32px;
   color: black;
-  margin-bottom: 5px;
+  margin-bottom: 3px; /* Reduced margin-bottom for labels */
   text-align: left;
   width: 100%;
 }
@@ -220,8 +220,8 @@ input[type="text"]::placeholder {
   align-items: center;
   flex-direction: column;
   width: 100%;
-  padding-top: 20px;
-  padding-bottom: 30px;
+  padding-top: 10px; /* Reduced padding-top */
+  padding-bottom: 10px; /* Reduced padding-bottom */
 }
 
 .upload-box {
@@ -312,12 +312,14 @@ input[type="text"]::placeholder {
   text-align: left;
   width: 100%;
   padding-left: 25px;
+  margin-bottom: 5px; /* Reduced margin-bottom */
 }
 
 .id1 {
   display: flex;
   flex-direction: row;
   gap: 50px;
+  margin-bottom: 10px; /* Added to reduce space after ID selection */
 }
 
 #select-id1,
@@ -349,6 +351,7 @@ input[type="text"]::placeholder {
 .id1-expiration {
   display: flex;
   flex-direction: column;
+  margin-top: 10px; /* Added margin-top to separate from issue date better */
 }
 
 .id1-expiration label {
@@ -372,8 +375,8 @@ input[type="date"] {
   align-items: center;
   flex-direction: column;
   width: 100%;
-  padding-top: 20px;
-  padding-bottom: 20px;
+  padding-top: 10px; /* Reduced padding-top */
+  padding-bottom: 10px; /* Reduced padding-bottom */
 }
 
 .third-container h2 {
@@ -382,6 +385,7 @@ input[type="date"] {
   text-align: left;
   width: 100%;
   padding-left: 20px;
+  margin-bottom: 5px; /* Reduced margin-bottom for the ID 2 title */
 }
 
 .id2 {
@@ -390,6 +394,7 @@ input[type="date"] {
   width: 100%;
   gap: 50px;
   padding-left: 20px;
+  margin-bottom: 10px; /* Added to reduce space after ID selection */
 }
 
 .id2 input[type="select"] {
@@ -422,6 +427,7 @@ input[type="date"] {
   flex-direction: column;
   width: 100%;
   justify-content: space-between;
+  margin-top: 10px; /* Added margin-top to separate from issue date better */
 }
 
 input[type="date"] {
@@ -516,6 +522,47 @@ select:focus {
   border-radius: 5px;
 }
 
+.alias-page {
+  animation: fadeInUp 0.7s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.title-container,
+.first-container,
+.second-container,
+.third-container {
+  animation: fadeIn 1s ease;
+}
+
+.upload-box {
+  animation: fadeIn 1s ease;
+}
+
+.id1,
+.id2 {
+  animation: fadeIn 1s ease;
+}
+
+.button {
+  animation: fadeInUp 0.7s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+input[type="text"],
+input[type="date"],
+select {
+  font-family: "Manjari", sans-serif;
+}
+
 .id1-issue-date,
 .id2-issue-date {
   display: flex;
@@ -570,8 +617,10 @@ select:focus {
   border-radius: 5px;
   width: 220px;
   height: 50px;
-  font-size: 32px;
-  margin-bottom: 10px;
+  font-size: 28px;
+  margin-bottom: 5px; /* Reduced margin-bottom */
+  padding-left: 10px;
+  font-family: var(--font-family);
 }
 
 .id1-issue-date .error-message,
@@ -584,4 +633,5 @@ select:focus {
 
 .required-asterisk {
   color: red;
+  margin-left: 4px;
 }
