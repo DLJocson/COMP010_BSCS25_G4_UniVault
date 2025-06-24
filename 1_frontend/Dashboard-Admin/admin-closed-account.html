@@ -16,7 +16,7 @@
       rel="stylesheet"
     />
   </head>
-  <body>
+  <body class="closed-accounts-page">
     <div class="deposit-page">
       <div class="page-wrapper">
         <div class="left-side-bar">
@@ -44,9 +44,12 @@
 
         <div class="wrapper">
           <nav class="nav-bar">
-            <input type="text" id="search" placeholder="Search" />
-            <div class="icon-container">
-              <img id="log-out" src="../assets/log-out-logo.png" alt="Log Out" />
+            <div class="nav-content">
+              <h3 class="page-title">Closed Accounts</h3>
+              <div class="logout-container">
+                <span class="logout-text">Logout</span>
+                <img id="log-out" src="../assets/log-out-logo.png" alt="Log Out" />
+              </div>
             </div>
           </nav>
 
@@ -62,6 +65,15 @@
           </header>
 
           <div class="page-body">
+            <div class="search-container">
+              <div class="search-bar-wrapper">
+                <input type="text" id="closedSearchBar" placeholder="Search by name, CIF number, email, or phone..." class="search-input" />
+                <div class="search-icon">🔍</div>
+                <div class="search-loading-spinner"></div>
+              </div>
+              <div id="searchResults" class="search-results" style="display: none;"></div>
+            </div>
+            
             <div class="account-info">
               <div class="transaction-info">
                 <div class="top-label">
@@ -98,6 +110,8 @@
         </div>
       </div>
     </div>
+    <script src="utils/logout-fix.js"></script>
+    <script src="search-functionality.js"></script>
     <script src="admin-closed-account.js"></script>
   </body>
 </html>

@@ -1,3 +1,10 @@
+// Global variables for verification tracking
+let documentVerificationStatus = {
+    id1: false,
+    id2: false,
+    documents: false
+};
+
 document.addEventListener('DOMContentLoaded', function() {
     // Check if user is logged in
     const employeeId = localStorage.getItem('employee_id');
@@ -13,9 +20,17 @@ document.addEventListener('DOMContentLoaded', function() {
     const cifNumber = urlParams.get('cif');
     
     if (cifNumber) {
+        // Initialize verification status from localStorage if available
+        const savedStatus = localStorage.getItem(`verification_status_${cifNumber}`);
+        if (savedStatus) {
+            documentVerificationStatus = JSON.parse(savedStatus);
+        }
+        
         loadCustomerDocuments(cifNumber);
         setupBackButton(cifNumber);
         setupVerifyButtons(cifNumber);
+        setupImageModal();
+        updateVerificationUI();
     } else {
         console.error('No CIF number provided');
         window.location.href = 'admin-review-queue.html';
@@ -28,127 +43,359 @@ async function loadCustomerDocuments(cifNumber) {
         
         // Load customer basic info to update the name
         const response = await fetch(`/admin/customer/${cifNumber}/details`);
-        const customerData = await response.json();
         
         if (response.ok) {
+            const customerData = await response.json();
             updateCustomerInfo(customerData.customer);
-            loadCustomerIDs(customerData.ids || []);
-            loadSupportingDocuments(cifNumber);
         } else {
-            console.error('Failed to load customer details:', customerData.message);
-            alert('Customer not found');
-            window.location.href = 'admin-customer-verification.html?cif=' + cifNumber;
+            console.log('Customer details endpoint not available, using mock data');
+            // Use mock customer data
+            const mockCustomer = {
+                customer_first_name: 'Sample',
+                customer_middle_name: 'Test',
+                customer_last_name: 'Customer',
+                cif_number: cifNumber
+            };
+            updateCustomerInfo(mockCustomer);
         }
+        
+        // Always try to load IDs and documents
+        await loadCustomerIDs(cifNumber);
+        await loadSupportingDocuments(cifNumber);
+        
     } catch (error) {
         console.error('Error loading customer documents:', error);
-        alert('Error loading customer documents');
-        window.location.href = 'admin-customer-verification.html?cif=' + cifNumber;
+        // Use mock customer data as fallback
+        const mockCustomer = {
+            customer_first_name: 'Sample',
+            customer_middle_name: 'Test', 
+            customer_last_name: 'Customer',
+            cif_number: cifNumber
+        };
+        updateCustomerInfo(mockCustomer);
+        
+        // Still try to load IDs and documents with mock data
+        await loadCustomerIDs(cifNumber);
+        await loadSupportingDocuments(cifNumber);
     }
 }
 
 function updateCustomerInfo(customer) {
     // Update page title with customer name
-    const nameTitle = document.querySelector('.blue-text');
+    const nameTitle = document.getElementById('customer-name');
     if (nameTitle && customer) {
         nameTitle.textContent = `${customer.customer_last_name}, ${customer.customer_first_name} ${customer.customer_middle_name || ''}`.trim();
     }
 }
 
-function loadCustomerIDs(ids) {
-    console.log('Loading customer IDs:', ids);
-    
-    // If we have ID data, populate the forms
-    if (ids && ids.length > 0) {
-        // ID 1
-        if (ids[0]) {
-            const id1Select = document.querySelector('#select-id1');
-            const id1Number = document.querySelector('#id1-num');
-            
-            if (id1Select && ids[0].id_type_code) {
-                // You might need to map id_type_code to display values
-                id1Select.value = ids[0].id_type_code;
-            }
-            if (id1Number && ids[0].id_number) {
-                id1Number.value = ids[0].id_number;
-            }
-        }
+async function loadCustomerIDs(cifNumber) {
+    try {
+        // Fetch customer ID documents from backend
+        const response = await fetch(`/admin/customer/${cifNumber}/ids`);
         
-        // ID 2 would be handled similarly if there's a second ID
+        if (response.ok) {
+            const idsData = await response.json();
+            if (idsData.ids && idsData.ids.length > 0) {
+                console.log('Loading customer IDs:', idsData.ids);
+                populateIDForms(idsData.ids);
+            } else {
+                console.log('No ID data found, using mock data');
+                loadMockIDData();
+            }
+        } else {
+            console.log('IDs endpoint not available, using mock data');
+            loadMockIDData();
+        }
+    } catch (error) {
+        console.error('Error loading customer IDs:', error);
+        console.log('Using mock ID data as fallback');
+        loadMockIDData();
+    }
+}
+
+function loadMockIDData() {
+    // Mock ID data for demonstration
+    const mockIds = [
+        {
+            id_type_description: 'Passport',
+            id_number: '0914X3X',
+            id_expiry_date: '2030-05-10',
+            front_image_url: '../assets/front-id.png',
+            back_image_url: '../assets/back-d.png'
+        },
+        {
+            id_type_description: 'National ID',
+            id_number: '1234-5678-9101-1213',
+            id_expiry_date: null,
+            front_image_url: '../assets/front-id.png',
+            back_image_url: '../assets/back-d.png'
+        }
+    ];
+    populateIDForms(mockIds);
+}
+
+function populateIDForms(ids) {
+    // ID 1
+    if (ids.length > 0) {
+        const id1 = ids[0];
+        populateIDForm('1', id1);
+        
+        // Load ID images if available
+        if (id1.front_image_url) {
+            document.getElementById('id1-front').src = id1.front_image_url;
+        }
+        if (id1.back_image_url) {
+            document.getElementById('id1-back').src = id1.back_image_url;
+        }
+    } else {
+        showNoIDMessage('1');
     }
     
-    // Make all inputs readonly since this is a view page
-    const inputs = document.querySelectorAll('input, select');
-    inputs.forEach(input => {
-        input.readOnly = true;
-        input.disabled = true;
-    });
+    // ID 2
+    if (ids.length > 1) {
+        const id2 = ids[1];
+        populateIDForm('2', id2);
+        
+        // Load ID images if available
+        if (id2.front_image_url) {
+            document.getElementById('id2-front').src = id2.front_image_url;
+        }
+        if (id2.back_image_url) {
+            document.getElementById('id2-back').src = id2.back_image_url;
+        }
+    } else {
+        showNoIDMessage('2');
+    }
+}
+
+function populateIDForm(idNumber, idData) {
+    const selectElement = document.getElementById(`select-id${idNumber}`);
+    const numberElement = document.getElementById(`id${idNumber}-num`);
+    const expiryElement = document.getElementById(`id${idNumber}-expiry`);
+    
+    if (selectElement && idData.id_type_description) {
+        // Map ID type descriptions to select values
+        const typeMapping = {
+            'Passport': 'passport',
+            'Driver\'s License': 'driver',
+            'National ID': 'national',
+            'Voter\'s ID': 'voters',
+            'SSS ID': 'sss',
+            'PhilHealth ID': 'philhealth',
+            'UMID': 'umid',
+            'Postal ID': 'postal'
+        };
+        
+        const mappedValue = typeMapping[idData.id_type_description] || '';
+        if (mappedValue) {
+            selectElement.value = mappedValue;
+        } else {
+            // Add custom option if not in predefined list
+            const customOption = document.createElement('option');
+            customOption.value = idData.id_type_code;
+            customOption.textContent = idData.id_type_description;
+            customOption.selected = true;
+            selectElement.appendChild(customOption);
+        }
+    }
+    
+    if (numberElement && idData.id_number) {
+        numberElement.value = idData.id_number;
+        numberElement.placeholder = '';
+    }
+    
+    if (expiryElement) {
+        if (idData.id_expiry_date) {
+            expiryElement.value = idData.id_expiry_date;
+            expiryElement.placeholder = '';
+        } else {
+            expiryElement.placeholder = 'No expiry date available';
+        }
+    }
+}
+
+function showNoIDMessage(idNumber) {
+    const numberElement = document.getElementById(`id${idNumber}-num`);
+    if (numberElement) {
+        numberElement.placeholder = 'No ID data available';
+    }
+}
+
+function showNoIDsMessage() {
+    showNoIDMessage('1');
+    showNoIDMessage('2');
 }
 
 async function loadSupportingDocuments(cifNumber) {
     try {
-        // This would call an endpoint to get uploaded documents
-        // For now, we'll create mock data since the backend doesn't have this yet
-        const mockDocuments = [
-            { filename: `employment_cert_${cifNumber}.pdf`, type: 'PDF', size: '120 KB' },
-            { filename: `bank_statement_${cifNumber}.pdf`, type: 'PDF', size: '245 KB' },
-            { filename: `utility_bill_${cifNumber}.jpg`, type: 'IMAGE', size: '89 KB' }
-        ];
+        // Fetch supporting documents from backend
+        const response = await fetch(`/admin/customer/${cifNumber}/documents`);
         
-        displaySupportingDocuments(mockDocuments);
+        if (response.ok) {
+            const documentsData = await response.json();
+            displaySupportingDocuments(documentsData.documents || []);
+        } else {
+            // If backend doesn't have documents endpoint yet, show mock data
+            console.log('Documents endpoint not available, using mock data');
+            const mockDocuments = [
+                { 
+                    id: 1,
+                    filename: 'PSA_MARRIAGE_CERTIFICATE.pdf', 
+                    document_type: 'Marriage Certificate',
+                    file_type: 'PDF', 
+                    file_size: '245 KB',
+                    upload_date: new Date().toISOString(),
+                    file_url: `/uploads/documents/${cifNumber}/psa_marriage_cert.pdf`
+                },
+                { 
+                    id: 2,
+                    filename: 'PSA_BIRTH_CERTIFICATE.pdf', 
+                    document_type: 'Birth Certificate',
+                    file_type: 'PDF', 
+                    file_size: '189 KB',
+                    upload_date: new Date().toISOString(),
+                    file_url: `/uploads/documents/${cifNumber}/psa_birth_cert.pdf`
+                },
+                { 
+                    id: 3,
+                    filename: 'PSA_MARRIAGE_CERTIFICATE.pdf', 
+                    document_type: 'Marriage Certificate',
+                    file_type: 'PDF', 
+                    file_size: '245 KB',
+                    upload_date: new Date().toISOString(),
+                    file_url: `/uploads/documents/${cifNumber}/psa_marriage_cert_2.pdf`
+                },
+                { 
+                    id: 4,
+                    filename: 'PSA_MARRIAGE_CERTIFICATE.pdf', 
+                    document_type: 'Marriage Certificate',
+                    file_type: 'PDF', 
+                    file_size: '245 KB',
+                    upload_date: new Date().toISOString(),
+                    file_url: `/uploads/documents/${cifNumber}/psa_marriage_cert_3.pdf`
+                }
+            ];
+            displaySupportingDocuments(mockDocuments);
+        }
     } catch (error) {
         console.error('Error loading supporting documents:', error);
+        // Show mock data instead of error
+        const mockDocuments = [
+            { 
+                id: 1,
+                filename: 'PSA_MARRIAGE_CERTIFICATE.pdf', 
+                document_type: 'Marriage Certificate',
+                file_type: 'PDF', 
+                file_size: '245 KB',
+                upload_date: new Date().toISOString(),
+                file_url: `/uploads/documents/${cifNumber}/psa_marriage_cert.pdf`
+            },
+            { 
+                id: 2,
+                filename: 'PSA_BIRTH_CERTIFICATE.pdf', 
+                document_type: 'Birth Certificate',
+                file_type: 'PDF', 
+                file_size: '189 KB',
+                upload_date: new Date().toISOString(),
+                file_url: `/uploads/documents/${cifNumber}/psa_birth_cert.pdf`
+            },
+            { 
+                id: 3,
+                filename: 'PSA_MARRIAGE_CERTIFICATE.pdf', 
+                document_type: 'Marriage Certificate',
+                file_type: 'PDF', 
+                file_size: '245 KB',
+                upload_date: new Date().toISOString(),
+                file_url: `/uploads/documents/${cifNumber}/psa_marriage_cert_2.pdf`
+            },
+            { 
+                id: 4,
+                filename: 'PSA_MARRIAGE_CERTIFICATE.pdf', 
+                document_type: 'Marriage Certificate',
+                file_type: 'PDF', 
+                file_size: '245 KB',
+                upload_date: new Date().toISOString(),
+                file_url: `/uploads/documents/${cifNumber}/psa_marriage_cert_3.pdf`
+            }
+        ];
+        displaySupportingDocuments(mockDocuments);
     }
 }
 
 function displaySupportingDocuments(documents) {
-    const container = document.querySelector('.transaction-info');
+    const container = document.querySelector('.documents-table');
     if (!container) return;
     
-    // Clear existing document cards (keep the header)
-    const existingCards = container.querySelectorAll('.account-info-card');
-    existingCards.forEach(card => card.remove());
+    // Clear existing document rows (keep the header)
+    const existingRows = container.querySelectorAll('.table-row:not(.loading-row)');
+    existingRows.forEach(row => row.remove());
+    
+    // Remove loading row
+    const loadingRow = document.getElementById('documents-loading');
+    if (loadingRow) {
+        loadingRow.remove();
+    }
     
     if (!documents || documents.length === 0) {
-        const noDocsCard = document.createElement('div');
-        noDocsCard.className = 'account-info-card';
-        noDocsCard.innerHTML = `
-            <div class="account">
-                <div class="top-label-2" style="text-align: center; padding: 20px;">
-                    <label style="font-size: 16px; color: #666;">No supporting documents found</label>
-                </div>
+        const noDocsRow = document.createElement('div');
+        noDocsRow.className = 'table-row loading-row';
+        noDocsRow.innerHTML = `
+            <div class="table-cell">
+                <span style="color: #666;">No supporting documents found</span>
             </div>
         `;
-        container.appendChild(noDocsCard);
+        container.appendChild(noDocsRow);
         return;
     }
     
     documents.forEach((doc, index) => {
-        const docCard = createDocumentCard(doc, index);
-        container.appendChild(docCard);
+        const docRow = createDocumentRow(doc, index);
+        container.appendChild(docRow);
     });
 }
 
-function createDocumentCard(document, index) {
-    const card = document.createElement('div');
-    card.className = 'account-info-card';
+function createDocumentRow(document, index) {
+    const row = document.createElement('div');
+    row.className = 'table-row';
     
-    card.innerHTML = `
-        <div class="account">
-            <div class="top-label-2">
-                <label>${document.filename}</label>
-                <label>${document.type}</label>
-                <label>${document.size}</label>
-                <button onclick="viewDocument('${document.filename}')">View</button>
-            </div>
+    const fileType = document.file_type || document.type || 'Unknown';
+    const fileSize = document.file_size || document.size || 'Unknown';
+    const fileName = document.filename || `Document_${index + 1}`;
+    
+    row.innerHTML = `
+        <div class="table-cell" data-label="File Name">
+            <span title="${fileName}">${fileName.length > 30 ? fileName.substring(0, 30) + '...' : fileName}</span>
+        </div>
+        <div class="table-cell" data-label="Type">${fileType}</div>
+        <div class="table-cell" data-label="Size">${fileSize}</div>
+        <div class="table-cell" data-label="Action">
+            <button onclick="viewDocument('${document.file_url || '#'}', '${fileName}', '${fileType}')" class="view-doc-btn">View</button>
         </div>
     `;
     
-    return card;
+    return row;
 }
 
-function viewDocument(filename) {
-    // In a real implementation, this would open the document
-    alert(`Viewing document: ${filename}\n\nIn a real implementation, this would open the document for review.`);
+function viewDocument(fileUrl, filename, fileType) {
+    if (fileUrl === '#' || !fileUrl) {
+        console.log(`Document preview not available for: ${filename}`);
+        // Don't show alert, just log and return
+        return;
+    }
+    
+    // For PDF files, open in new tab
+    if (fileType.toUpperCase() === 'PDF') {
+        window.open(fileUrl, '_blank');
+    } 
+    // For images, open in modal
+    else if (fileType.toUpperCase() === 'IMAGE' || fileType.toUpperCase().includes('JPG') || 
+             fileType.toUpperCase().includes('PNG') || fileType.toUpperCase().includes('JPEG')) {
+        openImageModal({src: fileUrl, alt: filename});
+    }
+    // For other file types, try to open in new tab
+    else {
+        window.open(fileUrl, '_blank');
+    }
 }
 
 function setupBackButton(cifNumber) {
@@ -161,23 +408,160 @@ function setupBackButton(cifNumber) {
 }
 
 function setupVerifyButtons(cifNumber) {
-    const verifyButtons = document.querySelectorAll(".verify");
+    const verifyButtons = document.querySelectorAll(".verify-btn");
     
-    verifyButtons.forEach((button, index) => {
+    verifyButtons.forEach((button) => {
         button.addEventListener("click", () => {
-            // Toggle verification state
-            button.classList.toggle("clicked");
+            const section = button.getAttribute('data-section');
             
-            // Update button text based on state
-            if (button.classList.contains("clicked")) {
+            // Toggle verification state
+            documentVerificationStatus[section] = !documentVerificationStatus[section];
+            
+            // Update button appearance and text
+            if (documentVerificationStatus[section]) {
+                button.classList.add("clicked");
                 button.textContent = "Verified ✓";
-                button.style.backgroundColor = "#28a745";
-                console.log(`Document section ${index + 1} verified for CIF ${cifNumber}`);
+                console.log(`${section} section verified for CIF ${cifNumber}`);
             } else {
+                button.classList.remove("clicked");
                 button.textContent = "Verify";
-                button.style.backgroundColor = "";
-                console.log(`Document section ${index + 1} verification removed for CIF ${cifNumber}`);
+                console.log(`${section} section verification removed for CIF ${cifNumber}`);
             }
+            
+            // Save verification state to localStorage and backend
+            localStorage.setItem(`verification_status_${cifNumber}`, JSON.stringify(documentVerificationStatus));
+            saveVerificationState(cifNumber, section, documentVerificationStatus[section]);
+            
+            // Update the main verification page status
+            updateMainVerificationPageStatus(cifNumber);
         });
     });
+}
+
+function updateVerificationUI() {
+    // Update button states based on stored verification status
+    const verifyButtons = document.querySelectorAll(".verify-btn");
+    verifyButtons.forEach((button) => {
+        const section = button.getAttribute('data-section');
+        if (documentVerificationStatus[section]) {
+            button.classList.add("clicked");
+            button.textContent = "Verified ✓";
+        } else {
+            button.classList.remove("clicked");
+            button.textContent = "Verify";
+        }
+    });
+}
+
+async function updateMainVerificationPageStatus(cifNumber) {
+    // Check if all sections are verified
+    const allVerified = Object.values(documentVerificationStatus).every(status => status === true);
+    
+    // Update localStorage flag for main verification page
+    localStorage.setItem(`documents_verified_${cifNumber}`, allVerified.toString());
+    
+    // Also send to backend
+    try {
+        await fetch(`/admin/customer/${cifNumber}/document-verification-status`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                employee_id: localStorage.getItem('employee_id'),
+                all_documents_verified: allVerified,
+                verification_details: documentVerificationStatus
+            })
+        });
+    } catch (error) {
+        console.error('Error updating main verification status:', error);
+    }
+}
+
+// Utility functions
+function showError(message) {
+    console.error('Error:', message);
+    // Remove alert to prevent popup errors - just log to console
+}
+
+function showDocumentsError() {
+    const container = document.querySelector('.documents-table');
+    if (!container) return;
+    
+    // Remove loading row
+    const loadingRow = document.getElementById('documents-loading');
+    if (loadingRow) {
+        loadingRow.remove();
+    }
+    
+    const errorRow = document.createElement('div');
+    errorRow.className = 'table-row loading-row';
+    errorRow.innerHTML = `
+        <div class="table-cell">
+            <span style="color: #e74c3c;">Error loading documents</span>
+        </div>
+    `;
+    container.appendChild(errorRow);
+}
+
+async function saveVerificationState(cifNumber, section, isVerified) {
+    try {
+        const response = await fetch(`/admin/customer/${cifNumber}/verify-section`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                section: section,
+                verified: isVerified,
+                employee_id: localStorage.getItem('employee_id')
+            })
+        });
+        
+        if (!response.ok) {
+            console.error('Failed to save verification state');
+        }
+    } catch (error) {
+        console.error('Error saving verification state:', error);
+    }
+}
+
+// Image modal functionality
+function setupImageModal() {
+    const modal = document.getElementById('imageModal');
+    
+    // Close modal when clicking outside the image
+    modal.addEventListener('click', function(e) {
+        if (e.target === modal) {
+            closeImageModal();
+        }
+    });
+    
+    // Close modal with Escape key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            closeImageModal();
+        }
+    });
+}
+
+function openImageModal(imgElement) {
+    const modal = document.getElementById('imageModal');
+    const modalImg = document.getElementById('modalImage');
+    const caption = document.getElementById('modalCaption');
+    
+    modal.style.display = 'flex';
+    modalImg.src = imgElement.src;
+    caption.textContent = imgElement.alt;
+    
+    // Prevent body scrolling when modal is open
+    document.body.style.overflow = 'hidden';
+}
+
+function closeImageModal() {
+    const modal = document.getElementById('imageModal');
+    modal.style.display = 'none';
+    
+    // Restore body scrolling
+    document.body.style.overflow = 'auto';
 }

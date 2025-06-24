@@ -6,7 +6,7 @@
       name="viewport"
       content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
     />
-    <title>Document</title>
+    <title>Document Verification - UniVault Admin</title>
     <link rel="stylesheet" href="admin-customer-verification2.css" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -20,151 +20,141 @@
     <div class="profile-page">
       <div class="wrapper">
         <div class="page-body">
-          <div class="account-information-container">
-            <div class="account-information">
-              <h1>Document Page</h1>
-              <h1 class="blue-text">Bautista, Chryshella Grace P.</h1>
-              <div class="button">
-                <button id="back">
-                  Back to Previous Page
-                </button>
-              </div>
-            </div>
+          <!-- Header Section -->
+          <div class="header-container">
+            <h1 class="page-title">Documents Page</h1>
+            <h2 class="customer-name blue-text" id="customer-name">Loading...</h2>
+            <button id="back" class="back-btn">Back to Previous Page</button>
           </div>
-          <div class="personal-information-container">
-            <div class="title-verify">
-              <h1 class="title">ID 1 (Front & Back)</h1>
-              <button class="verify">Verify</button>
+
+          <!-- ID 1 Section -->
+          <div class="id-section-container">
+            <div class="section-header">
+              <h2 class="section-title blue-text">ID 1 (Front & Back)</h2>
+              <button class="verify-btn" data-section="id1">Verify</button>
             </div>
 
-            <div class="container-wrapper">
-              <div class="container">
+            <div class="id-form-row">
+              <div class="form-group">
                 <label for="select-id1">Select ID Type</label>
-                <select id="select-id1">
-                  <option value="" disabled selected>Select</option>
+                <select id="select-id1" disabled>
+                  <option value="" disabled selected>Loading...</option>
                   <option value="passport">Passport</option>
                   <option value="driver">Driver's License</option>
+                  <option value="national">National ID</option>
+                  <option value="voters">Voter's ID</option>
+                  <option value="sss">SSS ID</option>
+                  <option value="philhealth">PhilHealth ID</option>
+                  <option value="umid">UMID</option>
+                  <option value="postal">Postal ID</option>
                 </select>
-                <div class="error-message" id="error-select-id1"></div>
-                <div class="error-message" id="error-select-id1"></div>
               </div>
 
-              <div class="container">
-                <label for="">ID Number</label>
-                <input id="id1-num" type="text" placeholder="Enter ID Number" />
-                <div class="error-message" id="error-id1-num"></div>
+              <div class="form-group">
+                <label for="id1-num">ID Number</label>
+                <input id="id1-num" type="text" placeholder="Loading..." readonly />
               </div>
 
-              <div class="container">
-                <label for="">Expiry Date</label>
-                <input type="date" />
+              <div class="form-group">
+                <label for="id1-expiry">Expiry Date</label>
+                <input id="id1-expiry" type="text" placeholder="Loading..." readonly />
               </div>
             </div>
 
-            <div class="id-picture-container">
-              <img src="../assets/front-id.png" alt="" />
-              <img src="../assets/back-d.png" alt="" />
+            <div class="id-images-container">
+              <div class="id-image-wrapper">
+                <img id="id1-front" src="../assets/front-id.png" alt="ID 1 Front" onclick="openImageModal(this)" />
+                <p class="image-label">Front</p>
+              </div>
+              <div class="id-image-wrapper">
+                <img id="id1-back" src="../assets/back-d.png" alt="ID 1 Back" onclick="openImageModal(this)" />
+                <p class="image-label">Back</p>
+              </div>
             </div>
           </div>
 
-          <div class="contact-details-container">
-            <div class="title-verify">
-              <h1 class="title">ID 2 (Front & Back)</h1>
-              <button class="verify">Verify</button>
+          <!-- ID 2 Section -->
+          <div class="id-section-container">
+            <div class="section-header">
+              <h2 class="section-title blue-text">ID 2 (Front & Back)</h2>
+              <button class="verify-btn" data-section="id2">Verify</button>
             </div>
 
-            <div class="container-wrapper">
-              <div class="container">
-                <label for="select-id1">Select ID Type</label>
-                <select id="select-id1">
-                  <option value="" disabled selected>Select</option>
+            <div class="id-form-row">
+              <div class="form-group">
+                <label for="select-id2">Select ID Type</label>
+                <select id="select-id2" disabled>
+                  <option value="" disabled selected>Loading...</option>
                   <option value="passport">Passport</option>
                   <option value="driver">Driver's License</option>
+                  <option value="national">National ID</option>
+                  <option value="voters">Voter's ID</option>
+                  <option value="sss">SSS ID</option>
+                  <option value="philhealth">PhilHealth ID</option>
+                  <option value="umid">UMID</option>
+                  <option value="postal">Postal ID</option>
                 </select>
-                <div class="error-message" id="error-select-id1"></div>
-                <div class="error-message" id="error-select-id1"></div>
               </div>
 
-              <div class="container">
-                <label for="">ID Number</label>
-                <input id="id1-num" type="text" placeholder="Enter ID Number" />
-                <div class="error-message" id="error-id1-num"></div>
+              <div class="form-group">
+                <label for="id2-num">ID Number</label>
+                <input id="id2-num" type="text" placeholder="Loading..." readonly />
               </div>
 
-              <div class="container">
-                <label for="">Expiry Date</label>
-                <input type="date" />
+              <div class="form-group">
+                <label for="id2-expiry">Expiry Date</label>
+                <input id="id2-expiry" type="text" placeholder="Loading..." readonly />
               </div>
             </div>
 
-            <div class="id-picture-container">
-              <img src="../assets/front-id.png" alt="" />
-              <img src="../assets/back-d.png" alt="" />
+            <div class="id-images-container">
+              <div class="id-image-wrapper">
+                <img id="id2-front" src="../assets/front-id.png" alt="ID 2 Front" onclick="openImageModal(this)" />
+                <p class="image-label">Front</p>
+              </div>
+              <div class="id-image-wrapper">
+                <img id="id2-back" src="../assets/back-d.png" alt="ID 2 Back" onclick="openImageModal(this)" />
+                <p class="image-label">Back</p>
+              </div>
             </div>
           </div>
 
-          <div class="employment-data-container">
-            <div class="title-verify">
-              <h1 class="title">Supporting Documents</h1>
-              <button class="verify">Verify</button>
+          <!-- Supporting Documents Section -->
+          <div class="documents-section-container">
+            <div class="section-header">
+              <h2 class="section-title blue-text">Supporting Documents</h2>
+              <button class="verify-btn" data-section="documents">Verify</button>
             </div>
 
-            <div class="account-info">
-              <div class="transaction-info">
-                <div class="top-label-2">
-                  <label>File Name</label>
-                  <label>Type</label>
-                  <label>Size</label>
-                </div>
-
-                <div class="account-info-card">
-                  <div class="account">
-                    <div class="top-label-2">
-                      <label>FILE_NAME</label>
-                      <label>PDF</label>
-                      <label>120 KB</label>
-                      <button id="view">View</button>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="account-info-card">
-                  <div class="account">
-                    <div class="top-label-2">
-                      <label>FILE_NAME</label>
-                      <label>PDF</label>
-                      <label>120 KB</label>
-                      <button id="view">View</button>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="account-info-card">
-                  <div class="account">
-                    <div class="top-label-2">
-                      <label>FILE_NAME</label>
-                      <label>PDF</label>
-                      <label>120 KB</label>
-                      <button id="view">View</button>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="account-info-card">
-                  <div class="account">
-                    <div class="top-label-2">
-                      <label>FILE_NAME</label>
-                      <label>PDF</label>
-                      <label>120 KB</label>
-                      <button id="view">View</button>
-                    </div>
-                  </div>
+            <div class="documents-table">
+              <div class="table-header">
+                <div class="table-cell">File Name</div>
+                <div class="table-cell">Type</div>
+                <div class="table-cell">Size</div>
+                <div class="table-cell">Action</div>
+              </div>
+              
+              <!-- Document rows will be populated by JavaScript -->
+              <div id="documents-loading" class="table-row loading-row">
+                <div class="table-cell" colspan="4">
+                  <span style="color: #666;">Loading documents...</span>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
+
+      <!-- Image Modal for previewing ID documents -->
+      <div id="imageModal" class="modal" style="display: none;">
+        <div class="modal-content">
+          <span class="close" onclick="closeImageModal()">&times;</span>
+          <img id="modalImage" src="" alt="Document Preview" />
+          <div id="modalCaption"></div>
+        </div>
+      </div>
+
+      <script src="utils/logout-fix.js"></script>
       <script src="admin-customer-verification2.js"></script>
     </div>
   </body>

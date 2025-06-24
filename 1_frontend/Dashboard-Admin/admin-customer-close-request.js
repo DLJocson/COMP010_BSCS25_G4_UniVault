@@ -1,3 +1,4 @@
+// Enhanced admin customer request processing with dual functionality
 document.addEventListener('DOMContentLoaded', function() {
     // Check if user is logged in
     const employeeId = localStorage.getItem('employee_id');
@@ -13,290 +14,415 @@ document.addEventListener('DOMContentLoaded', function() {
     const cifNumber = urlParams.get('cif');
     
     if (cifNumber) {
-        loadCustomerDetails(cifNumber);
-        setupCloseRequestButtons(cifNumber);
+        loadCustomerBasicInfo(cifNumber);
+        loadProfileUpdateRequest(cifNumber);
+        loadCustomerAccounts(cifNumber);
+        setupEventListeners();
     } else {
         console.error('No CIF number provided');
         window.location.href = 'admin-review-queue2.html';
     }
-    
-    // Set up logout functionality
-    const logoutBtn = document.getElementById('log-out');
-    if (logoutBtn) {
-        logoutBtn.addEventListener('click', function() {
-            localStorage.removeItem('employee_id');
-            localStorage.removeItem('employee_username');
-            localStorage.removeItem('employee_position');
-            window.location.href = 'admin-login.html';
-        });
-    }
 });
 
-async function loadCustomerDetails(cifNumber) {
-    try {
-        const response = await fetch(`/admin/customer/${cifNumber}/details`);
-        const customerData = await response.json();
-        
-        if (response.ok) {
-            populateCustomerDetails(customerData);
-        } else {
-            console.error('Failed to load customer details:', customerData.message);
-            alert('Customer not found');
-            window.location.href = 'admin-review-queue2.html';
+// Global variables
+let selectedAccounts = new Set();
+let currentCustomerData = null;
+let profileUpdateData = null;
+
+// Tab switching functionality
+function switchTab(tabType) {
+    // Update tab buttons
+    document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+    document.getElementById(`${tabType}-tab`).classList.add('active');
+    
+    // Update panels
+    document.querySelectorAll('.request-panel').forEach(panel => panel.classList.remove('active'));
+    document.getElementById(`${tabType}-panel`).classList.add('active');
+}
+
+// Event listeners setup
+function setupEventListeners() {
+    // Documents modal
+    const modal = document.getElementById('documents-modal');
+    const closeBtn = document.querySelector('.documents-modal .close');
+    
+    closeBtn.onclick = () => modal.style.display = 'none';
+    window.onclick = (event) => {
+        if (event.target === modal) {
+            modal.style.display = 'none';
         }
+    };
+    
+    // Action buttons
+    document.getElementById('view-documents-btn').onclick = viewDocuments;
+    document.getElementById('approve-profile-update-btn').onclick = () => processProfileUpdate('approve');
+    document.getElementById('reject-profile-update-btn').onclick = () => processProfileUpdate('reject');
+    document.getElementById('approve-account-closure-btn').onclick = () => processAccountClosure('approve');
+    document.getElementById('reject-account-closure-btn').onclick = () => processAccountClosure('reject');
+}
+
+// Load basic customer information
+async function loadCustomerBasicInfo(cifNumber) {
+    try {
+        const response = await fetch(`/api/customer/${cifNumber}`);
+        if (!response.ok) throw new Error('Customer not found');
+        
+        const customerData = await response.json();
+        currentCustomerData = customerData;
+        
+        // Update customer name in header
+        const nameElement = document.getElementById('customer-name');
+        nameElement.textContent = `${customerData.customer_last_name}, ${customerData.customer_first_name} ${customerData.customer_middle_name || ''}`.trim();
+        
+        // Populate basic account information
+        document.getElementById('cif-number').value = customerData.cif_number || '';
+        document.getElementById('customer-type').value = customerData.customer_type || '';
+        document.getElementById('status').value = customerData.customer_status || '';
+        
+        // Make inputs readonly
+        const inputs = document.querySelectorAll('input[type="text"]');
+        inputs.forEach(input => {
+            input.readOnly = true;
+            input.disabled = true;
+        });
+        
     } catch (error) {
-        console.error('Error loading customer details:', error);
-        alert('Error loading customer details');
+        console.error('Error loading customer info:', error);
+        alert('Customer not found');
         window.location.href = 'admin-review-queue2.html';
     }
 }
 
-function populateCustomerDetails(data) {
-    const { customer, addresses, contacts } = data;
-    
-    // Update page title with customer name
-    const nameTitle = document.querySelector('.blue-text');
-    if (nameTitle) {
-        nameTitle.textContent = `${customer.customer_last_name}, ${customer.customer_first_name} ${customer.customer_middle_name || ''}`.trim();
-    }
-    
-    // Account Information
-    document.getElementById('cif-number').value = customer.cif_number || '';
-    document.getElementById('customer-type').value = customer.customer_type || '';
-    document.getElementById('status').value = customer.customer_status || '';
-    
-    // Personal Information - Full Name
-    document.getElementById('first-name').value = customer.customer_first_name || '';
-    document.getElementById('middle-name').value = customer.customer_middle_name || '';
-    document.getElementById('last-name').value = customer.customer_last_name || '';
-    document.getElementById('suffix-name').value = customer.customer_suffix_name || '';
-    
-    // Biographical Information
-    document.getElementById('date').value = customer.birth_date || '';
-    document.getElementById('country-of-birth').value = customer.birth_country || '';
-    document.getElementById('citizenship').value = customer.citizenship || '';
-    document.getElementById('gender').value = customer.gender || '';
-    document.getElementById('civil-status').value = customer.civil_status_description || '';
-    
-    // Contact Details
-    if (contacts && contacts.length > 0) {
-        const email = contacts.find(c => c.contact_type_code === 'CT01');
-        const mobile = contacts.find(c => c.contact_type_code === 'CT02');
-        
-        document.getElementById('email-address').value = email ? email.contact_value : '';
-        document.getElementById('mobile-number').value = mobile ? mobile.contact_value : '';
-    }
-    
-    // Address Information
-    if (addresses && addresses.length > 0) {
-        const homeAddress = addresses.find(a => a.address_type_code === 'AD01');
-        
-        if (homeAddress) {
-            document.getElementById('unit').value = homeAddress.address_unit || '';
-            document.getElementById('building').value = homeAddress.address_building || '';
-            document.getElementById('street').value = homeAddress.address_street || '';
-            document.getElementById('subdivision').value = homeAddress.address_subdivision || '';
-            document.getElementById('barangay').value = homeAddress.address_barangay || '';
-            document.getElementById('city').value = homeAddress.address_city || '';
-            document.getElementById('province').value = homeAddress.address_province || '';
-            document.getElementById('country').value = homeAddress.address_country || '';
-            document.getElementById('zip-code').value = homeAddress.address_zip_code || '';
-        }
-    }
-    
-    // Make all inputs readonly since this is a verification page
-    const inputs = document.querySelectorAll('input[type="text"], input[type="date"], select');
-    inputs.forEach(input => {
-        input.readOnly = true;
-        input.disabled = true;
-    });
-}
-
-function setupCloseRequestButtons(cifNumber) {
-    const employeeId = localStorage.getItem('employee_id');
-    
-    // Find the confirm button
-    const confirmBtn = document.getElementById('view');
-    if (confirmBtn) {
-        confirmBtn.onclick = () => processCloseRequest(cifNumber, 'approve', employeeId);
-        confirmBtn.textContent = 'Approve Close Request';
-        confirmBtn.style.backgroundColor = '#28a745';
-        confirmBtn.style.color = 'white';
-    }
-    
-    // Add reject button
-    const buttonContainer = document.querySelector('.button');
-    if (buttonContainer) {
-        const rejectBtn = document.createElement('button');
-        rejectBtn.textContent = 'Reject Close Request';
-        rejectBtn.style.backgroundColor = '#dc3545';
-        rejectBtn.style.color = 'white';
-        rejectBtn.style.margin = '5px';
-        rejectBtn.onclick = () => processCloseRequest(cifNumber, 'reject', employeeId);
-        buttonContainer.appendChild(rejectBtn);
-    }
-}
-
-async function processCloseRequest(cifNumber, action, employeeId) {
-    const confirmation = confirm(`Are you sure you want to ${action} this close request?`);
-    if (!confirmation) return;
-    
+// Load profile update request data
+async function loadProfileUpdateRequest(cifNumber) {
     try {
-        const response = await fetch(`/admin/close-request/${cifNumber}/process`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                employee_id: employeeId,
-                action: action,
-                reason: `Close request ${action}d by admin`
-            })
-        });
+        // First get current profile data
+        const currentResponse = await fetch(`/api/customer/${cifNumber}/profile`);
+        const currentData = await currentResponse.json();
         
-        const result = await response.json();
+        // Try to get profile update request
+        const updateResponse = await fetch(`/api/customer/${cifNumber}/profile-update-request`);
+        let updateData = null;
         
-        if (response.ok) {
-            alert(result.message);
-            window.location.href = 'admin-review-queue2.html';
-        } else {
-            alert('Error: ' + result.message);
+        if (updateResponse.ok) {
+            updateData = await updateResponse.json();
+            profileUpdateData = updateData;
         }
+        
+        displayProfileComparison(currentData, updateData);
+        
     } catch (error) {
-        console.error('Error processing close request:', error);
-        alert('Error processing close request');
+        console.error('Error loading profile update request:', error);
+        displayProfileComparison(currentCustomerData, null);
     }
 }
 
-async function loadCloseRequests(searchTerm = '') {
-    try {
-        const response = await fetch('/admin/close-requests');
-        const closeRequests = await response.json();
-        
-        if (response.ok) {
-            let filteredRequests = closeRequests;
-            if (searchTerm) {
-                filteredRequests = closeRequests.filter(request => 
-                    request.customer_first_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                    request.customer_last_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                    request.cif_number.toString().includes(searchTerm)
-                );
-            }
-            displayCloseRequests(filteredRequests);
-        } else {
-            console.error('Failed to load close requests:', closeRequests.message);
-        }
-    } catch (error) {
-        console.error('Error loading close requests:', error);
+// Display profile comparison
+function displayProfileComparison(currentData, updateData) {
+    const currentContainer = document.getElementById('current-profile-data');
+    const updatedContainer = document.getElementById('updated-profile-data');
+    
+    // Display current data
+    currentContainer.innerHTML = createProfileDataDisplay(currentData, 'current');
+    
+    // Display update data or no updates message
+    if (updateData) {
+        updatedContainer.innerHTML = createProfileDataDisplay(updateData, 'updated', currentData);
+        document.getElementById('approve-profile-update-btn').disabled = false;
+        document.getElementById('reject-profile-update-btn').disabled = false;
+    } else {
+        updatedContainer.innerHTML = '<div class="no-updates">No profile update requests pending</div>';
+        document.getElementById('approve-profile-update-btn').disabled = true;
+        document.getElementById('reject-profile-update-btn').disabled = true;
     }
 }
 
-function displayCloseRequests(requests) {
-    const container = document.querySelector('.transaction-info');
-    if (!container) return;
+// Create profile data display
+function createProfileDataDisplay(data, type, compareData = null) {
+    const fields = [
+        { label: 'First Name', value: data.customer_first_name },
+        { label: 'Middle Name', value: data.customer_middle_name },
+        { label: 'Last Name', value: data.customer_last_name },
+        { label: 'Suffix', value: data.customer_suffix_name },
+        { label: 'Birth Date', value: data.birth_date },
+        { label: 'Gender', value: data.gender },
+        { label: 'Citizenship', value: data.citizenship },
+        { label: 'Birth Country', value: data.birth_country }
+    ];
     
-    // Clear existing request cards (keep the header)
-    const existingCards = container.querySelectorAll('.account-info-card');
-    existingCards.forEach(card => card.remove());
-    
-    if (requests.length === 0) {
-        const noRequestsCard = document.createElement('div');
-        noRequestsCard.className = 'account-info-card';
-        noRequestsCard.innerHTML = `
-            <div class="account">
-                <div class="top-label-2">
-                    <label colspan="8" style="text-align: center; padding: 20px;">No close requests found</label>
-                </div>
+    let html = '';
+    fields.forEach(field => {
+        const isChanged = compareData && compareData[field.value] !== data[field.value];
+        const fieldClass = isChanged ? 'data-field field-changed' : 'data-field';
+        
+        html += `
+            <div class="${fieldClass}">
+                <span class="field-label">${field.label}:</span>
+                <span class="field-value">${field.value || 'N/A'}</span>
             </div>
         `;
-        container.appendChild(noRequestsCard);
+    });
+    
+    return html;
+}
+
+// Load customer accounts for closure
+async function loadCustomerAccounts(cifNumber) {
+    const loadingEl = document.getElementById('accounts-loading');
+    const accountsListEl = document.getElementById('customer-accounts-list');
+    const noAccountsEl = document.getElementById('no-accounts-message');
+    
+    try {
+        showAccountsLoading(true);
+        
+        const response = await fetch(`/api/customers/${cifNumber}/accounts`);
+        if (!response.ok) {
+            if (response.status === 404) {
+                showNoAccounts();
+                return;
+            }
+            throw new Error('Failed to load accounts');
+        }
+        
+        const accountsData = await response.json();
+        displayAccountsForClosure(accountsData.accounts);
+        
+    } catch (error) {
+        console.error('Error loading accounts:', error);
+        showAccountsError(error.message);
+    } finally {
+        showAccountsLoading(false);
+    }
+}
+
+// Display accounts for closure selection
+function displayAccountsForClosure(accounts) {
+    const accountsListEl = document.getElementById('customer-accounts-list');
+    const noAccountsEl = document.getElementById('no-accounts-message');
+    
+    if (!accounts || accounts.length === 0) {
+        showNoAccounts();
         return;
     }
     
-    requests.forEach(request => {
-        const requestCard = createCloseRequestCard(request);
-        container.appendChild(requestCard);
+    accountsListEl.innerHTML = '';
+    
+    // Filter out already closed accounts
+    const activeAccounts = accounts.filter(account => account.account_status !== 'Closed');
+    
+    if (activeAccounts.length === 0) {
+        noAccountsEl.innerHTML = '<p>All accounts are already closed.</p>';
+        noAccountsEl.style.display = 'block';
+        accountsListEl.style.display = 'none';
+        return;
+    }
+    
+    activeAccounts.forEach(account => {
+        const accountCard = createAccountClosureCard(account);
+        accountsListEl.appendChild(accountCard);
     });
+    
+    accountsListEl.style.display = 'grid';
+    noAccountsEl.style.display = 'none';
+    
+    updateClosureButtonStates();
 }
 
-function createCloseRequestCard(request) {
+// Create account closure card
+function createAccountClosureCard(account) {
     const card = document.createElement('div');
-    card.className = 'account-info-card';
-    card.onclick = () => {
-        processCloseRequest(request.cif_number, request.customer_first_name + ' ' + request.customer_last_name);
-    };
+    card.className = 'account-closure-card';
+    card.dataset.accountNumber = account.account_number;
     
-    const formattedDate = new Date(request.request_date).toLocaleString();
+    const openDate = new Date(account.account_open_date).toLocaleDateString();
     
     card.innerHTML = `
-        <div class="account">
-            <div class="top-label-2">
-                <label>${request.cif_number}</label>
-                <label>${formattedDate}</label>
-                <label>${request.customer_type}</label>
-                <label>${request.customer_last_name}</label>
-                <label>${request.customer_first_name}</label>
-                <label>${request.customer_middle_name || 'N/A'}</label>
-                <label>${request.customer_suffix_name || 'N/A'}</label>
-                <label class="orange-text">${request.request_status}</label>
-            </div>
+        <input type="checkbox" class="selection-checkbox" onchange="toggleAccountSelection('${account.account_number}')">
+        <div class="account-number">${account.account_number}</div>
+        <div class="account-type">${account.account_type}</div>
+        <div class="account-status ${account.account_status.toLowerCase()}">${account.account_status}</div>
+        <div class="account-dates">
+            <div>Opened: ${openDate}</div>
+            <div>Referral: ${account.referral_type}</div>
         </div>
     `;
     
     return card;
 }
 
-function processCloseRequest(cifNumber, customerName) {
-    const employeeId = localStorage.getItem('employee_id');
+// Toggle account selection
+function toggleAccountSelection(accountNumber) {
+    const checkbox = document.querySelector(`[data-account-number="${accountNumber}"] .selection-checkbox`);
+    const card = document.querySelector(`[data-account-number="${accountNumber}"]`);
     
-    const action = confirm(
-        `Process close request for ${customerName} (CIF: ${cifNumber})?\n\n` +
-        `Click OK to APPROVE the request and close the account.\n` +
-        `Click Cancel to REJECT the request.`
-    );
+    if (checkbox.checked) {
+        selectedAccounts.add(accountNumber);
+        card.classList.add('selected');
+    } else {
+        selectedAccounts.delete(accountNumber);
+        card.classList.remove('selected');
+    }
     
-    if (action !== null) {
-        const actionType = action ? 'approve' : 'reject';
-        submitCloseRequestDecision(cifNumber, actionType, employeeId);
+    updateClosureButtonStates();
+}
+
+// Update closure button states
+function updateClosureButtonStates() {
+    const approveBtn = document.getElementById('approve-account-closure-btn');
+    const rejectBtn = document.getElementById('reject-account-closure-btn');
+    
+    const hasSelection = selectedAccounts.size > 0;
+    approveBtn.disabled = !hasSelection;
+    rejectBtn.disabled = !hasSelection;
+}
+
+// Helper functions
+function showAccountsLoading(isLoading) {
+    const loadingEl = document.getElementById('accounts-loading');
+    const accountsListEl = document.getElementById('customer-accounts-list');
+    const noAccountsEl = document.getElementById('no-accounts-message');
+    
+    if (isLoading) {
+        loadingEl.style.display = 'block';
+        accountsListEl.style.display = 'none';
+        noAccountsEl.style.display = 'none';
+    } else {
+        loadingEl.style.display = 'none';
     }
 }
 
-async function submitCloseRequestDecision(cifNumber, action, employeeId) {
+function showNoAccounts() {
+    const accountsListEl = document.getElementById('customer-accounts-list');
+    const noAccountsEl = document.getElementById('no-accounts-message');
+    
+    accountsListEl.style.display = 'none';
+    noAccountsEl.style.display = 'block';
+}
+
+function showAccountsError(errorMessage) {
+    const noAccountsEl = document.getElementById('no-accounts-message');
+    noAccountsEl.innerHTML = `<p>Error loading accounts: ${errorMessage}</p>`;
+    noAccountsEl.style.display = 'block';
+}
+
+// View documents functionality
+async function viewDocuments() {
+    const modal = document.getElementById('documents-modal');
+    const documentsList = document.getElementById('documents-list');
+    
     try {
-        const response = await fetch(`/admin/close-request/${cifNumber}/process`, {
+        documentsList.innerHTML = '<p>Loading documents...</p>';
+        modal.style.display = 'block';
+        
+        const response = await fetch(`/api/customer/${currentCustomerData.cif_number}/documents`);
+        if (!response.ok) throw new Error('Failed to load documents');
+        
+        const documents = await response.json();
+        
+        if (documents.length === 0) {
+            documentsList.innerHTML = '<p>No documents found for this customer.</p>';
+            return;
+        }
+        
+        let html = '';
+        documents.forEach(doc => {
+            html += `
+                <div class="document-item">
+                    <h4>${doc.document_type}</h4>
+                    <p><strong>Issue Date:</strong> ${new Date(doc.issue_date).toLocaleDateString()}</p>
+                    <p><strong>Expiry Date:</strong> ${doc.expiry_date ? new Date(doc.expiry_date).toLocaleDateString() : 'N/A'}</p>
+                    ${doc.document_path ? `<img src="${doc.document_path}" alt="Document" class="document-image">` : '<p>Document file not available</p>'}
+                </div>
+            `;
+        });
+        
+        documentsList.innerHTML = html;
+        
+    } catch (error) {
+        console.error('Error loading documents:', error);
+        documentsList.innerHTML = '<p>Error loading documents.</p>';
+    }
+}
+
+// Process profile update
+async function processProfileUpdate(action) {
+    if (!profileUpdateData) {
+        alert('No profile update request found');
+        return;
+    }
+    
+    const confirmation = confirm(`Are you sure you want to ${action} this profile update request?`);
+    if (!confirmation) return;
+    
+    try {
+        const response = await fetch(`/api/customer/${currentCustomerData.cif_number}/profile-update/${action}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                employee_id: employeeId,
-                action: action,
-                reason: `Close request ${action}d by admin`
+                employee_id: localStorage.getItem('employee_id'),
+                reason: `Profile update ${action}d by admin`,
+                timestamp: new Date().toISOString()
             })
         });
         
         const result = await response.json();
         
         if (response.ok) {
-            alert(result.message);
-            loadCloseRequests(); // Reload the list
+            alert(`Profile update ${action}d successfully`);
+            // Reload the profile update request to reflect changes
+            await loadProfileUpdateRequest(currentCustomerData.cif_number);
         } else {
             alert('Error: ' + result.message);
         }
     } catch (error) {
-        console.error('Error processing close request:', error);
-        alert('Error processing close request');
+        console.error('Error processing profile update:', error);
+        alert('Error processing profile update');
     }
 }
 
-function debounce(func, wait) {
-    let timeout;
-    return function executedFunction(...args) {
-        const later = () => {
-            clearTimeout(timeout);
-            func(...args);
-        };
-        clearTimeout(timeout);
-        timeout = setTimeout(later, wait);
-    };
+// Process account closure
+async function processAccountClosure(action) {
+    if (selectedAccounts.size === 0) {
+        alert('Please select at least one account');
+        return;
+    }
+    
+    const accountList = Array.from(selectedAccounts).join(', ');
+    const confirmation = confirm(`Are you sure you want to ${action} closure for accounts: ${accountList}?`);
+    if (!confirmation) return;
+    
+    try {
+        const response = await fetch(`/api/customer/${currentCustomerData.cif_number}/accounts/closure/${action}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                account_numbers: Array.from(selectedAccounts),
+                employee_id: localStorage.getItem('employee_id'),
+                reason: `Account closure ${action}d by admin`,
+                timestamp: new Date().toISOString()
+            })
+        });
+        
+        const result = await response.json();
+        
+        if (response.ok) {
+            alert(`Account closure ${action}d successfully`);
+            // Reload accounts to reflect changes
+            selectedAccounts.clear();
+            await loadCustomerAccounts(currentCustomerData.cif_number);
+        } else {
+            alert('Error: ' + result.message);
+        }
+    } catch (error) {
+        console.error('Error processing account closure:', error);
+        alert('Error processing account closure');
+    }
 }
+
+// Make functions globally accessible
+window.switchTab = switchTab;
+window.toggleAccountSelection = toggleAccountSelection;

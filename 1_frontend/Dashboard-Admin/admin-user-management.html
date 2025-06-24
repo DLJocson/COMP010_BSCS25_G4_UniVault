@@ -16,7 +16,7 @@
       rel="stylesheet"
     />
   </head>
-  <body>
+  <body class="user-management-page">
     <div class="deposit-page">
       <div class="page-wrapper">
         <div class="left-side-bar">
@@ -44,9 +44,12 @@
 
         <div class="wrapper">
           <nav class="nav-bar">
-            <input type="text" id="search" placeholder="Search" />
-            <div class="icon-container">
-              <img id="log-out" src="../assets/log-out-logo.png" alt="Log Out" />
+            <div class="nav-content">
+              <h3 class="page-title">User Management</h3>
+              <div class="logout-container">
+                <span class="logout-text">Logout</span>
+                <img id="log-out" src="../assets/log-out-logo.png" alt="Log Out" />
+              </div>
             </div>
           </nav>
 
@@ -56,8 +59,8 @@
                 <span class="blue-text">Manage Users</span> Here
               </h1>
               <p class="blue-text">
-                View and search for all customer and employee accounts in one
-                place.
+                View and search for all verified customer and employee accounts in one
+                place. Pending verification customers are handled in the Review Queue.
               </p>
             </div>
           </header>
@@ -79,11 +82,11 @@
             </div>
             <div class="progress-step">
               <div
-                onclick="window.location.href='admin-user-management2.html'"
+                onclick="window.location.href='admin-employee-management.html'"
                 class="circle"
               ></div>
               <div
-                onclick="window.location.href='admin-user-management2.html'"
+                onclick="window.location.href='admin-employee-management.html'"
                 class="label"
               >
                 Employees
@@ -92,6 +95,26 @@
           </div>
 
           <div class="page-body">
+            <div class="search-container">
+              <div class="search-bar-wrapper">
+                <input type="text" id="customerSearchBar" placeholder="Search by name, CIF number, email, or phone..." class="search-input" />
+                <div class="search-icon">🔍</div>
+                <div class="search-loading-spinner"></div>
+              </div>
+              <div class="filter-container">
+                <label for="statusFilter" class="filter-label">Filter by Status:</label>
+                <select id="statusFilter" class="status-filter">
+                  <option value="all">All Verified Customers</option>
+                  <option value="Active">Active</option>
+                  <option value="Pending Verification">Pending Verification (Review Queue)</option>
+                  <option value="Inactive">Inactive</option>
+                  <option value="Suspended">Suspended</option>
+                  <option value="Dormant">Dormant</option>
+                </select>
+              </div>
+              <div id="searchResults" class="search-results" style="display: none;"></div>
+            </div>
+            
             <div class="account-info">
               <div class="transaction-info">
                 <div class="top-label">
@@ -116,6 +139,8 @@
         </div>
       </div>
     </div>
+    <script src="utils/logout-fix.js"></script>
+    <script src="search-functionality.js"></script>
     <script src="admin-user-management.js"></script>
   </body>
 </html>

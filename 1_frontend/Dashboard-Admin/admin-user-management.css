@@ -1,3 +1,6 @@
+@import url('./shared-table-styles.css');
+@import url('./shared-nav-styles.css');
+
 :root {
   --primary-color: #1f65b4;
   --secondary-color: #004ea8;
@@ -43,44 +46,7 @@ body {
   padding-top: 80px;
 }
 
-.nav-bar {
-  position: fixed;
-  top: 0;
-  left: 300px;
-  right: 0;
-  width: calc(100vw - 300px);
-  height: 80px;
-  z-index: 1;
-  background-color: var(--nav-bar-color);
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  padding: 0 30px;
-  gap: 30px;
-}
-
-input[type="text"] {
-  height: 40px;
-  width: 851px;
-  border-radius: 15px;
-  padding-left: 10px;
-  font-size: 24px;
-  background-color: transparent;
-  border: 3px solid var(--tertiary-color);
-}
-
-.icon-container {
-  justify-content: center;
-  display: flex;
-  flex-direction: row;
-  gap: 30px;
-}
-
-.icon-container img {
-  width: 35px;
-  height: 33px;
-}
+/* Navigation styles now handled by shared-nav-styles.css */
 
 .left-side-bar {
   position: fixed;
@@ -112,7 +78,7 @@ input[type="text"] {
 
 .page-body {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   gap: 40px;
   width: 100%;
   max-width: 100vw;
@@ -121,6 +87,64 @@ input[type="text"] {
   flex-wrap: wrap;
   justify-content: center;
   align-items: flex-start;
+}
+
+.search-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.filter-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  width: 100%;
+}
+
+.filter-label {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--secondary-color);
+  min-width: 120px;
+}
+
+.status-filter {
+  padding: 12px 15px;
+  font-size: 16px;
+  border: 2px solid var(--fields-color);
+  border-radius: 10px;
+  background-color: white;
+  font-family: var(--font-family);
+  color: var(--secondary-color);
+  cursor: pointer;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  min-width: 200px;
+}
+
+.status-filter:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 10px rgba(31, 101, 180, 0.2);
+}
+
+.status-filter:hover {
+  border-color: var(--primary-color);
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 0.6;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1.02);
+  }
 }
 
 .welcome-message {
@@ -568,13 +592,7 @@ input[type="checkbox"] {
   margin-bottom: 20px;
 }
 
-.top-label-2 {
-  display: flex;
-  font-size: 16px;
-  align-items: center;
-  gap: 2em;
-  justify-content: space-between;
-}
+/* Table alignment styles now handled by shared-table-styles.css */
 
 .account-info-card {
   display: flex;
@@ -620,17 +638,34 @@ input[type="checkbox"] {
   line-height: 1.2;
 }
 
-.top-label-2 > * {
-  text-align: center;
-  min-width: 8em;
-  max-width: 12em;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  flex: 1;
+/* Column width styles now handled by shared-table-styles.css */
+
+/* Validation Indicator Styles */
+.validation-indicator {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.8rem;
+  padding: 0.2rem 0.5rem;
+  border-radius: 12px;
+  font-weight: 500;
+  cursor: help;
 }
 
-.top-label-3 > * {
-  text-align: center;
-  min-width: 5em;
+.validation-indicator.complete {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.validation-indicator.incomplete {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.validation-icon {
+  font-size: 0.9rem;
+}
+
+.validation-percentage {
+  font-weight: 600;
 }

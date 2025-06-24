@@ -8,30 +8,19 @@ document.addEventListener('DOMContentLoaded', function() {
         return;
     }
 
+    // Initialize progress bar highlighting
+    initializeProgressBar();
+
     // Load pending verifications
     loadPendingVerifications();
     
-    // Set up search functionality
-    const searchInput = document.getElementById('search');
-    if (searchInput) {
-        searchInput.addEventListener('input', debounce(function() {
-            loadPendingVerifications(this.value);
-        }, 300));
-    }
+    // Initialize search functionality
+    initializeQueueSearch();
     
-    // Set up logout functionality
-    const logoutBtn = document.getElementById('log-out');
-    if (logoutBtn) {
-        logoutBtn.addEventListener('click', function() {
-            localStorage.removeItem('employee_id');
-            localStorage.removeItem('employee_username');
-            localStorage.removeItem('employee_position');
-            window.location.href = 'admin-login.html';
-        });
-    }
+    // Logout functionality is handled by logout-fix.js
 });
 
-async function loadPendingVerifications(searchTerm = '') {
+async function loadPendingVerifications() {
     try {
         console.log('Loading pending verifications...');
         const response = await fetch('/admin/pending-verifications');
@@ -43,17 +32,8 @@ async function loadPendingVerifications(searchTerm = '') {
         const verifications = await response.json();
         console.log('API Response:', verifications);
         
-        let filteredVerifications = verifications;
-        if (searchTerm) {
-            filteredVerifications = verifications.filter(verification => 
-                verification.customer_first_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                verification.customer_last_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                verification.cif_number.toString().includes(searchTerm) ||
-                (verification.email && verification.email.toLowerCase().includes(searchTerm.toLowerCase()))
-            );
-        }
-        
-        displayVerifications(filteredVerifications);
+        allVerificationsData = verifications; // Store for search functionality
+        displayVerifications(verifications);
     } catch (error) {
         console.error('Error loading pending verifications:', error);
         
@@ -128,16 +108,8 @@ function createVerificationCard(verification) {
             return;
         }
         
-        // Show options for what to do with this customer
-        const action = confirm(
-            `Customer: ${verification.customer_first_name} ${verification.customer_last_name} (CIF: ${verification.cif_number})\n\n` +
-            `Click OK to go to VERIFICATION page (approve/reject)\n` +
-            `Click Cancel to go to PROFILE page (view only)`
-        );
-        
-        const targetUrl = action 
-            ? `admin-customer-verification.html?cif=${verification.cif_number}`
-            : `admin-customer-profile.html?cif=${verification.cif_number}`;
+        // Navigate directly to verification page
+        const targetUrl = `admin-customer-verification.html?cif=${verification.cif_number}`;
             
         console.log('Navigating to:', targetUrl);
         window.location.href = targetUrl;
@@ -174,14 +146,124 @@ function createVerificationCard(verification) {
     return card;
 }
 
-function debounce(func, wait) {
-    let timeout;
-    return function executedFunction(...args) {
-        const later = () => {
-            clearTimeout(timeout);
-            func(...args);
-        };
-        clearTimeout(timeout);
-        timeout = setTimeout(later, wait);
-    };
+
+
+// Initialize progress bar highlighting
+function initializeProgressBar() {
+  const steps = document.querySelectorAll(".progress-step");
+  const currentPage = window.location.pathname;
+  const filename = currentPage.split('/').pop() || currentPage.split('\\').pop(); // Handle both Unix and Windows paths
+  
+  // Debug logging
+  console.log('Current page pathname:', currentPage);
+  console.log('Extracted filename:', filename);
+  console.log('Found steps:', steps.length);
+  
+  // Remove any existing active classes
+  steps.forEach(step => step.classList.remove("active"));
+  
+  // Set active step based on current page filename
+  if (filename === "admin-review-queue2.html") {
+    console.log('Setting step 2 (Approve Requests) as active');
+    steps[1]?.classList.add("active"); // Approve Requests
+  } else if (filename === "admin-review-queue.html") {
+    console.log('Setting step 1 (Verify Accounts) as active');
+    steps[0]?.classList.add("active"); // Verify Accounts
+  } else {
+    console.log('No matching filename found for:', filename);
+  }
+  
+  // Verify which steps are active
+  steps.forEach((step, index) => {
+    console.log(`Step ${index + 1} active:`, step.classList.contains("active"));
+  });
+}
+
+let allVerificationsData = [];
+let queueSearchDebounceTimer;
+
+function initializeQueueSearch() {
+    const searchInput = document.getElementById('queueSearchBar');
+    if (!searchInput) {
+        console.error('Queue search input not found');
+        return;
+    }
+    
+    searchInput.addEventListener('input', function(e) {
+        const searchTerm = e.target.value.trim();
+        
+        // Clear previous timer
+        clearTimeout(queueSearchDebounceTimer);
+        
+        // Debounce the search
+        queueSearchDebounceTimer = setTimeout(() => {
+            if (searchTerm.length === 0) {
+                // Show all verifications when search is empty
+                displayVerifications(allVerificationsData);
+            } else if (searchTerm.length >= 2) {
+                // Perform search
+                performQueueSearch(searchTerm);
+            }
+        }, 300);
+    });
+    
+    // Clear search when input is cleared
+    searchInput.addEventListener('keyup', function(e) {
+        if (e.target.value === '') {
+            displayVerifications(allVerificationsData);
+        }
+    });
+}
+
+function performQueueSearch(searchTerm) {
+    const searchLower = searchTerm.toLowerCase();
+    
+    const filteredVerifications = allVerificationsData.filter(verification => {
+        return (
+            (verification.cif_number && verification.cif_number.toString().includes(searchLower)) ||
+            (verification.customer_first_name && verification.customer_first_name.toLowerCase().includes(searchLower)) ||
+            (verification.customer_last_name && verification.customer_last_name.toLowerCase().includes(searchLower)) ||
+            (verification.customer_middle_name && verification.customer_middle_name.toLowerCase().includes(searchLower)) ||
+            (verification.customer_suffix_name && verification.customer_suffix_name.toLowerCase().includes(searchLower)) ||
+            (verification.email && verification.email.toLowerCase().includes(searchLower)) ||
+            (verification.phone && verification.phone.includes(searchLower)) ||
+            (verification.customer_type && verification.customer_type.toLowerCase().includes(searchLower))
+        );
+    });
+    
+    displayVerifications(filteredVerifications);
+    
+    // Show no results message if needed
+    if (filteredVerifications.length === 0) {
+        showNoVerificationsFound();
+    }
+}
+
+function showNoVerificationsFound() {
+    const container = document.querySelector('.transaction-info');
+    if (!container) return;
+    
+    // Clear existing verification cards (keep the header)
+    const existingCards = container.querySelectorAll('.account-info-card');
+    existingCards.forEach(card => card.remove());
+    
+    // Add no results message
+    const noResultsCard = document.createElement('div');
+    noResultsCard.className = 'account-info-card no-results-card';
+    noResultsCard.style.cssText = `
+        padding: 40px 20px;
+        text-align: center;
+        background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+        border: 2px dashed #dee2e6;
+        margin: 20px 0;
+    `;
+    noResultsCard.innerHTML = `
+        <div style="color: #6c757d; font-size: 18px; font-weight: 500;">
+            🔍 No pending verifications found
+        </div>
+        <div style="color: #adb5bd; font-size: 14px; margin-top: 8px;">
+            Try adjusting your search terms
+        </div>
+    `;
+    container.appendChild(noResultsCard);
 }

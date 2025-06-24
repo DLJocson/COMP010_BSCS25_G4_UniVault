@@ -1,4 +1,5 @@
 const { pool } = require('../config/database');
+const { validateCustomerProfileCompleteness, validateStatusTransition } = require('../utils/customerValidation');
 
 // Get dashboard statistics
 const getDashboardStats = async (req, res, next) => {
@@ -38,7 +39,7 @@ const getDashboardStats = async (req, res, next) => {
 // Get all customers
 const getAllCustomers = async (req, res, next) => {
     try {
-        const { search } = req.query;
+        const { search, status, includeValidation } = req.query;
         let query = `
             SELECT 
                 c.cif_number, c.customer_type, c.customer_first_name, c.customer_last_name, 
@@ -48,19 +49,65 @@ const getAllCustomers = async (req, res, next) => {
             FROM CUSTOMER c
             LEFT JOIN CUSTOMER_CONTACT_DETAILS cd ON c.cif_number = cd.cif_number AND cd.contact_type_code = 'CT01'
             LEFT JOIN CUSTOMER_CONTACT_DETAILS cd2 ON c.cif_number = cd2.cif_number AND cd2.contact_type_code = 'CT02'
-            WHERE c.is_deleted = FALSE
+            WHERE c.is_deleted = FALSE AND c.customer_status != 'Pending Verification'
         `;
         let params = [];
         
+        // Add status filter
+        if (status && status !== 'all') {
+            // If specifically requesting "Pending Verification", override the default filter
+            if (status === 'Pending Verification') {
+                query = query.replace("AND c.customer_status != 'Pending Verification'", "");
+                query += ` AND c.customer_status = ?`;
+            } else {
+                query += ` AND c.customer_status = ?`;
+            }
+            params.push(status);
+        }
+        
+        // Add search filter
         if (search) {
             query += ` AND (c.customer_first_name LIKE ? OR c.customer_last_name LIKE ? OR c.cif_number LIKE ? OR c.customer_username LIKE ?)`;
             const searchParam = `%${search}%`;
-            params = [searchParam, searchParam, searchParam, searchParam];
+            params.push(searchParam, searchParam, searchParam, searchParam);
         }
         
         query += ` ORDER BY c.created_at DESC LIMIT 100`;
         
         const [customers] = await pool.query(query, params);
+        
+        // Add validation info if requested
+        if (includeValidation === 'true') {
+            const customersWithValidation = await Promise.all(
+                customers.map(async (customer) => {
+                    try {
+                        const validation = await validateCustomerProfileCompleteness(customer.cif_number);
+                        return {
+                            ...customer,
+                            profileValidation: {
+                                isComplete: validation.isComplete,
+                                completionPercentage: validation.completionPercentage,
+                                missingSections: validation.missingSections,
+                                warnings: validation.warnings
+                            }
+                        };
+                    } catch (error) {
+                        console.error(`Error validating customer ${customer.cif_number}:`, error);
+                        return {
+                            ...customer,
+                            profileValidation: {
+                                isComplete: false,
+                                completionPercentage: 0,
+                                missingSections: ['Validation error'],
+                                warnings: ['Could not validate profile']
+                            }
+                        };
+                    }
+                })
+            );
+            return res.json(customersWithValidation);
+        }
+        
         res.json(customers);
     } catch (err) {
         console.error('Error fetching customers:', err);
@@ -116,12 +163,16 @@ const getCustomerDetails = async (req, res, next) => {
             WHERE ci.cif_number = ?
         `, [cif_number]);
         
+        // Add profile completeness validation
+        const profileValidation = await validateCustomerProfileCompleteness(cif_number);
+        
         res.json({
             customer,
             addresses,
             contacts,
             employment,
-            ids
+            ids,
+            profileValidation
         });
     } catch (err) {
         console.error('Error fetching customer details:', err);
@@ -174,10 +225,173 @@ const closeCustomerAccount = async (req, res, next) => {
     }
 };
 
+const updateCustomerStatus = async (req, res, next) => {
+    try {
+        const { cif_number } = req.params;
+        const { status, updated_by } = req.body;
+        
+        // Quick validation - fail fast
+        if (!status || !cif_number) {
+            return res.status(400).json({ message: 'Missing required fields' });
+        }
+        
+        // Validate status
+        const validStatuses = ['Active', 'Pending Verification', 'Inactive', 'Suspended', 'Closed'];
+        if (!validStatuses.includes(status)) {
+            return res.status(400).json({ message: 'Invalid status provided' });
+        }
+        
+        // Validate status transition based on profile completeness
+        const transitionValidation = await validateStatusTransition(cif_number, status);
+        
+        if (!transitionValidation.canTransition) {
+            return res.status(400).json({ 
+                message: 'Cannot update status: Profile requirements not met',
+                reasons: transitionValidation.reasons,
+                warnings: transitionValidation.warnings
+            });
+        }
+        
+        // Optimized query with index hints for better performance
+        const [result] = await pool.query(
+            'UPDATE CUSTOMER SET customer_status = ?, updated_at = NOW() WHERE cif_number = ? AND is_deleted = FALSE LIMIT 1',
+            [status, cif_number]
+        );
+        
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ message: 'Customer not found or already deleted' });
+        }
+        
+        // Get updated profile validation
+        const profileValidation = await validateCustomerProfileCompleteness(cif_number);
+        
+        // Enhanced response with validation info
+        res.json({ 
+            success: true,
+            message: 'Status updated successfully',
+            status: status,
+            profileValidation: profileValidation,
+            warnings: transitionValidation.warnings
+        });
+        
+    } catch (err) {
+        console.error('Error updating customer status:', err);
+        
+        // Provide specific error messages for common issues
+        if (err.code === 'ER_LOCK_WAIT_TIMEOUT') {
+            return res.status(503).json({ message: 'Database busy, please try again' });
+        }
+        
+        next(err);
+    }
+};
+
+// Get all accounts for a specific customer
+const getCustomerAccounts = async (req, res, next) => {
+    try {
+        const { cif_number } = req.params;
+        
+        if (!cif_number) {
+            return res.status(400).json({ message: 'CIF number is required' });
+        }
+        
+        // Get all accounts for the customer with account details and product type
+        const [accounts] = await pool.query(`
+            SELECT 
+                ca.account_number,
+                pt.product_type_name as account_type,
+                ad.account_status,
+                ad.account_open_date,
+                ad.account_close_date,
+                ca.relationship_type,
+                ca.created_at as account_created_at
+            FROM CUSTOMER_ACCOUNT ca
+            JOIN ACCOUNT_DETAILS ad ON ca.account_number = ad.account_number
+            JOIN CUSTOMER_PRODUCT_TYPE pt ON ad.product_type_code = pt.product_type_code
+            WHERE ca.cif_number = ?
+            ORDER BY ca.created_at ASC
+        `, [cif_number]);
+        
+        if (accounts.length === 0) {
+            return res.status(404).json({ message: 'No accounts found for this customer' });
+        }
+        
+        res.json({
+            cif_number: cif_number,
+            total_accounts: accounts.length,
+            accounts: accounts
+        });
+        
+    } catch (err) {
+        console.error('Error fetching customer accounts:', err);
+        next(err);
+    }
+};
+
+// Get customers with closed accounts
+const getCustomersWithClosedAccounts = async (req, res, next) => {
+    try {
+        const [customers] = await pool.query(`
+            SELECT DISTINCT
+                c.cif_number,
+                c.customer_type,
+                c.customer_first_name,
+                c.customer_last_name,
+                c.customer_middle_name,
+                c.customer_suffix_name,
+                c.customer_status,
+                c.created_at,
+                cd.contact_value as email,
+                cd2.contact_value as phone,
+                GROUP_CONCAT(
+                    CONCAT(ca.account_number, ':', pt.product_type_name, ':', ad.account_status, ':', ad.account_close_date)
+                    SEPARATOR '|'
+                ) as closed_accounts_info
+            FROM CUSTOMER c
+            JOIN CUSTOMER_ACCOUNT ca ON c.cif_number = ca.cif_number
+            JOIN ACCOUNT_DETAILS ad ON ca.account_number = ad.account_number
+            JOIN CUSTOMER_PRODUCT_TYPE pt ON ad.product_type_code = pt.product_type_code
+            LEFT JOIN CUSTOMER_CONTACT_DETAILS cd ON c.cif_number = cd.cif_number AND cd.contact_type_code = 'CT01'
+            LEFT JOIN CUSTOMER_CONTACT_DETAILS cd2 ON c.cif_number = cd2.cif_number AND cd2.contact_type_code = 'CT02'
+            WHERE ad.account_status = 'Closed' AND c.is_deleted = FALSE
+            GROUP BY c.cif_number
+            ORDER BY MAX(ad.account_close_date) DESC
+        `);
+        
+        // Parse the closed accounts info for each customer
+        const customersWithAccounts = customers.map(customer => {
+            const closedAccounts = customer.closed_accounts_info.split('|').map(accountInfo => {
+                const [account_number, account_type, status, close_date] = accountInfo.split(':');
+                return {
+                    account_number,
+                    account_type,
+                    status,
+                    close_date
+                };
+            }).filter(account => account.status === 'Closed');
+            
+            return {
+                ...customer,
+                closed_accounts: closedAccounts,
+                closed_accounts_count: closedAccounts.length
+            };
+        });
+        
+        res.json(customersWithAccounts);
+        
+    } catch (err) {
+        console.error('Error fetching customers with closed accounts:', err);
+        next(err);
+    }
+};
+
 module.exports = {
     getDashboardStats,
     getAllCustomers,
     getCustomerDetails,
     verifyCustomer,
-    closeCustomerAccount
+    closeCustomerAccount,
+    updateCustomerStatus,
+    getCustomerAccounts,
+    getCustomersWithClosedAccounts
 };

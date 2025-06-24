@@ -42,7 +42,13 @@
 
                 <div class="container">
                   <label for="status">Status</label>
-                  <input type="text" id="status" />
+                  <div class="status-control-container">
+                    <select id="status-dropdown" class="status-dropdown">
+                      <option value="">Loading...</option>
+                    </select>
+                    <button id="update-status-btn" class="update-status-btn" disabled>Update Status</button>
+                  </div>
+                  <div id="status-update-message" class="status-message" style="display: none;"></div>
                 </div>
               </div>
             </div>
@@ -59,6 +65,32 @@
               </div>
             </div>
           </div>
+          
+          <!-- Customer Accounts Section -->
+          <div class="customer-accounts-container">
+            <h1 class="title">Customer Accounts</h1>
+            <div id="accounts-loading" class="accounts-loading">
+              <p>Loading accounts...</p>
+            </div>
+            <div id="accounts-list" class="accounts-list" style="display: none;">
+              <!-- Account cards will be populated by JavaScript -->
+            </div>
+            <div id="no-accounts-message" class="no-accounts-message" style="display: none;">
+              <p>No accounts found for this customer.</p>
+            </div>
+          </div>
+          
+          <!-- Profile Validation Section -->
+          <div class="profile-validation-container">
+            <h1 class="title">Profile Completeness Validation</h1>
+            <div id="validation-loading" class="validation-loading" style="display: none;">
+              <p>Loading validation information...</p>
+            </div>
+            <div id="validation-content" class="validation-content" style="display: none;">
+              <!-- Validation content will be populated by JavaScript -->
+            </div>
+          </div>
+          
           <div class="personal-information-container">
             <h1 class="title">Personal Information</h1>
             <h2 class="subtitle">Full Name</h2>
@@ -382,9 +414,75 @@
               </div>
             </div>
           </div>
+
+          <div class="regulatory-requirements-container">
+            <h1 class="title">Regulatory Requirements</h1>
+            <div class="regulatory-fields-container">
+              <div class="container">
+                <label for="political-relations">Political Relations & Affiliations</label>
+                <select id="political-relations">
+                  <option value="">Select...</option>
+                  <option value="yes">Yes</option>
+                  <option value="no">No</option>
+                </select>
+              </div>
+
+              <div class="container">
+                <label for="foreign-account-tax">Foreign Account Tax Compliance</label>
+                <select id="foreign-account-tax">
+                  <option value="">Select...</option>
+                  <option value="yes">Yes</option>
+                  <option value="no">No</option>
+                </select>
+              </div>
+
+              <div class="container">
+                <label for="cnfbps">CNFBPs</label>
+                <select id="cnfbps">
+                  <option value="">Select...</option>
+                  <option value="yes">Yes</option>
+                  <option value="no">No</option>
+                </select>
+              </div>
+
+              <div class="container">
+                <label for="beneficial-ownership">Beneficial Ownership</label>
+                <select id="beneficial-ownership">
+                  <option value="">Select...</option>
+                  <option value="yes">Yes</option>
+                  <option value="no">No</option>
+                </select>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
+
+    <!-- Status Update Confirmation Modal -->
+    <div id="status-confirmation-modal" class="modal-overlay" style="display: none;">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>Confirm Status Update</h3>
+          <button class="modal-close" id="modal-close-btn">&times;</button>
+        </div>
+        <div class="modal-body">
+          <p>Are you sure you want to update the customer status?</p>
+          <div class="status-change-info">
+            <span class="status-from">Current Status: <strong id="current-status-text"></strong></span>
+            <span class="status-arrow">→</span>
+            <span class="status-to">New Status: <strong id="new-status-text"></strong></span>
+          </div>
+          <p class="warning-text">This action cannot be undone.</p>
+        </div>
+        <div class="modal-footer">
+          <button id="modal-cancel-btn" class="modal-btn modal-cancel">Cancel</button>
+          <button id="modal-confirm-btn" class="modal-btn modal-confirm">Confirm Update</button>
+        </div>
+      </div>
+    </div>
+
+    <script src="utils/logout-fix.js"></script>
     <script src="admin-customer-profile.js"></script>
   </body>
 </html>

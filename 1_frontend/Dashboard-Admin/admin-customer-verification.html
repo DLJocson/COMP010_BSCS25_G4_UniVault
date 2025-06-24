@@ -47,8 +47,10 @@
               </div>
             </div>
             <div class="profile-name-page">
-              <h1>Verification Page</h1>
-              <h1 class="blue-text">Bautista, Chryshella Grace P.</h1>
+              <div class="profile-text-section">
+                <h1>Verification Page</h1>
+                <h1 class="blue-text">Bautista, Chryshella Grace P.</h1>
+              </div>
               <div class="button">
                 <button
                   onclick="location.href='admin-review-queue.html'"
@@ -61,9 +63,36 @@
                 >
                   View Attached Documents
                 </button>
+                <button
+                  id="approve"
+                  class="verification-btn"
+                >
+                  Approve Verification
+                </button>
+                <button
+                  id="reject"
+                  class="verification-btn"
+                >
+                  Reject Verification
+                </button>
               </div>
             </div>
           </div>
+          
+          <!-- Account Information for Verification Context -->
+          <div class="verification-accounts-container">
+            <h1 class="title">Account Information</h1>
+            <div id="verification-accounts-loading" class="accounts-loading">
+              <p>Loading account details...</p>
+            </div>
+            <div id="verification-accounts-list" class="accounts-list" style="display: none;">
+              <!-- Account info will be populated by JavaScript -->
+            </div>
+            <div id="verification-no-accounts" class="no-accounts-message" style="display: none;">
+              <p>No existing accounts found. This is a new customer.</p>
+            </div>
+          </div>
+          
           <div class="personal-information-container">
             <h1 class="title">Personal Information</h1>
             <h2 class="subtitle">Full Name</h2>
@@ -390,6 +419,10 @@
         </div>
       </div>
     </div>
+    <!-- Notification System -->
+    <div id="notification-container" class="notification-container"></div>
+
+    <script src="utils/logout-fix.js"></script>
     <script src="admin-customer-verification.js"></script>
   </body>
 </html>

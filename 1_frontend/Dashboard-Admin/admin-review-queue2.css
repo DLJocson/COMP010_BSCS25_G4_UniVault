@@ -1,10 +1,13 @@
+@import url('./shared-table-styles.css');
+@import url('./shared-nav-styles.css');
+
 :root {
   --primary-color: #1f65b4;
   --secondary-color: #004ea8;
   --tertiary-color: #0072d8;
   --fields-color: #cbcbcb;
   --nav-bar-color: #e5f5ff;
-  --font-family: "Manjari", sans-serif;
+  --font-family: 'Manjari', sans-serif;
 }
 
 * {
@@ -19,12 +22,16 @@ body {
   padding: 0;
   width: 100vw;
   height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
-.deposite-page {
+.deposit-page {
   width: 100vw;
   min-height: 100vh;
   position: relative;
+  display: flex;
+  flex-direction: column;
 }
 
 .page-wrapper {
@@ -32,55 +39,19 @@ body {
   flex-direction: column;
   width: 100vw;
   min-height: 100vh;
+  flex: 1;
 }
 
 .wrapper {
   display: flex;
-
   flex-direction: column;
   margin-left: 300px;
   width: calc(100vw - 300px);
   padding-top: 80px;
+  flex: 1;
 }
 
-.nav-bar {
-  position: fixed;
-  top: 0;
-  left: 300px;
-  right: 0;
-  width: calc(100vw - 300px);
-  height: 80px;
-  z-index: 1;
-  background-color: var(--nav-bar-color);
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  padding: 0 30px;
-  gap: 30px;
-}
-
-input[type="text"] {
-  height: 40px;
-  width: 851px;
-  border-radius: 15px;
-  padding-left: 10px;
-  font-size: 24px;
-  background-color: transparent;
-  border: 3px solid var(--tertiary-color);
-}
-
-.icon-container {
-  justify-content: center;
-  display: flex;
-  flex-direction: row;
-  gap: 30px;
-}
-
-.icon-container img {
-  width: 35px;
-  height: 33px;
-}
+/* Navigation styles now handled by shared-nav-styles.css */
 
 .left-side-bar {
   position: fixed;
@@ -92,6 +63,8 @@ input[type="text"] {
   background-color: var(--secondary-color);
   padding-top: 80px;
   overflow-y: auto;
+  display: flex;
+  flex-direction: column;
 }
 
 .header {
@@ -108,14 +81,19 @@ input[type="text"] {
   margin-left: 30px;
   position: relative;
   z-index: 0;
+  box-sizing: border-box;
 }
 
 .page-body {
-  display: flex;
-  flex-direction: row;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   gap: 40px;
-  width: 100vw;
+  width: 100%;
+  max-width: 100vw;
   padding: 40px;
+  box-sizing: border-box;
+  justify-items: center;
+  align-items: flex-start;
 }
 
 .welcome-message {
@@ -138,6 +116,7 @@ input[type="text"] {
   padding: 0 100px;
   position: relative;
   z-index: 0;
+  box-sizing: border-box;
 }
 
 .progress-container {
@@ -259,20 +238,27 @@ input[type="text"] {
   height: 70px;
 }
 
-.customer-options i {
-  margin-right: 10px;
-}
-
 .account-info {
   display: flex;
+  flex-direction: column;
+  align-items: center;
   position: relative;
-  height: 90vh;
-  width: 170vh;
+  min-height: 400px;
+  max-width: 100%;
+  width: 100%;
   border-radius: 20px;
   background-color: white;
   box-shadow: 0 5px 15px rgba(0.2, 0.2, 0.2, 0.2);
-  margin-left: 40px;
-  padding: 5vh 5vh;
+  margin: 40px auto;
+  padding: 2em 2em;
+  box-sizing: border-box;
+  overflow: hidden;
+  grid-column: 1 / span 2;
+}
+
+/* Fix for grid layout centering */
+.page-body > .account-info {
+  grid-column: 1 / -1; /* Span all grid columns */
 }
 
 .right-container > img {
@@ -281,18 +267,30 @@ input[type="text"] {
   margin-right: 40px;
 }
 
-.title > img {
-  width: 30px;
-  height: 30px;
-}
-
-.account-title {
-  font-size: 12px;
-}
-
 .right-container {
-  height: 90vh;
-  width: 65vh;
+  flex: 0 0 350px;
+  max-width: 100%;
+  width: 100%;
+  min-width: 250px;
+  background-color: white;
+  box-shadow: 0 5px 15px rgba(0.2, 0.2, 0.2, 0.2);
+  margin-left: 40px;
+  padding: 5vh 5vh;
+  box-sizing: border-box;
+}
+
+.account-details {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 0;
+  min-width: 0;
+  min-height: 300px;
+  border-radius: 20px;
+  background-color: white;
+  box-shadow: 0 5px 15px rgba(0.2, 0.2, 0.2, 0.2);
+  padding: 2em 2em 1em 2em;
+  box-sizing: border-box;
+  overflow: auto;
 }
 
 .account-details {
@@ -305,6 +303,7 @@ input[type="text"] {
   box-shadow: 0 5px 15px rgba(0.2, 0.2, 0.2, 0.2);
   padding: 5vh 5vh;
   padding-bottom: 3vh;
+  box-sizing: border-box;
 }
 
 .title {
@@ -312,6 +311,7 @@ input[type="text"] {
   flex-direction: row;
   justify-content: space-between;
   margin-bottom: 20px;
+  align-items: center;
 }
 
 .title h2 {
@@ -337,11 +337,9 @@ textarea {
   width: 55vh;
   font-size: 30px;
   padding-left: 10px;
-  font-size: 30px;
-  padding-left: 10px;
   border-radius: 10px;
-  padding-left: 10px;
   border: 2px solid var(--fields-color);
+  box-sizing: border-box;
 }
 
 .account-number {
@@ -359,11 +357,9 @@ textarea {
   width: 55vh;
   font-size: 30px;
   padding-left: 10px;
-  font-size: 30px;
-  padding-left: 10px;
   border-radius: 10px;
-  padding-left: 10px;
   border: 2px solid var(--fields-color);
+  box-sizing: border-box;
 }
 
 .open-close-date {
@@ -382,11 +378,9 @@ textarea {
   width: 25vh;
   font-size: 30px;
   padding-left: 10px;
-  font-size: 30px;
-  padding-left: 10px;
   border-radius: 10px;
-  padding-left: 10px;
   border: 2px solid var(--fields-color);
+  box-sizing: border-box;
 }
 
 .close-date textarea {
@@ -394,11 +388,9 @@ textarea {
   width: 25vh;
   font-size: 30px;
   padding-left: 10px;
-  font-size: 30px;
-  padding-left: 10px;
   border-radius: 10px;
-  padding-left: 10px;
   border: 2px solid var(--fields-color);
+  box-sizing: border-box;
 }
 
 .current-balance label {
@@ -410,11 +402,9 @@ textarea {
   width: 55vh;
   font-size: 30px;
   padding-left: 10px;
-  font-size: 30px;
-  padding-left: 10px;
   border-radius: 10px;
-  padding-left: 10px;
   border: 2px solid var(--fields-color);
+  box-sizing: border-box;
 }
 
 .current-balance {
@@ -438,11 +428,9 @@ textarea {
   width: 55vh;
   font-size: 30px;
   padding-left: 10px;
-  font-size: 30px;
-  padding-left: 10px;
   border-radius: 10px;
-  padding-left: 10px;
   border: 2px solid var(--fields-color);
+  box-sizing: border-box;
 }
 
 .button {
@@ -452,6 +440,7 @@ textarea {
   margin-top: 30px;
   margin-bottom: 30px;
   transition: transform 0.3s ease;
+  align-items: stretch;
 }
 
 #add-existing-button,
@@ -460,6 +449,8 @@ textarea {
   border-radius: 20px;
   height: 40px;
   transition: transform 0.3s ease;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 #add-existing-button {
@@ -552,13 +543,7 @@ input[type="checkbox"] {
   margin-bottom: 20px;
 }
 
-.top-label-2 {
-  display: flex;
-  font-size: 16px;
-  align-items: center;
-  gap: 2em;
-  justify-content: space-between;
-}
+/* Table alignment styles now handled by shared-table-styles.css */
 
 .account-info-card {
   display: flex;
@@ -604,15 +589,7 @@ input[type="checkbox"] {
   line-height: 1.2;
 }
 
-.top-label-2 > * {
-  flex: 1;
-  max-width: 12em;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  text-align: center;
-  min-width: 5em;
-}
+/* Column width styles now handled by shared-table-styles.css */
 
 .top-label-3 > * {
   text-align: center;

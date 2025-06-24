@@ -6,7 +6,7 @@ if (!process.env.DB_USER || !process.env.DB_PASSWORD || !process.env.DB_DATABASE
     process.exit(1);
 }
 
-// MySQL Connection Pool
+// MySQL Connection Pool with performance optimizations
 const pool = mysql.createPool({
     host: process.env.DB_HOST,
     user: process.env.DB_USER,
@@ -14,8 +14,14 @@ const pool = mysql.createPool({
     database: process.env.DB_DATABASE,
     port: process.env.DB_PORT,
     waitForConnections: true,
-    connectionLimit: 10,
-    queueLimit: 0
+    connectionLimit: 15, // Increased for better concurrency
+    queueLimit: 0,
+    acquireTimeout: 60000, // 60 seconds
+    timeout: 60000, // 60 seconds
+    enableKeepAlive: true,
+    keepAliveInitialDelay: 0,
+    multipleStatements: false,
+    charset: 'utf8mb4'
 });
 
 // Test database connection

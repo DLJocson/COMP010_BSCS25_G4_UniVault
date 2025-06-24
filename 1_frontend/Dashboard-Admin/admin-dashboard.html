@@ -44,9 +44,12 @@
 
         <div class="wrapper">
           <nav class="nav-bar">
-            <input type="text" id="search" placeholder="Search" />
-            <div class="icon-container">
-              <img id="log-out" src="../assets/log-out-logo.png" alt="Log Out" />
+            <div class="nav-content">
+              <h3 class="page-title">Dashboard</h3>
+              <div class="logout-container">
+                <span class="logout-text">Logout</span>
+                <img id="log-out" src="../assets/log-out-logo.png" alt="Log Out" />
+              </div>
             </div>
           </nav>
 
@@ -70,10 +73,10 @@
                   <div class="title">
                     <h2 class="title-name">Rejected Applications</h2>
 
-                    <label class="date">as of 06/14/2025</label>
+                    <label class="date" id="rejected-date">as of -</label>
                   </div>
                 </div>
-                <h1 class="number">1</h1>
+                <h1 class="number" id="rejected-count">-</h1>
               </div>
               <div class="pending-applications">
                 <div class="title-logo-container">
@@ -84,10 +87,10 @@
                   <div class="title">
                     <h2 class="title-name">Pending Applications</h2>
 
-                    <label class="date">as of 06/14/2025</label>
+                    <label class="date" id="pending-applications-date">as of -</label>
                   </div>
                 </div>
-                <h1 class="number">1</h1>
+                <h1 class="number" id="pending-applications-count">-</h1>
               </div>
               <div class="pending-approvals">
                 <div class="title-logo-container">
@@ -98,10 +101,10 @@
                   <div class="title">
                     <h2 class="title-name">Pending Approvals</h2>
 
-                    <label class="date">as of 06/14/2025</label>
+                    <label class="date" id="pending-approvals-date">as of -</label>
                   </div>
                 </div>
-                <h1 class="number">1</h1>
+                <h1 class="number" id="pending-approvals-count">-</h1>
               </div>
             </div>
             <div class="second-div">
@@ -113,7 +116,7 @@
 
                     <div class="title">
                     <h2 class="title-name">Monthly Statistics</h2>
-                    <label class="date">as of 06/14/2025</label>
+                    <label class="date" id="monthly-stats-date">as of -</label>
                     </div>
                   </div>
 
@@ -122,33 +125,6 @@
                   <div class="container" style="width:100%; max-width:900px; margin:auto;">
                     <canvas id="myChart" style="width:100%; height:400px; max-height:60vw;"></canvas>
                   </div>
-                  <script>
-                    document.addEventListener('DOMContentLoaded', function () {
-                    const ctx = document.getElementById('myChart').getContext('2d');
-                    new Chart(ctx, {
-                      type: 'bar',
-                      data: {
-                      labels: ['January', 'February', 'March', 'April', 'May', 'June'],
-                      datasets: [{
-                        label: 'Applications',
-                        data: [12, 19, 14, 17, 10, 15],
-                        backgroundColor: 'rgba(54, 162, 235, 0.5)',
-                        borderColor: 'rgba(54, 162, 235, 1)',
-                        borderWidth: 1
-                      }]
-                      },
-                      options: {
-                      responsive: true,
-                      maintainAspectRatio: false,
-                      scales: {
-                        y: {
-                        beginAtZero: true
-                        }
-                      }
-                      }
-                    });
-                    });
-                  </script>
                   </div>
               <div class="vertical-div">
                 <div class="new-accounts">
@@ -160,10 +136,10 @@
                     <div class="title">
                       <h2 class="title-name">New Accounts</h2>
 
-                      <label class="date">as of 06/14/2025</label>
+                      <label class="date" id="new-accounts-date">as of -</label>
                     </div>
                   </div>
-                  <h1 class="number">1</h1>
+                  <h1 class="number" id="new-accounts-count">-</h1>
                 </div>
                 <div class="verified">
                   <div class="title-logo-container">
@@ -174,10 +150,10 @@
                     <div class="title">
                       <h2 class="title-name">Verified</h2>
 
-                      <label class="date">as of 06/14/2025</label>
+                      <label class="date" id="verified-date">as of -</label>
                     </div>
                   </div>
-                  <h1 class="number">1</h1>
+                  <h1 class="number" id="verified-count">-</h1>
                 </div>
                 <div class="total-customers">
                   <div class="title-logo-container">
@@ -188,10 +164,10 @@
                     <div class="title">
                       <h2 class="title-name">Total Customers</h2>
 
-                      <label class="date">as of 06/14/2025</label>
+                      <label class="date" id="total-customers-date">as of -</label>
                     </div>
                   </div>
-                  <h1 class="number">1</h1>
+                  <h1 class="number" id="total-customers-count">-</h1>
                 </div>
               </div>
             </div>
@@ -199,6 +175,7 @@
         </div>
       </div>
     </div>
+    <script src="utils/logout-fix.js"></script>
     <script src="admin-dashboard.js"></script>
   </body>
 </html>

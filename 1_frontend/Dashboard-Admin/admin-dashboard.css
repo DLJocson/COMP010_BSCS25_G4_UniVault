@@ -1,3 +1,5 @@
+@import url('./shared-nav-styles.css');
+
 :root {
   --primary-color: #1f65b4;
   --secondary-color: #004ea8;
@@ -43,44 +45,7 @@ body {
   padding-top: 80px;
 }
 
-.nav-bar {
-  position: fixed;
-  top: 0;
-  left: 300px;
-  right: 0;
-  width: calc(100vw - 300px);
-  height: 80px;
-  z-index: 1;
-  background-color: var(--nav-bar-color);
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  padding: 0 30px;
-  gap: 30px;
-}
-
-input[type="text"] {
-  height: 40px;
-  width: 851px;
-  border-radius: 15px;
-  padding-left: 10px;
-  font-size: 24px;
-  background-color: transparent;
-  border: 3px solid var(--tertiary-color);
-}
-
-.icon-container {
-  justify-content: center;
-  display: flex;
-  flex-direction: row;
-  gap: 30px;
-}
-
-.icon-container img {
-  width: 35px;
-  height: 33px;
-}
+/* Navigation styles now handled by shared-nav-styles.css */
 
 .left-side-bar {
   position: fixed;

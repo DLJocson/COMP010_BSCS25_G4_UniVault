@@ -4,6 +4,7 @@ const express = require('express');
 const path = require('path');
 const multer = require('multer');
 const fs = require('fs');
+const cors = require('cors');
 
 // Import configurations and utilities
 const { testConnection } = require('./config/database');
@@ -27,6 +28,7 @@ const PORT = process.env.PORT || 3000;
 })();
 
 // Security middleware
+app.use(cors()); // Enable CORS for all origins
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
@@ -82,6 +84,82 @@ app.post('/upload', upload.single('file'), (req, res) => {
 app.use('/auth', authRoutes);
 app.use('/api', apiRoutes);
 app.use('/admin', adminRoutes);
+
+// Direct admin endpoints for compatibility with existing frontend
+app.get('/admin/pending-verifications', async (req, res) => {
+    try {
+        const { pool } = require('./config/database');
+        const [verifications] = await pool.query(`
+            SELECT 
+                c.cif_number, c.customer_type, c.customer_first_name, c.customer_last_name,
+                c.customer_middle_name, c.customer_suffix_name, c.created_at,
+                cd.contact_value as email, cd2.contact_value as phone, c.customer_status
+            FROM CUSTOMER c
+            LEFT JOIN CUSTOMER_CONTACT_DETAILS cd ON c.cif_number = cd.cif_number AND cd.contact_type_code = 'CT01'
+            LEFT JOIN CUSTOMER_CONTACT_DETAILS cd2 ON c.cif_number = cd2.cif_number AND cd2.contact_type_code = 'CT02'
+            WHERE c.customer_status = 'Pending Verification' AND c.is_deleted = FALSE
+            ORDER BY c.created_at ASC
+            LIMIT 100
+        `);
+        
+        res.json(verifications);
+    } catch (err) {
+        console.error('Error fetching pending verifications:', err);
+        res.status(500).json({ message: 'Server error' });
+    }
+});
+
+app.get('/admin/close-requests', async (req, res) => {
+    try {
+        const { pool } = require('./config/database');
+        const [closeRequests] = await pool.query(`
+            SELECT 
+                cr.close_request_id,
+                cr.cif_number,
+                cr.request_date,
+                cr.request_reason,
+                cr.request_status,
+                cr.processed_by,
+                cr.processed_date,
+                c.customer_type,
+                c.customer_first_name,
+                c.customer_last_name,
+                c.customer_middle_name,
+                c.customer_suffix_name,
+                cd.contact_value as email,
+                cd2.contact_value as phone
+            FROM CLOSE_REQUEST cr
+            INNER JOIN CUSTOMER c ON cr.cif_number = c.cif_number
+            LEFT JOIN CUSTOMER_CONTACT_DETAILS cd ON c.cif_number = cd.cif_number AND cd.contact_type_code = 'CT01'
+            LEFT JOIN CUSTOMER_CONTACT_DETAILS cd2 ON c.cif_number = cd2.cif_number AND cd2.contact_type_code = 'CT02'
+            WHERE c.is_deleted = FALSE AND cr.request_status = 'Pending'
+            ORDER BY cr.request_date DESC
+            LIMIT 100
+        `);
+        
+        res.json(closeRequests);
+    } catch (err) {
+        console.error('Error fetching close requests:', err);
+        res.status(500).json({ message: 'Server error' });
+    }
+});
+
+// Get all accounts for a specific customer
+app.get('/api/customers/:cif_number/accounts', async (req, res) => {
+    const { cif_number } = req.params;
+    try {
+        const [accounts] = await pool.query(
+            `SELECT account_number, account_type, account_status
+             FROM account
+             WHERE cif_number = ?`,
+            [cif_number]
+        );
+        res.json(accounts);
+    } catch (err) {
+        console.error('Error fetching accounts:', err);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+});
 
 // Root endpoint
 app.get('/', (req, res) => {

@@ -517,10 +517,17 @@ body {
 }
 
 .button {
-  display: flex;
-  flex-direction: row;
-  gap: 2vh;
-  margin-right: 30px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  gap: 12px;
+  align-items: center;
+  justify-content: center;
+  max-width: 340px;
+  width: 100%;
+  padding: 0 8px;
+  box-sizing: border-box;
+  flex-shrink: 0;
 }
 
 #add,
@@ -726,11 +733,33 @@ body {
 }
 
 .profile-name-page {
-  padding-top: 10px;
-  gap: 10px;
+  padding: 20px;
+  gap: 30px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  min-width: 400px;
+  background-color: transparent;
+}
+
+.profile-text-section {
   display: flex;
   flex-direction: column;
   align-items: center;
+  gap: 8px;
+  text-align: center;
+}
+
+.profile-text-section h1 {
+  font-size: 28px;
+  margin: 0;
+}
+
+.profile-text-section h1.blue-text {
+  font-size: 24px;
+  margin: 0;
 }
 
 .container-wrapper {
@@ -776,11 +805,27 @@ body {
 }
 
 #back,
-#view {
-  font-size: 24px;
-  border-radius: 20px;
-  height: 40px;
-  width: 310px;
+#view,
+#approve,
+#reject {
+  font-size: 12px;
+  font-weight: 600;
+  font-family: var(--font-family);
+  border-radius: 10px;
+  height: 42px;
+  width: 100%;
+  max-width: 160px;
+  min-width: 130px;
+  padding: 0 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  white-space: nowrap;
+  box-sizing: border-box;
 }
 
 #back {
@@ -792,16 +837,334 @@ body {
 #back:hover {
   background-color: var(--tertiary-color);
   color: white;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 114, 216, 0.3);
 }
 
 #view {
-  background-color: var(--secondary-color);
+  background: linear-gradient(135deg, var(--secondary-color) 0%, var(--tertiary-color) 100%);
   color: white;
-  border: 0;
 }
 
 #view:hover {
-  background-color: var(--secondary-color);
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 74, 168, 0.4);
+  background: linear-gradient(135deg, var(--tertiary-color) 0%, var(--secondary-color) 100%);
+}
+
+#approve {
+  background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+  color: white;
+}
+
+#approve:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(40, 167, 69, 0.4);
+  background: linear-gradient(135deg, #20c997 0%, #28a745 100%);
+}
+
+#reject {
+  background: linear-gradient(135deg, #dc3545 0%, #e74c3c 100%);
+  color: white;
+}
+
+#reject:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(220, 53, 69, 0.4);
+  background: linear-gradient(135deg, #e74c3c 0%, #dc3545 100%);
+}
+
+/* Active states for better feedback */
+#back:active,
+#view:active,
+#approve:active,
+#reject:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .profile-name-page {
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    min-width: auto;
+    padding: 15px;
+  }
+  
+  .profile-text-section {
+    align-items: center;
+  }
+  
+  .profile-text-section h1 {
+    font-size: 24px;
+  }
+  
+  .profile-text-section h1.blue-text {
+    font-size: 20px;
+  }
+  
+  .button {
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(4, 1fr);
+    gap: 12px;
+    max-width: 300px;
+  }
+  
+  #back,
+  #view,
+  #approve,
+  #reject {
+    width: 100%;
+    min-width: auto;
+    font-size: 13px;
+    height: 44px;
+  }
+}
+
+@media (max-width: 480px) {
+  .button {
+    max-width: 250px;
+    gap: 10px;
+  }
+  
+  #back,
+  #view,
+  #approve,
+  #reject {
+    font-size: 12px;
+    height: 40px;
+    padding: 0 10px;
+  }
+}
+
+/* Notification System */
+.notification-container {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 10000;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 400px;
+}
+
+.notification {
+  padding: 16px 20px;
+  border-radius: 8px;
+  color: white;
+  font-family: var(--font-family);
+  font-size: 14px;
+  font-weight: 500;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transform: translateX(100%);
+  opacity: 0;
+  transition: all 0.3s ease-in-out;
+  position: relative;
+  cursor: pointer;
+}
+
+.notification.show {
+  transform: translateX(0);
+  opacity: 1;
+}
+
+.notification.success {
+  background-color: #28a745;
+  border-left: 4px solid #1e7e34;
+}
+
+.notification.warning {
+  background-color: #ffc107;
+  color: #212529;
+  border-left: 4px solid #d39e00;
+}
+
+.notification.error {
+  background-color: #dc3545;
+  border-left: 4px solid #bd2130;
+}
+
+.notification.info {
+  background-color: var(--primary-color);
+  border-left: 4px solid var(--secondary-color);
+}
+
+.notification::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 12px;
+  transform: translateY(-50%);
+  width: 16px;
+  height: 16px;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+.notification.success::before {
+  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>');
+}
+
+.notification.warning::before {
+  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" fill="%23212529" viewBox="0 0 24 24"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>');
+}
+
+.notification.error::before {
+  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>');
+}
+
+.notification.info::before {
+  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>');
+}
+
+.notification-message {
+  margin-left: 24px;
+  line-height: 1.4;
+}
+
+@media (max-width: 768px) {
+  .notification-container {
+    left: 20px;
+    right: 20px;
+    max-width: none;
+  }
+  
+  .notification {
+    font-size: 13px;
+    padding: 14px 16px;
+  }
+}
+
+/* Verification Accounts Section */
+.verification-accounts-container {
+  display: flex;
+  flex-direction: column;
+  align-items: left;
+  width: calc(100vw - 200px);
+  border-radius: 20px;
+  padding: 3vh 3vh;
+  background-color: white;
+  box-shadow: 0 5px 15px rgba(0.2, 0.2, 0.2, 0.2);
+  margin-bottom: 20px;
+  transition: transform 0.3s ease;
+}
+
+/* Reuse account styles from profile page */
+.accounts-loading {
+  text-align: center;
+  padding: 2em;
+  color: var(--primary-color);
+  font-size: 18px;
+}
+
+.accounts-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.account-card {
+  background-color: #f8f9fa;
+  border-radius: 15px;
+  padding: 20px;
+  border-left: 4px solid var(--primary-color);
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.account-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+}
+
+.account-card.status-active {
+  border-left-color: #28a745;
+}
+
+.account-card.status-inactive {
+  border-left-color: #ffc107;
+}
+
+.account-card.status-closed {
+  border-left-color: #dc3545;
+}
+
+.account-card.status-suspended {
+  border-left-color: #fd7e14;
+}
+
+.account-card.status-dormant {
+  border-left-color: #6c757d;
+}
+
+.account-number {
+  font-weight: bold;
+  font-size: 16px;
+  color: var(--secondary-color);
+  margin-bottom: 8px;
+}
+
+.account-type {
+  font-size: 14px;
+  color: #495057;
+  margin-bottom: 12px;
+}
+
+.account-status {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.account-status.active {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.account-status.inactive {
+  background-color: #fff3cd;
+  color: #856404;
+}
+
+.account-status.closed {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+.account-status.suspended {
+  background-color: #ffeaa7;
+  color: #b8860b;
+}
+
+.account-status.dormant {
+  background-color: #e2e3e5;
+  color: #383d41;
+}
+
+.account-dates {
+  font-size: 12px;
+  color: #6c757d;
+  line-height: 1.4;
+}
+
+.account-relationship {
+  font-size: 13px;
+  color: var(--primary-color);
+  font-weight: 500;
+  margin-top: 8px;
+}
+
+.no-accounts-message {
+  text-align: center;
+  padding: 3em;
+  color: #6c757d;
+  font-style: italic;
 }

@@ -1,3 +1,6 @@
+@import url('./shared-table-styles.css');
+@import url('./shared-nav-styles.css');
+
 :root {
   --primary-color: #1f65b4;
   --secondary-color: #004ea8;
@@ -42,44 +45,7 @@ body {
   padding-top: 80px;
 }
 
-.nav-bar {
-  position: fixed;
-  top: 0;
-  left: 300px;
-  right: 0;
-  width: calc(100vw - 300px);
-  height: 80px;
-  z-index: 1;
-  background-color: var(--nav-bar-color);
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  padding: 0 30px;
-  gap: 30px;
-}
-
-input[type="text"] {
-  height: 40px;
-  width: 851px;
-  border-radius: 15px;
-  padding-left: 10px;
-  font-size: 24px;
-  background-color: transparent;
-  border: 3px solid var(--tertiary-color);
-}
-
-.icon-container {
-  justify-content: center;
-  display: flex;
-  flex-direction: row;
-  gap: 30px;
-}
-
-.icon-container img {
-  width: 35px;
-  height: 33px;
-}
+/* Navigation styles now handled by shared-nav-styles.css */
 
 .left-side-bar {
   position: fixed;
@@ -476,28 +442,9 @@ input[type="checkbox"] {
   margin-bottom: 20px;
 }
 
-.top-label-2 {
-  display: flex;
-  font-size: 16px;
-  align-items: center;
-  gap: 2em;
-  justify-content: space-between;
-}
+/* Table alignment styles now handled by shared-table-styles.css */
 
-.top-label-2 > * {
-  text-align: center;
-  min-width: 8em;
-  max-width: 12em;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  flex: 1;
-}
-
-.top-label-3 > * {
-  text-align: center;
-  min-width: 5em;
-}
+/* Column width styles now handled by shared-table-styles.css */
 
 .account-info-card {
   display: flex;
@@ -595,8 +542,5 @@ input[type="checkbox"] {
     width: 100%;
     padding: 0.5em;
   }
-  .top-label-2 > * {
-    min-width: 4em;
-    font-size: 12px;
-  }
+  /* Mobile styles handled by shared-table-styles.css */
 }

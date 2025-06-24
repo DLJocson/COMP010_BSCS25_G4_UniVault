@@ -14,6 +14,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     if (cifNumber) {
         loadCustomerDetails(cifNumber);
+        loadVerificationAccounts(cifNumber);
     } else {
         console.error('No CIF number provided');
         window.location.href = 'admin-review-queue.html';
@@ -151,50 +152,36 @@ function populateCustomerDetails(data) {
 function setupVerificationButtons(cifNumber) {
     const employeeId = localStorage.getItem('employee_id');
     
-    // Create verification buttons container
-    const container = document.querySelector('.profile-name-page .button');
-    if (container) {
-        // Clear existing buttons except back button
-        const backButton = container.querySelector('#back');
-        container.innerHTML = '';
-        if (backButton) {
-            container.appendChild(backButton);
-        }
-        
-        // Create view documents button
-        const viewDocsBtn = document.createElement('button');
-        viewDocsBtn.textContent = 'View Attached Documents';
-        viewDocsBtn.id = 'view';
-        viewDocsBtn.onclick = () => {
+    // Set up view documents button
+    const viewBtn = document.getElementById('view');
+    if (viewBtn) {
+        viewBtn.onclick = () => {
             window.location.href = `admin-customer-verification2.html?cif=${cifNumber}`;
         };
-        
-        // Add verification buttons
-        const approveBtn = document.createElement('button');
-        approveBtn.textContent = 'Approve Verification';
-        approveBtn.className = 'approve-btn';
-        approveBtn.style.backgroundColor = '#28a745';
-        approveBtn.style.color = 'white';
-        approveBtn.style.margin = '5px';
+    }
+    
+    // Set up approve button
+    const approveBtn = document.getElementById('approve');
+    if (approveBtn) {
         approveBtn.onclick = () => verifyCustomer(cifNumber, 'approve', employeeId);
-        
-        const rejectBtn = document.createElement('button');
-        rejectBtn.textContent = 'Reject Verification';
-        rejectBtn.className = 'reject-btn';
-        rejectBtn.style.backgroundColor = '#dc3545';
-        rejectBtn.style.color = 'white';
-        rejectBtn.style.margin = '5px';
+    }
+    
+    // Set up reject button
+    const rejectBtn = document.getElementById('reject');
+    if (rejectBtn) {
         rejectBtn.onclick = () => verifyCustomer(cifNumber, 'reject', employeeId);
-        
-        container.appendChild(viewDocsBtn);
-        container.appendChild(approveBtn);
-        container.appendChild(rejectBtn);
     }
 }
 
 async function verifyCustomer(cifNumber, action, employeeId) {
-    const confirmation = confirm(`Are you sure you want to ${action} this customer verification?`);
-    if (!confirmation) return;
+    // Check if documents are verified before allowing approval
+    if (action === 'approve') {
+        const documentsVerified = localStorage.getItem(`documents_verified_${cifNumber}`);
+        if (!documentsVerified || documentsVerified !== 'true') {
+            showNotification('Please verify all attached documents before approving this verification. Click "View Attached Documents" to review and verify documents.', 'warning');
+            return;
+        }
+    }
     
     try {
         const response = await fetch(`/admin/customer/${cifNumber}/verify`, {
@@ -211,13 +198,179 @@ async function verifyCustomer(cifNumber, action, employeeId) {
         const result = await response.json();
         
         if (response.ok) {
-            alert(result.message);
-            window.location.href = 'admin-review-queue.html';
+            // Clear verification status from localStorage on successful approval/rejection
+            localStorage.removeItem(`documents_verified_${cifNumber}`);
+            localStorage.removeItem(`verification_status_${cifNumber}`);
+            showNotification(`Customer verification ${action}d successfully!`, 'success');
+            setTimeout(() => {
+                window.location.href = 'admin-review-queue.html';
+            }, 1500);
         } else {
-            alert('Error: ' + result.message);
+            showNotification('Error: ' + result.message, 'error');
         }
     } catch (error) {
         console.error('Error verifying customer:', error);
-        alert('Error processing verification');
+        showNotification('Error processing verification', 'error');
     }
+}
+
+// Notification System
+function showNotification(message, type = 'info') {
+    const container = document.getElementById('notification-container');
+    if (!container) {
+        console.error('Notification container not found');
+        return;
+    }
+
+    // Create notification element
+    const notification = document.createElement('div');
+    notification.className = `notification ${type}`;
+    
+    const messageElement = document.createElement('div');
+    messageElement.className = 'notification-message';
+    messageElement.textContent = message;
+    
+    notification.appendChild(messageElement);
+    container.appendChild(notification);
+
+    // Show notification with animation
+    setTimeout(() => {
+        notification.classList.add('show');
+    }, 100);
+
+    // Auto-hide notification after 5 seconds (or 7 seconds for warnings)
+    const hideDelay = type === 'warning' ? 7000 : 5000;
+    
+    setTimeout(() => {
+        hideNotification(notification);
+    }, hideDelay);
+
+    // Click to dismiss
+    notification.addEventListener('click', () => {
+        hideNotification(notification);
+    });
+
+    return notification;
+}
+
+function hideNotification(notification) {
+    notification.classList.remove('show');
+    setTimeout(() => {
+        if (notification.parentNode) {
+            notification.parentNode.removeChild(notification);
+        }
+    }, 300);
+}
+
+// Load verification accounts for context
+async function loadVerificationAccounts(cifNumber) {
+    const loadingEl = document.getElementById('verification-accounts-loading');
+    const accountsListEl = document.getElementById('verification-accounts-list');
+    const noAccountsEl = document.getElementById('verification-no-accounts');
+    
+    try {
+        showVerificationAccountsLoading(true);
+        
+        const response = await fetch(`/api/customers/${cifNumber}/accounts`);
+        
+        if (!response.ok) {
+            if (response.status === 404) {
+                showVerificationNoAccounts();
+                return;
+            }
+            throw new Error(`Failed to load accounts: ${response.status}`);
+        }
+        
+        const accountsData = await response.json();
+        displayVerificationAccounts(accountsData.accounts);
+        
+    } catch (error) {
+        console.error('Error loading verification accounts:', error);
+        showVerificationAccountsError(error.message);
+    } finally {
+        showVerificationAccountsLoading(false);
+    }
+}
+
+function showVerificationAccountsLoading(isLoading) {
+    const loadingEl = document.getElementById('verification-accounts-loading');
+    const accountsListEl = document.getElementById('verification-accounts-list');
+    const noAccountsEl = document.getElementById('verification-no-accounts');
+    
+    if (isLoading) {
+        loadingEl.style.display = 'block';
+        accountsListEl.style.display = 'none';
+        noAccountsEl.style.display = 'none';
+    } else {
+        loadingEl.style.display = 'none';
+    }
+}
+
+function displayVerificationAccounts(accounts) {
+    const accountsListEl = document.getElementById('verification-accounts-list');
+    const noAccountsEl = document.getElementById('verification-no-accounts');
+    
+    if (!accounts || accounts.length === 0) {
+        showVerificationNoAccounts();
+        return;
+    }
+    
+    accountsListEl.innerHTML = '';
+    
+    accounts.forEach(account => {
+        const accountCard = createVerificationAccountCard(account);
+        accountsListEl.appendChild(accountCard);
+    });
+    
+    accountsListEl.style.display = 'grid';
+    noAccountsEl.style.display = 'none';
+}
+
+function createVerificationAccountCard(account) {
+    const card = document.createElement('div');
+    card.className = `account-card status-${account.account_status.toLowerCase()}`;
+    
+    const openDate = new Date(account.account_open_date).toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric'
+    });
+    
+    const closeDateHTML = account.account_close_date 
+        ? `<div>Closed: ${new Date(account.account_close_date).toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric'
+        })}</div>`
+        : '';
+    
+    card.innerHTML = `
+        <div class="account-number">${account.account_number}</div>
+        <div class="account-type">${account.account_type}</div>
+        <div class="account-status ${account.account_status.toLowerCase()}">${account.account_status}</div>
+        <div class="account-dates">
+            <div>Opened: ${openDate}</div>
+            ${closeDateHTML}
+        </div>
+        <div class="account-relationship">${account.relationship_type}</div>
+    `;
+    
+    return card;
+}
+
+function showVerificationNoAccounts() {
+    const accountsListEl = document.getElementById('verification-accounts-list');
+    const noAccountsEl = document.getElementById('verification-no-accounts');
+    
+    accountsListEl.style.display = 'none';
+    noAccountsEl.style.display = 'block';
+}
+
+function showVerificationAccountsError(errorMessage) {
+    const accountsListEl = document.getElementById('verification-accounts-list');
+    const noAccountsEl = document.getElementById('verification-no-accounts');
+    
+    accountsListEl.style.display = 'none';
+    noAccountsEl.style.display = 'block';
+    noAccountsEl.innerHTML = `<p>Error loading accounts: ${errorMessage}</p>`;
 }
