@@ -21,7 +21,7 @@ body {
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background: url("../assets/bg.png");
+  background: url("/assets/bg.png");
   z-index: -1;
   font-family: var(--font-family);
 }
@@ -29,7 +29,6 @@ body {
 .data-privacy-consent-page {
   display: flex;
   justify-content: center;
-  border-radius: 30px;
   align-items: center;
   flex-direction: column;
   height: 1450px;

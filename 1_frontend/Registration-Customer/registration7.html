@@ -92,7 +92,7 @@
 
         <div class="upload-box">
           <div class="icon">
-            <img src="../assets/upload-logo.png" alt="" />
+            <img src="/assets/upload-logo.png" alt="" />
           </div>
           <p class="direction">Upload Front of ID 1</p>
           <label for="front-id-1">Browse</label>
@@ -108,7 +108,7 @@
 
         <div class="upload-box">
           <div class="icon">
-            <img src="../assets/upload-logo.png" alt="" />
+            <img src="/assets/upload-logo.png" alt="" />
           </div>
           <p class="direction">Upload Back of ID 1</p>
           <label for="back-id-1">Browse</label>
@@ -201,7 +201,7 @@
 
         <div class="upload-box">
           <div class="icon">
-            <img src="../assets/upload-logo.png" alt="" />
+            <img src="/assets/upload-logo.png" alt="" />
           </div>
           <p class="direction">Upload Front of ID 2</p>
           <label for="front-id-2">Browse</label>
@@ -217,7 +217,7 @@
 
         <div class="upload-box">
           <div class="icon">
-            <img src="../assets/upload-logo.png" alt="" />
+            <img src="/assets/upload-logo.png" alt="" />
           </div>
           <p class="direction">Upload Back of ID 2</p>
           <label for="back-id-2">Browse</label>
@@ -234,7 +234,7 @@
         <h2 class="subtitle">Supporting Documents</h2>
         <div id="supporting-documents" class="upload-box">
           <div class="icon">
-            <img src="../assets/upload-logo.png" alt="" />
+            <img src="/assets/upload-logo.png" alt="" />
           </div>
           <p class="direction">Upload Supporting Document</p>
           <label for="supporting-doc">Browse</label>
@@ -256,7 +256,7 @@
 
       <div class="button">
         <div class="back">
-          <button onclick="location.href='apply-account1.html'" id="back">
+          <button onclick="location.href='registration6.html'" id="back">
             Back
           </button>
         </div>
@@ -295,32 +295,32 @@
       "Gov't / GOCC ID",
       "DSWD Certification",
       "NCWDP Certification",
-      "PWD ID",
+      "PWD ID"
     ];
     const select = document.getElementById(selectId);
     while (select.options.length > 1) {
       select.remove(1);
     }
-    idTypes.forEach((type) => {
-      const option = document.createElement("option");
+    idTypes.forEach(type => {
+      const option = document.createElement('option');
       option.value = type;
       option.textContent = type;
       select.appendChild(option);
     });
   }
 
-  document.addEventListener("DOMContentLoaded", function () {
-    addIdTypeOptions("select-id1");
-    addIdTypeOptions("select-id2");
+  document.addEventListener('DOMContentLoaded', function() {
+    addIdTypeOptions('select-id1');
+    addIdTypeOptions('select-id2');
   });
 </script>
 
 <script>
   function addAsterisk(label, after = true) {
     if (!label) return;
-    const asterisk = document.createElement("span");
-    asterisk.className = "required-asterisk";
-    asterisk.textContent = "*";
+    const asterisk = document.createElement('span');
+    asterisk.className = 'required-asterisk';
+    asterisk.textContent = '*';
     if (after) {
       label.appendChild(asterisk);
     } else {
@@ -328,36 +328,32 @@
     }
   }
 
-  document.addEventListener("DOMContentLoaded", function () {
+  document.addEventListener('DOMContentLoaded', function() {
     addAsterisk(document.querySelector('label[for="select-id1"]'));
-    addAsterisk(document.querySelector("#id1-num").previousElementSibling);
+    addAsterisk(document.querySelector('#id1-num').previousElementSibling);
     addAsterisk(document.querySelector('label[for="issue-month-id1"]'));
     addAsterisk(document.querySelector('label[for="issue-year-id1"]'));
 
     // Add asterisk to upload headings instead of labels
-    const uploadFront1 = Array.from(
-      document.querySelectorAll(".upload-box .direction")
-    ).find((el) => el.textContent.trim().startsWith("Upload Front of ID 1"));
+    const uploadFront1 = Array.from(document.querySelectorAll('.upload-box .direction'))
+      .find(el => el.textContent.trim().startsWith('Upload Front of ID 1'));
     addAsterisk(uploadFront1, false);
 
-    const uploadBack1 = Array.from(
-      document.querySelectorAll(".upload-box .direction")
-    ).find((el) => el.textContent.trim().startsWith("Upload Back of ID 1"));
+    const uploadBack1 = Array.from(document.querySelectorAll('.upload-box .direction'))
+      .find(el => el.textContent.trim().startsWith('Upload Back of ID 1'));
     addAsterisk(uploadBack1, false);
 
     addAsterisk(document.querySelector('label[for="select-id2"]'));
-    addAsterisk(document.querySelector("#id2-num").previousElementSibling);
+    addAsterisk(document.querySelector('#id2-num').previousElementSibling);
     addAsterisk(document.querySelector('label[for="issue-month-id2"]'));
     addAsterisk(document.querySelector('label[for="issue-year-id2"]'));
 
-    const uploadFront2 = Array.from(
-      document.querySelectorAll(".upload-box .direction")
-    ).find((el) => el.textContent.trim().startsWith("Upload Front of ID 2"));
+    const uploadFront2 = Array.from(document.querySelectorAll('.upload-box .direction'))
+      .find(el => el.textContent.trim().startsWith('Upload Front of ID 2'));
     addAsterisk(uploadFront2, false);
 
-    const uploadBack2 = Array.from(
-      document.querySelectorAll(".upload-box .direction")
-    ).find((el) => el.textContent.trim().startsWith("Upload Back of ID 2"));
+    const uploadBack2 = Array.from(document.querySelectorAll('.upload-box .direction'))
+      .find(el => el.textContent.trim().startsWith('Upload Back of ID 2'));
     addAsterisk(uploadBack2, false);
   });
 </script>

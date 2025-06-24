@@ -23,7 +23,7 @@ body {
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background: url("../assets/bg.png");
+  background: url("/assets/bg.png");
   z-index: -1;
   font-family: var(--font-family);
 }
@@ -312,7 +312,7 @@ body {
   align-items: left;
   width: calc(100vw - 400px);
   border-radius: 20px;
-  padding: 5vh 5vh;
+  padding: 3vh 3vh;
   background-color: white;
   box-shadow: 0 5px 15px rgba(0.2, 0.2, 0.2, 0.2);
 }
@@ -417,7 +417,7 @@ body {
   align-items: left;
   width: calc(100vw - 400px);
   border-radius: 20px;
-  padding: 5vh 5vh;
+  padding: 3vh 3vh;
   background-color: white;
   box-shadow: 0 5px 15px rgba(0.2, 0.2, 0.2, 0.2);
 }
@@ -511,7 +511,7 @@ body {
   align-items: left;
   width: calc(100vw - 400px);
   border-radius: 20px;
-  padding: 5vh 5vh;
+  padding: 3vh 3vh;
   background-color: white;
   box-shadow: 0 5px 15px rgba(0.2, 0.2, 0.2, 0.2);
 }
@@ -571,7 +571,6 @@ body {
   flex-wrap: wrap;
   align-items: left;
   width: calc(100vw - 500px);
-  border-radius: 20px;
   background-color: white;
   box-shadow: 0 5px 15px rgba(0.2, 0.2, 0.2, 0.2);
   padding: 2vh 2vh;
@@ -628,7 +627,6 @@ body {
   flex-wrap: wrap;
   align-items: left;
   width: calc(100vw - 500px) / 2;
-  border-radius: 20px;
   background-color: white;
   box-shadow: 0 5px 15px rgba(0.2, 0.2, 0.2, 0.2);
   padding: 2vh 2vh;
@@ -665,6 +663,7 @@ body {
   align-items: left;
   width: calc(100vw - 500px) / 2;
   padding: 2vh 2vh;
+  gap: 30px;
   margin-left: 20px;
   margin-bottom: 20px;
 }
@@ -680,6 +679,26 @@ body {
   background-color: transparent;
   margin-bottom: 0.5vh;
   border: 2px solid var(--fields-color);
+}
+
+.account-information-container,
+.personal-information-container,
+.contact-details-container,
+.employment-data-container,
+.work-nature-container,
+.fund-source-container,
+.alias-container {
+  transition: transform 0.3s ease;
+}
+
+.account-information-container:hover,
+.personal-information-container:hover,
+.contact-details-container:hover,
+.employment-data-container:hover,
+.work-nature-container:hover,
+.fund-source-container:hover,
+.alias-container:hover {
+  transform: scale(1.01);
 }
 
 .account-information {
@@ -757,22 +776,4 @@ body {
 #back:hover {
   background-color: var(--secondary-color);
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-}
-
-.full-name-container-2 {
-  display: flex;
-  flex-direction: column;
-  flex-wrap: wrap;
-  align-items: left;
-  width: calc(100vw - 500px) / 2;
-  border-radius: 20px;
-  background-color: white;
-  box-shadow: 0 5px 15px rgba(0.2, 0.2, 0.2, 0.2);
-  padding: 2vh 2vh;
-  margin-left: 0;
-  gap: 30px;
-}
-
-.alias-full-name-container .title {
-  padding-left: 0;
 }

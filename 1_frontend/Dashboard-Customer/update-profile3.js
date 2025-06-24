@@ -43,7 +43,7 @@ document.addEventListener("DOMContentLoaded", () => {
         allValid = false;
       } else {
         errorMsg.style.display = "none";
-        window.location.href = "update-profile4.html";
+        window.location.href = "apply-account4.html";
       }
     });
 

@@ -3,9 +3,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const checkboxes = document.querySelectorAll(
     ".second-container input[type='checkbox']"
   );
-  const errorMessage = document.getElementById("error-message"); // Div in your HTML
+  const errorMessage = document.getElementById("error-message");
 
-  // Ensure only one can be checked
   checkboxes.forEach((cb) => {
     cb.addEventListener("change", () => {
       if (cb.checked) {
@@ -15,30 +14,23 @@ document.addEventListener("DOMContentLoaded", () => {
           }
         });
       }
-      // Clear error when a checkbox is selected
-      errorMessage.textContent = "";
+
+      const oneChecked = Array.from(checkboxes).some((box) => box.checked);
+      if (oneChecked) {
+        errorMessage.textContent = "";
+      }
     });
   });
 
   proceedBtn.addEventListener("click", (e) => {
-    const checkedBoxes = Array.from(checkboxes).filter((cb) => cb.checked);
+    const oneChecked = Array.from(checkboxes).some((cb) => cb.checked);
 
-    if (checkedBoxes.length === 0) {
+    if (!oneChecked) {
       e.preventDefault();
-      errorMessage.textContent = "Please select an option.";
-      return;
+      errorMessage.textContent = "Please select one option.";
+    } else {
+      errorMessage.textContent = "";
+      window.location.href = "update-work5.html";
     }
-
-    const selectedIndex = Array.from(checkboxes).indexOf(checkedBoxes[0]);
-    if (selectedIndex === 1) {
-      e.preventDefault();
-      errorMessage.textContent =
-        "You cannot proceed if you select the second option.";
-      return;
-    }
-
-    // Proceed if first checkbox is selected
-    errorMessage.textContent = "";
-    window.location.href = "update-work5.html";
   });
 });

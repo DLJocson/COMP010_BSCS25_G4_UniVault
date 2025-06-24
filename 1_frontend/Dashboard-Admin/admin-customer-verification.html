@@ -20,58 +20,51 @@
     <div class="profile-page">
       <div class="wrapper">
         <div class="page-body">
-          <div class="account-button">
-            <div class="account-information-container">
-              <div class="account-information">
-                <h2 class="title">Account Information</h2>
+          <div class="account-information-container">
+            <div class="account-information">
+              <h2 class="title">Account Information</h2>
 
-                <div class="container-wrapper">
-                  <div class="container">
-                    <label for="cif-number">CIF Number</label>
-                    <input type="text" id="cif-number" />
-                  </div>
+              <div class="container-wrapper">
+                <div class="container">
+                  <label for="cif-number">CIF Number</label>
+                  <input type="text" id="cif-number" />
+                </div>
 
-                  <div class="container">
-                    <label for="customer-type">Customer Type</label>
-                    <input type="text" id="customer-type" />
-                  </div>
+                <div class="container">
+                  <label for="customer-type">Customer Type</label>
+                  <input type="text" id="customer-type" />
+                </div>
 
-                  <div class="container">
-                    <label for="account-tyoe">Account Type</label>
-                    <input type="text" id="account-type" />
-                  </div>
+                <div class="container">
+                  <label for="account-tyoe">Account Type</label>
+                  <input type="text" id="account-type" />
+                </div>
 
-                  <div class="container">
-                    <label for="status">Status</label>
-                    <input type="text" id="status" />
-                  </div>
+                <div class="container">
+                  <label for="status">Status</label>
+                  <input type="text" id="status" />
                 </div>
               </div>
-              <div class="profile-name-page">
-                <h1>Account Closure Verification</h1>
-                <h1 class="blue-text">Bautista, Chryshella Grace P.</h1>
+            </div>
+            <div class="profile-name-page">
+              <h1>Verification Page</h1>
+              <h1 class="blue-text">Bautista, Chryshella Grace P.</h1>
+              <div class="button">
+                <button
+                  onclick="location.href='admin-review-queue.html'"
+                  id="back"
+                >
+                  Back to Review Queue
+                </button>
+                <button
+                  onclick="location.href='admin-customer-verification2.html'"
+                  id="view"
+                >
+                  View Attached Documents
+                </button>
               </div>
             </div>
-            <div class="button">
-              <button
-                onclick="location.href='admin-review-queue2.html'"
-                id="back"
-              >
-                Back to Review Queue
-              </button>
-              <button
-                onclick="location.href='admin-customer-verification2.html'"
-                id="view"
-              >
-                View Attached Documents
-              </button>
-
-              <button id="confirm-closure">Confirm Closure Request</button>
-
-              <button id="reject">Reject Request</button>
-            </div>
           </div>
-
           <div class="personal-information-container">
             <h1 class="title">Personal Information</h1>
             <h2 class="subtitle">Full Name</h2>
@@ -378,49 +371,20 @@
                 <div class="title-container">
                   <h1 class="title">Aliases</h1>
                 </div>
-                <div class="full-name-container-2">
-                  <div class="container">
-                    <label for="alias-first-name">First Name</label>
-                    <input type="text" id="alias-first-name" />
-                  </div>
-
-                  <div class="container">
-                    <label for="alias-middle-name">Middle Name</label>
-                    <input type="text" id="alias-middle-name" />
-                  </div>
-
-                  <div class="container">
-                    <label for="alias-last-name">Last Name</label>
-                    <input type="text" id="alias-last-name" />
-                  </div>
+                <div class="container">
+                  <label for="alias-first-name">First Name</label>
+                  <input type="text" id="alias-first-name" />
                 </div>
-              </div>
-            </div>
-          </div>
 
-          <div class="regulatory-requirement-container">
-            <h1 class="title">Regulatory Requirements</h1>
-            <div class="container-container">
-              <div class="container">
-                <label for="political-affilation"
-                  >Political Relations & Affilatiosn</label
-                >
-                <input type="text" id="political-affilation" />
-              </div>
+                <div class="container">
+                  <label for="alias-middle-name">Middle Name</label>
+                  <input type="text" id="alias-middle-name" />
+                </div>
 
-              <div class="container">
-                <label for="foreign-tax">Foreign Account Tax Compliance</label>
-                <input type="text" id="foreign-tax" />
-              </div>
-
-              <div class="container">
-                <label for="dnfbps">DNFBPs</label>
-                <input type="text" id="dnfbps" />
-              </div>
-
-              <div class="container">
-                <label for="beneficial-ownership">Beneficial Ownership</label>
-                <input type="text" id="beneficial-ownership" />
+                <div class="container">
+                  <label for="alias-last-name">Last Name</label>
+                  <input type="text" id="alias-last-name" />
+                </div>
               </div>
             </div>
           </div>

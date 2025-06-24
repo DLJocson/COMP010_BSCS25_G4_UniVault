@@ -1,75 +1,16 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const containers = document.getElementById("containers");
+  populateDateDropdowns();
+  attachInputListeners();
+  handleProceedClick();
+  handleFileUploadValidation();
+
   const checkbox = document.getElementById("yes");
-
-  // Initial state: Hide the 'containers' div by default
-  if (containers) containers.style.display = "none";
-
-  if (checkbox) {
-    function showHideMainContent() {
-      if (checkbox.checked) {
-        // If "Yes" is checked, show the 'containers' div
-        if (containers) containers.style.display = "block";
-
-        // Initialize the rest of the form only once
-        if (!containers.dataset.initialized) {
-          populateDateDropdowns();
-          attachInputListeners();
-          handleProceedClick(); // Re-attach listener after content is potentially shown
-          handleFileUploadValidation();
-          containers.dataset.initialized = "true";
-        }
-      } else {
-        // If "Yes" is NOT checked, hide the 'containers' div
-        if (containers) containers.style.display = "none";
-        // Optionally, clear any error messages if the user unchecks "Yes" after seeing errors
-        clearAllErrorsInContainers(); // New helper function
-      }
-    }
-    // Run on load in case checkbox is already checked (e.g., after a page refresh preserving state)
-    showHideMainContent();
-    checkbox.addEventListener("change", showHideMainContent);
-  }
-});
-
-// New helper function to clear errors when hiding the form
-function clearAllErrorsInContainers() {
   const containers = document.getElementById("containers");
-  if (containers) {
-    const errorMessages = containers.querySelectorAll(".error-message");
-    errorMessages.forEach((errorEl) => {
-      errorEl.textContent = "";
-    });
-    const errorInputs = containers.querySelectorAll(
-      "input.error, select.error, .upload-box.error"
-    );
-    errorInputs.forEach((inputEl) => {
-      inputEl.classList.remove("error");
-    });
-    // Also reset file upload text if needed
-    const fileUploadDirections = containers.querySelectorAll(
-      ".upload-box .direction"
-    );
-    fileUploadDirections.forEach((directionEl) => {
-      // You might need to adjust this to your default text
-      if (directionEl.textContent.startsWith("✓")) {
-        // Only reset if it shows an uploaded file
-        const inputId = directionEl
-          .closest(".upload-box")
-          .querySelector("input[type='file']").id;
-        if (inputId === "front-id-1")
-          directionEl.textContent = "Upload Front of ID 1";
-        else if (inputId === "back-id-1")
-          directionEl.textContent = "Upload Back of ID 1";
-        else if (inputId === "front-id-2")
-          directionEl.textContent = "Upload Front of ID 2";
-        else if (inputId === "back-id-2")
-          directionEl.textContent = "Upload Back of ID 2";
-        directionEl.style.color = ""; // Remove green color
-      }
-    });
-  }
-}
+
+  checkbox.addEventListener("change", () => {
+    containers.style.display = checkbox.checked ? "none" : "block";
+  });
+});
 
 function handleFileUploadValidation() {
   const validTypes = ["image/jpeg", "image/png"];
@@ -78,29 +19,26 @@ function handleFileUploadValidation() {
   fileInputs.forEach((id) => {
     const input = document.getElementById(id);
 
-    // Check if input element exists before adding event listener
-    if (input) {
-      input.addEventListener("change", () => {
-        const file = input.files[0];
-        const errorElement = document.getElementById(`error-${id}`);
-        const uploadBox = input.closest(".upload-box");
+    input.addEventListener("change", () => {
+      const file = input.files[0];
+      const errorElement = document.getElementById(`error-${id}`);
+      const uploadBox = input.closest(".upload-box");
 
-        if (!file) return;
+      if (!file) return;
 
-        if (!validTypes.includes(file.type)) {
-          errorElement.textContent = "Only JPG and PNG files are allowed.";
-          input.value = ""; // Clear the selected file
-          uploadBox.classList.add("error");
-        } else {
-          errorElement.textContent = "";
-          uploadBox.classList.remove("error");
+      if (!validTypes.includes(file.type)) {
+        errorElement.textContent = "Only JPG and PNG files are allowed.";
+        input.value = "";
+        uploadBox.classList.add("error");
+      } else {
+        errorElement.textContent = "";
+        uploadBox.classList.remove("error");
 
-          const direction = uploadBox.querySelector(".direction");
-          direction.textContent = `✓ ${file.name} uploaded`;
-          direction.style.color = "green";
-        }
-      });
-    }
+        const direction = uploadBox.querySelector(".direction");
+        direction.textContent = `✓ ${file.name} uploaded`;
+        direction.style.color = "green";
+      }
+    });
   });
 }
 
@@ -128,48 +66,33 @@ function populateDateDropdowns() {
     "December",
   ];
 
-  // Only populate if elements exist
-  if (monthSelect1 && monthSelect2) {
-    months.forEach((month, index) => {
-      const option1 = document.createElement("option");
-      option1.value = index + 1;
-      option1.textContent = month;
-      monthSelect1.appendChild(option1);
+  months.forEach((month, index) => {
+    const option1 = document.createElement("option");
+    option1.value = index + 1;
+    option1.textContent = month;
+    monthSelect1.appendChild(option1);
 
-      const option2 = document.createElement("option");
-      option2.value = index + 1;
-      option2.textContent = month;
-      monthSelect2.appendChild(option2);
-    });
-  }
+    const option2 = document.createElement("option");
+    option2.value = index + 1;
+    option2.textContent = month;
+    monthSelect2.appendChild(option2);
+  });
 
-  if (yearSelect1 && yearSelect2) {
-    for (let y = new Date().getFullYear(); y >= 1900; y--) {
-      const option1 = document.createElement("option");
-      option1.value = y;
-      option1.textContent = y;
-      yearSelect1.appendChild(option1);
+  for (let y = new Date().getFullYear(); y >= 1900; y--) {
+    const option1 = document.createElement("option");
+    option1.value = y;
+    option1.textContent = y;
+    yearSelect1.appendChild(option1);
 
-      const option2 = document.createElement("option");
-      option2.value = y;
-      option2.textContent = y;
-      yearSelect2.appendChild(option2);
-    }
+    const option2 = document.createElement("option");
+    option2.value = y;
+    option2.textContent = y;
+    yearSelect2.appendChild(option2);
   }
 
   function updateDays(monthSelect, yearSelect, daySelect) {
-    if (!monthSelect || !yearSelect || !daySelect) return; // Ensure elements exist
-
     const month = parseInt(monthSelect.value);
     const year = parseInt(yearSelect.value);
-    // Handle cases where month/year might not be selected yet (value is NaN)
-    if (isNaN(month) || isNaN(year) || month === 0) {
-      // month === 0 if "Select Month" is chosen after initial load
-      daySelect.innerHTML =
-        '<option value="" disabled selected>Select Day</option>';
-      return;
-    }
-
     const daysInMonth = new Date(year, month, 0).getDate();
 
     daySelect.innerHTML =
@@ -182,30 +105,23 @@ function populateDateDropdowns() {
     }
   }
 
-  // Attach listeners only if elements exist
-  if (monthSelect1 && yearSelect1 && daySelect1) {
-    monthSelect1.addEventListener("change", () =>
-      updateDays(monthSelect1, yearSelect1, daySelect1)
-    );
-    yearSelect1.addEventListener("change", () =>
-      updateDays(monthSelect1, yearSelect1, daySelect1)
-    );
-  }
+  monthSelect1.addEventListener("change", () =>
+    updateDays(monthSelect1, yearSelect1, daySelect1)
+  );
+  yearSelect1.addEventListener("change", () =>
+    updateDays(monthSelect1, yearSelect1, daySelect1)
+  );
 
-  if (monthSelect2 && yearSelect2 && daySelect2) {
-    monthSelect2.addEventListener("change", () =>
-      updateDays(monthSelect2, yearSelect2, daySelect2)
-    );
-    yearSelect2.addEventListener("change", () =>
-      updateDays(monthSelect2, yearSelect2, daySelect2)
-    );
-  }
+  monthSelect2.addEventListener("change", () =>
+    updateDays(monthSelect2, yearSelect2, daySelect2)
+  );
+  yearSelect2.addEventListener("change", () =>
+    updateDays(monthSelect2, yearSelect2, daySelect2)
+  );
 }
 
 function attachInputListeners() {
-  const inputs = document.querySelectorAll(
-    "#containers input, #containers select"
-  ); // Target inputs only within #containers
+  const inputs = document.querySelectorAll("input, select");
   inputs.forEach((input) => {
     input.addEventListener("input", () => clearError(input.id));
     input.addEventListener("change", () => clearError(input.id));
@@ -246,171 +162,54 @@ function clearError(id) {
   }
 }
 
-// Removed the old validateForm() as validateAliasAndIDs() is more comprehensive for this page.
-/*
 function validateForm() {
-  // ... (old validateForm content)
-}
-*/
-
-function handleProceedClick() {
-  const proceedBtn = document.getElementById("proceed");
-
-  // Ensure the event listener is only attached once
-  // This check is important because handleProceedClick is called inside showHideMainContent
-  // which might be called multiple times if the checkbox is toggled.
-  if (proceedBtn.dataset.listenerAttached) {
-    return;
-  }
-  proceedBtn.dataset.listenerAttached = "true"; // Mark as attached
-
-  proceedBtn.addEventListener("click", () => {
-    const checkbox = document.getElementById("yes");
-
-    if (checkbox.checked) {
-      // If "Yes" is checked, validate only required alias and ID fields
-      if (validateAliasAndIDs()) {
-        window.location.href = "update-alias2.html";
-      }
-    } else {
-      // If "Yes" is NOT checked, proceed without validating alias/ID fields
-      window.location.href = "update-alias2.html";
-    }
-  });
-}
-
-function validateAliasAndIDs() {
   let isValid = true;
-  const containers = document.getElementById("containers"); // Get the container to limit validation to visible fields
 
-  // Required alias fields - only First and Last name
-  const aliasFields = [
-    { id: "first-name", msg: "Alias first name is required" },
-    { id: "last-name", msg: "Alias last name is required" },
-    // Removed middle-name as it's not required
-  ];
-
-  aliasFields.forEach(({ id, msg }) => {
-    const el = document.getElementById(id);
-    // Only validate if the element exists and is inside the visible 'containers'
-    if (el && containers.contains(el)) {
-      if (el.value.trim() === "") {
-        showError(id, msg);
-        isValid = false;
-      }
-    }
-  });
-
-  // Required ID 1 fields - only ID Type, ID Number, and Issue Date (Month and Year)
-  const id1Fields = [
+  const requiredFields = [
+    { id: "first-name", msg: "First name is required" },
+    { id: "middle-name", msg: "Middle name is required" },
+    { id: "last-name", msg: "Last name is required" },
+    { id: "month", msg: "Month is required" },
+    { id: "day", msg: "Day is required" },
+    { id: "year", msg: "Year is required" },
+    { id: "month-id2", msg: "Month is required" },
+    { id: "day-id2", msg: "Day is required" },
+    { id: "year-id2", msg: "Year is required" },
     { id: "select-id1", msg: "ID 1 type is required" },
-    { id: "id1-num", msg: "ID 1 number is required" },
-    { id: "issue-month-id1", msg: "Issue month is required" },
-    { id: "issue-year-id1", msg: "Issue year is required" },
-    // Removed expiration date fields and day field as they're not required
-  ];
-
-  id1Fields.forEach(({ id, msg }) => {
-    const el = document.getElementById(id);
-    if (el && containers.contains(el)) {
-      // For select dropdowns, check if a valid option is selected (value is not empty)
-      if (!el.value || el.value === "" || el.value === null) {
-        showError(id, msg);
-        isValid = false;
-      }
-    }
-  });
-
-  // ID 1 file fields - front and back uploads are required
-  const id1FileFields = [
-    { id: "front-id-1", msg: "Front image of ID 1 is required" },
-    { id: "back-id-1", msg: "Back image of ID 1 is required" },
-  ];
-
-  id1FileFields.forEach(({ id, msg }) => {
-    const el = document.getElementById(id);
-    if (el && containers.contains(el)) {
-      if (!el.files || !el.files.length) {
-        showError(id, msg);
-        isValid = false;
-      }
-    }
-  });
-
-  // Required ID 2 fields - only ID Type, ID Number, and Issue Date (Month and Year)
-  const id2Fields = [
     { id: "select-id2", msg: "ID 2 type is required" },
+    { id: "id1-num", msg: "ID 1 number is required" },
     { id: "id2-num", msg: "ID 2 number is required" },
-    { id: "issue-month-id2", msg: "Issue month is required" },
-    { id: "issue-year-id2", msg: "Issue year is required" },
-    // Removed expiration date fields and day field as they're not required
   ];
 
-  id2Fields.forEach(({ id, msg }) => {
+  requiredFields.forEach(({ id, msg }) => {
     const el = document.getElementById(id);
-    if (el && containers.contains(el)) {
-      if (!el.value || el.value === "" || el.value === null) {
-        showError(id, msg);
-        isValid = false;
-      }
+    if (!el || el.value.trim() === "") {
+      showError(id, msg);
+      isValid = false;
     }
   });
 
-  // ID 2 file fields - front and back uploads are required
-  const id2FileFields = [
-    { id: "front-id-2", msg: "Front image of ID 2 is required" },
-    { id: "back-id-2", msg: "Back image of ID 2 is required" },
-  ];
-
-  id2FileFields.forEach(({ id, msg }) => {
-    const el = document.getElementById(id);
-    if (el && containers.contains(el)) {
-      if (!el.files || !el.files.length) {
-        showError(id, msg);
-        isValid = false;
-      }
+  const fileFields = ["front-id-1", "back-id-1", "front-id-2", "back-id-2"];
+  fileFields.forEach((id) => {
+    const fileInput = document.getElementById(id);
+    if (!fileInput || !fileInput.files.length) {
+      showError(id);
+      isValid = false;
     }
   });
 
   return isValid;
 }
 
-function populateDays(daySelectId, monthSelectId, yearSelectId) {
-  const daySelect = document.getElementById(daySelectId);
-  const monthSelect = document.getElementById(monthSelectId);
-  const yearSelect = document.getElementById(yearSelectId);
+function handleProceedClick() {
+  const proceedBtn = document.getElementById("proceed");
 
-  function updateDays() {
-    const month = parseInt(monthSelect.value, 10);
-    let daysInMonth;
-    if (isNaN(month)) {
-      daySelect.innerHTML =
-        '<option value="" disabled selected>Select Day</option>';
-      return;
-    }
-    if (month === 2) {
-      daysInMonth = 29;
-    } else if ([4, 6, 9, 11].includes(month)) {
-      daysInMonth = 30;
-    } else {
-      daysInMonth = 31;
-    }
-    daySelect.innerHTML =
-      '<option value="" disabled selected>Select Day</option>';
-    for (let d = 1; d <= daysInMonth; d++) {
-      const option = document.createElement("option");
-      option.value = d;
-      option.textContent = d;
-      daySelect.appendChild(option);
-    }
-  }
+  proceedBtn.addEventListener("click", () => {
+    const checkbox = document.getElementById("yes");
+    const aliasSkipped = checkbox && checkbox.checked;
 
-  monthSelect.addEventListener("change", updateDays);
+    if (aliasSkipped || validateForm()) {
+      window.location.href = "update-alias2.html";
+    }
+  });
 }
-
-document.addEventListener("DOMContentLoaded", function () {
-  populateDays("issue-day-id1", "issue-month-id1", "issue-year-id1");
-  populateDays("day", "month", "year");
-  populateDays("issue-day-id2", "issue-month-id2", "issue-year-id2");
-  populateDays("day-id2", "month-id2", "year-id2");
-});

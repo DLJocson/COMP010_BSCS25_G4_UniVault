@@ -49,8 +49,27 @@ document.addEventListener("DOMContentLoaded", function () {
     );
     const zipCode = document.querySelector(".zip-code #zip-code");
 
+    if (!personalInput.value.trim()) {
+      showError(personalInput, "Personal code is required");
+      isValid = false;
+    } else if (!/^\d{2,3}$/.test(personalInput.value.trim())) {
+      showError(personalInput, "Personal code must be 2-3 digits");
+      isValid = false;
+    }
+
     if (!phoneInput.value.trim()) {
       showError(phoneInput, "Phone number is required");
+      isValid = false;
+    } else if (!/^\d{10}$/.test(phoneInput.value.trim())) {
+      showError(phoneInput, "Phone number must be 10 digits");
+      isValid = false;
+    }
+
+    if (!homeInput.value.trim()) {
+      showError(homeInput, "Home code is required");
+      isValid = false;
+    } else if (!/^\d{2,3}$/.test(homeInput.value.trim())) {
+      showError(homeInput, "Home code must be 2-3 digits");
       isValid = false;
     }
 
@@ -71,6 +90,18 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // Address: at least one of unit, building, street, subdivision required
+    if (
+      !unitInput.value.trim() &&
+      !buildingInput.value.trim() &&
+      !streetInput.value.trim() &&
+      !subdivisionInput.value.trim()
+    ) {
+      showError(unitInput, "At least one of Unit, Building, Street, or Subdivision is required");
+      showError(buildingInput, "");
+      showError(streetInput, "");
+      showError(subdivisionInput, "");
+      isValid = false;
+    }
 
     // City, Province, Country, Zip Code are always required
     if (!cityInput.value.trim()) {
@@ -121,6 +152,18 @@ document.addEventListener("DOMContentLoaded", function () {
       );
 
       // At least one of alt unit, building, street, subdivision required
+      if (
+        (!altUnitInput || !altUnitInput.value.trim()) &&
+        (!altBuildingInput || !altBuildingInput.value.trim()) &&
+        (!altStreetInput || !altStreetInput.value.trim()) &&
+        (!altSubdivisionInput || !altSubdivisionInput.value.trim())
+      ) {
+        if (altUnitInput) showError(altUnitInput, "At least one of Unit, Building, Street, or Subdivision is required");
+        if (altBuildingInput) showError(altBuildingInput, "");
+        if (altStreetInput) showError(altStreetInput, "");
+        if (altSubdivisionInput) showError(altSubdivisionInput, "");
+        isValid = false;
+      }
 
       // City, Province, Country, Zip Code are always required for alt address
       if (altCityInput && !altCityInput.value.trim()) {
@@ -209,19 +252,110 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   });
 
-  proceedBtn.onclick = function (e) {
-    e.preventDefault();
+  if (proceedBtn) {
+    proceedBtn.onclick = function (e) {
+      e.preventDefault();
 
-    if (validateForm()) {
-      window.location.href = "registration5.html";
-    } else {
-      const firstError = document.querySelector(".error");
-      if (firstError) {
-        firstError.scrollIntoView({ behavior: "smooth", block: "center" });
-        firstError.focus();
+      // Save all relevant fields to localStorage here
+      const personalCode = document.querySelector(".phone-number-text #personal").value.trim();
+      const phoneNumber = document.querySelector(".phone-number-text #phone-num").value.trim();
+      const homeCode = document.querySelector(".home-landline-text #home").value.trim();
+      const landlineNumber = document.querySelector(".home-landline-text #landline").value.trim();
+      const emailAddress = document.querySelector(".personal-email #email").value.trim();
+
+      const unit = document.querySelector(".unit-building-text #unit").value.trim();
+      const building = document.querySelector(".unit-building-text #building").value.trim();
+      const street = document.querySelector(".street-subdivision-text #street").value.trim();
+      const subdivision = document.querySelector(".street-subdivision-text #subdivision").value.trim();
+      const barangay = document.querySelector(".barangay-city-text #barangay").value.trim();
+      const city = document.querySelector(".barangay-city-text #city").value.trim();
+      const province = document.querySelector(".province-country-text #province").value.trim();
+      const country = document.querySelector(".province-country-text #country").value.trim();
+      const zip = document.querySelector(".zip-code #zip-code").value.trim();
+
+      // Save to localStorage
+      localStorage.setItem("personalCode", personalCode);
+      localStorage.setItem("phoneNumber", phoneNumber);
+      localStorage.setItem("homeCode", homeCode);
+      localStorage.setItem("landlineNumber", landlineNumber);
+      localStorage.setItem("emailAddress", emailAddress);
+
+      localStorage.setItem("address_unit", unit);
+      localStorage.setItem("address_building", building);
+      localStorage.setItem("address_street", street);
+      localStorage.setItem("address_subdivision", subdivision);
+      localStorage.setItem("address_barangay", barangay);
+      localStorage.setItem("address_city", city);
+      localStorage.setItem("address_province", province);
+      localStorage.setItem("address_country", country);
+      localStorage.setItem("address_zip_code", zip);
+
+      // Alternate address checkbox state
+      if (isAlternativeCheckbox.checked) {
+        localStorage.setItem("alternateAddressSameAsHome", "Yes");
+        // Clear any previously saved alternate address fields
+        localStorage.removeItem("altUnit");
+        localStorage.removeItem("altBuilding");
+        localStorage.removeItem("altStreet");
+        localStorage.removeItem("altSubdivision");
+        localStorage.removeItem("altBarangay");
+        localStorage.removeItem("altCity");
+        localStorage.removeItem("altProvince");
+        localStorage.removeItem("altCountry");
+        localStorage.removeItem("altZip");
+      } else {
+        localStorage.setItem("alternateAddressSameAsHome", "No");
+        const altUnit = document.querySelector(
+          "#third-container .unit-building-text #unit"
+        ).value.trim();
+        const altBuilding = document.querySelector(
+          "#third-container .unit-building-text #building"
+        ).value.trim();
+        const altStreet = document.querySelector(
+          "#third-container .street-subdivision-text #street"
+        ).value.trim();
+        const altSubdivision = document.querySelector(
+          "#third-container .street-subdivision-text #subdivision"
+        ).value.trim();
+        const altBarangay = document.querySelector(
+          "#third-container .barangay-city-text #barangay"
+        ).value.trim();
+        const altCity = document.querySelector(
+          "#third-container .barangay-city-text #city"
+        ).value.trim();
+        const altProvince = document.querySelector(
+          "#third-container .province-country-text #province"
+        ).value.trim();
+        const altCountry = document.querySelector(
+          "#third-container .province-country-text #country"
+        ).value.trim();
+        const altZip = document.querySelector(
+          "#third-container .zip-code #zip-code"
+        ).value.trim();
+
+        // Save alternative address to localStorage
+        localStorage.setItem("altUnit", altUnit);
+        localStorage.setItem("altBuilding", altBuilding);
+        localStorage.setItem("altStreet", altStreet);
+        localStorage.setItem("altSubdivision", altSubdivision);
+        localStorage.setItem("altBarangay", altBarangay);
+        localStorage.setItem("altCity", altCity);
+        localStorage.setItem("altProvince", altProvince);
+        localStorage.setItem("altCountry", altCountry);
+        localStorage.setItem("altZip", altZip);
       }
-    }
 
-    return false;
-  };
+      if (validateForm()) {
+        window.location.href = "registration5.html";
+      } else {
+        const firstError = document.querySelector(".error");
+        if (firstError) {
+          firstError.scrollIntoView({ behavior: "smooth", block: "center" });
+          firstError.focus();
+        }
+      }
+
+      return false;
+    };
+  }
 });

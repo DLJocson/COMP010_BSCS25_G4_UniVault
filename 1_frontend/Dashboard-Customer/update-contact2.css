@@ -25,7 +25,7 @@ body {
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background: url("../assets/bg.png");
+  background: url("/assets/bg.png");
   z-index: -1;
   font-family: var(--font-family);
 }
@@ -485,22 +485,4 @@ select:focus {
   background-color: #d4edda;
   border: 1px solid #c3e6cb;
   border-radius: 5px;
-}
-
-.required-asterisk {
-  color: red;
-}
-
-#issue-month-id1,
-#issue-day-id1,
-#issue-year-id1,
-#issue-month-id2,
-#issue-day-id2,
-#issue-year-id2 {
-  border: 3px solid var(--tertiary-color);
-  border-radius: 5px;
-  width: 220px;
-  height: 50px;
-  font-size: 32px;
-  margin-bottom: 10px;
 }

@@ -3,42 +3,32 @@ document.addEventListener("DOMContentLoaded", () => {
   const checkboxes = document.querySelectorAll(
     ".second-container input[type='checkbox']"
   );
-  const errorMessage = document.getElementById("error-message"); // Div in your HTML
+  const errorMessage = document.getElementById("error-message");
 
-  // Ensure only one can be checked
   checkboxes.forEach((cb) => {
     cb.addEventListener("change", () => {
       if (cb.checked) {
+        // Uncheck all others
         checkboxes.forEach((otherCb) => {
           if (otherCb !== cb) {
             otherCb.checked = false;
           }
         });
+        errorMessage.textContent = ""; // Clear error if one is selected
       }
-      // Clear error when a checkbox is selected
-      errorMessage.textContent = "";
     });
   });
 
   proceedBtn.addEventListener("click", (e) => {
-    const checkedBoxes = Array.from(checkboxes).filter((cb) => cb.checked);
+    const oneChecked = Array.from(checkboxes).some((cb) => cb.checked);
 
-    if (checkedBoxes.length === 0) {
-      e.preventDefault();
-      errorMessage.textContent = "Please select an option.";
-      return;
-    }
-
-    const selectedIndex = Array.from(checkboxes).indexOf(checkedBoxes[0]);
-    if (selectedIndex === 1) {
+    if (!oneChecked) {
       e.preventDefault();
       errorMessage.textContent =
-        "You cannot proceed if you select the second option.";
-      return;
+        "Please select either 'I give consent' or 'I do not give consent.'";
+    } else {
+      errorMessage.textContent = "";
+      window.location.href = "update-profile5.html";
     }
-
-    // Proceed if first checkbox is selected
-    errorMessage.textContent = "";
-    window.location.href = "update-profile5.html";
   });
 });
