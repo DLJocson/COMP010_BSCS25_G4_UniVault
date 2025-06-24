@@ -811,7 +811,7 @@ body {
 }
 
 #view {
-  background-color: var(--secondary-color);
+  background-color: var(--tertiary-color);
   color: white;
   border: 0;
   cursor: pointer;
@@ -819,7 +819,7 @@ body {
 }
 
 #view:hover {
-  background-color: var(--secondary-color);
+  background-color: var(--tertiary-color);
   transform: scale(1.01);
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }

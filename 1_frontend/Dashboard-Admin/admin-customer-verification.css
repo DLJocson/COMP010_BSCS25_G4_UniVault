@@ -787,7 +787,8 @@ body {
 
 #back,
 #view,
-#reject {
+#reject,
+#confirm-closure {
   font-size: 24px;
   border-radius: 20px;
   height: 40px;
@@ -819,6 +820,20 @@ body {
 
 #view:hover {
   background-color: var(--secondary-color);
+  transform: scale(1.01);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+#confirm-closure {
+  background-color: var(--tertiary-color);
+  color: white;
+  border: 0;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s, box-shadow 0.2s;
+}
+
+#confirm-closure:hover {
+  background-color: var(--tertiary-color);
   transform: scale(1.01);
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
