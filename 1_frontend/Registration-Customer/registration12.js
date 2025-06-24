@@ -147,6 +147,7 @@ document.addEventListener("DOMContentLoaded", () => {
       'alias_id2_number': 'alias_id2_number',
       'alias_id2_issue_month': 'alias_id2_issue_month',
       'alias_id2_issue_year': 'alias_id2_issue_year',
+      'supportingDocPath': 'alias_doc_storage',
     };
     const registrationData = {};
     let fundSourceCode = null;
@@ -473,7 +474,9 @@ document.addEventListener("DOMContentLoaded", () => {
         alias_id1_type: registrationData.alias_id1_type,
         alias_id1_number: registrationData.alias_id1_number,
         alias_id2_type: registrationData.alias_id2_type,
-        alias_id2_number: registrationData.alias_id2_number
+        alias_id2_number: registrationData.alias_id2_number,
+        alias_doc_storage: registrationData.alias_doc_storage,
+        supportingDocPath: localStorage.getItem('supportingDocPath')
       });
       
       // Submit registration data
