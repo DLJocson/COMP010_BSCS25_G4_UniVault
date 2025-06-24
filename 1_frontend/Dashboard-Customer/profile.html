@@ -8,13 +8,13 @@
     />
     <title>Document</title>
     <link rel="stylesheet" href="profile.css" />
-
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=Manjari:wght@100;400;700&display=swap"
       rel="stylesheet"
     />
+    <script defer src="profile.js"></script>
   </head>
   <body>
     <div class="profile-page">
@@ -42,16 +42,18 @@
 
         <div class="wrapper">
           <nav class="nav-bar">
-            <input type="text" id="search" placeholder="Search" />
-            <div class="icon-container">
-              <img id="log-out" src="/assets/log-out-logo.png" alt="Log Out" />
+            <div class="icon-container" style="display: flex; align-items: center; gap: 8px;">
+              <button id="logout-btn" style="background: none; border: none; cursor: pointer; display: flex; align-items: center;">
+                <img id="log-out" src="/assets/log-out-logo.png" alt="Log Out" style="width: 32px; height: 32px;" />
+              </button>
+              <button id="logout-text-btn" style="background: none; color: #1f65b4; border: none; font-size: 1.2rem; font-weight: 700; cursor: pointer; text-decoration: underline; padding: 0; margin: 0;">Log out</button>
             </div>
           </nav>
 
-          <header class="header">
+          <header class="header" style="display: flex; justify-content: space-between; align-items: center; position: relative;">
             <div class="welcome-message">
-              <h1 class="welcome">
-                <span class="blue-text">Chryshella's</span> Profile
+              <h1 class="welcome" style="margin: 0;">
+                <span class="blue-text" id="profile-first-name">Joe</span>'s Profile
               </h1>
             </div>
             <div class="picture-logo">
@@ -59,35 +61,62 @@
             </div>
           </header>
           <div class="page-body">
-            <div class="personal-information-container">
-              <h1 class="title">
+            <div class="personal-information-container" style="position: relative;">
+              <h1 class="title" style="display: flex; align-items: center; justify-content: space-between; position: relative;">
                 Personal Information
-                <img
-                  onclick="location.href='update-profile1.html'"
-                  src="/assets/edit-logo.png"
-                  alt=""
-                />
+                <div id="profile-action-btns" style="display: flex; align-items: center; gap: 12px; position: relative;">
+                  <button
+                    id="edit-profile-btn"
+                    class="button"
+                    style="width: 44px; height: 44px; background: #1f65b4; color: #fff; border: none; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(0,0,0,0.08); cursor: pointer; z-index: 2; font-size: 22px; font-weight: bold; transition: background 0.2s;"
+                    title="Edit Profile"
+                  >
+                    ✎
+                  </button>
+                  <button
+                    id="edit-profile-text-btn"
+                    class="button"
+                    style="background: none; color: #1f65b4; border: none; font-size: 1.6rem; font-weight: 700; cursor: pointer; text-decoration: underline; padding: 0; margin: 0;"
+                    title="Edit Profile"
+                  >
+                    Edit Profile
+                  </button>
+                  <button
+                    id="save-profile-btn"
+                    class="button"
+                    style="width: 120px; background: #1f65b4; color: #fff; border: none; border-radius: 22px; font-size: 18px; font-weight: 600; box-shadow: 0 2px 8px rgba(0,0,0,0.08); cursor: pointer; transition: background 0.2s; display: none; position: absolute; right: 0;"
+                  >
+                    Save
+                  </button>
+                  <button
+                    id="cancel-profile-btn"
+                    class="button"
+                    style="width: 120px; background: #fff; color: #1f65b4; border: 2px solid #1f65b4; border-radius: 22px; font-size: 18px; font-weight: 600; box-shadow: 0 2px 8px rgba(0,0,0,0.08); cursor: pointer; transition: background 0.2s; display: none; position: absolute; right: 130px;"
+                  >
+                    Cancel
+                  </button>
+                </div>
               </h1>
               <h2 class="subtitle">Full Name</h2>
               <div class="full-name-container">
                 <div class="container">
                   <label for="first-name">First Name</label>
-                  <input type="text" id="first-name" />
+                  <input type="text" id="first-name" disabled />
                 </div>
 
                 <div class="container">
                   <label for="middle-name">Middle Name</label>
-                  <input type="text" id="middle-name" />
+                  <input type="text" id="middle-name" disabled />
                 </div>
 
                 <div class="container">
                   <label for="last-name">Last Name</label>
-                  <input type="text" id="last-name" />
+                  <input type="text" id="last-name" disabled />
                 </div>
 
                 <div class="container">
                   <label for="suffix-name">Suffix </label>
-                  <input type="text" id="suffix-name" />
+                  <input type="text" id="suffix-name" disabled />
                 </div>
               </div>
 
@@ -95,60 +124,53 @@
               <div class="biographical-info-container">
                 <div class="container">
                   <label for="date">Date of Birth</label>
-                  <input type="text" id="date" />
+                  <input type="text" id="date" disabled />
                 </div>
 
                 <div class="container">
                   <label for="country-of-birth">Country of Birth</label>
-                  <input type="text" id="country-of-birth" />
+                  <input type="text" id="country-of-birth" disabled />
                 </div>
 
                 <div class="container">
                   <label for="citizenship">Citizenship</label>
-                  <input type="text" id="citizenship" />
+                  <input type="text" id="citizenship" disabled />
                 </div>
 
                 <div class="container">
                   <label for="gender">Gender</label>
-                  <input type="text" id="gender" />
+                  <input type="text" id="gender" disabled />
                 </div>
 
                 <div class="container">
                   <label for="civil-status">Civil Status</label>
-                  <input type="text" id="civil-status" />
+                  <input type="text" id="civil-status" disabled />
                 </div>
 
                 <div class="container">
                   <label for="residency">Residency Status</label>
-                  <input type="text" id="residency" />
+                  <input type="text" id="residency" disabled />
                 </div>
               </div>
             </div>
 
             <div class="contact-details-container">
-              <h1 class="title">
-                Contact Details
-                <img
-                  onclick="location.href='update-contact1.html'"
-                  src="/assets/edit-logo.png"
-                  alt=""
-                />
-              </h1>
+              <h1 class="title">Contact Details</h1>
               <h2 class="subtitle">Personal Numbers and Email Address</h2>
               <div class="full-name-container">
                 <div class="container">
                   <label for="mobile-number">Personal Mobile Number</label>
-                  <input type="text" id="mobile-number" />
+                  <input type="text" id="mobile-number" disabled />
                 </div>
 
                 <div class="container">
                   <label for="landline-number">Home Landline Number</label>
-                  <input type="text" id="landline-number" />
+                  <input type="text" id="landline-number" disabled />
                 </div>
 
                 <div class="container">
                   <label for="email-address">Personal Email Address</label>
-                  <input type="text" id="email-address" />
+                  <input type="text" id="email-address" disabled />
                 </div>
               </div>
 
@@ -156,47 +178,47 @@
               <div class="home-address-container">
                 <div class="container">
                   <label for="unit">Unit</label>
-                  <input type="text" id="unit" />
+                  <input type="text" id="unit" disabled />
                 </div>
 
                 <div class="container">
                   <label for="building">Building</label>
-                  <input type="text" id="building" />
+                  <input type="text" id="building" disabled />
                 </div>
 
                 <div class="container">
                   <label for="street">Street</label>
-                  <input type="text" id="street" />
+                  <input type="text" id="street" disabled />
                 </div>
 
                 <div class="container">
                   <label for="subdivision">Subdivision</label>
-                  <input type="text" id="subdivision" />
+                  <input type="text" id="subdivision" disabled />
                 </div>
 
                 <div class="container">
                   <label for="barangay">Barangay</label>
-                  <input type="text" id="barangay" />
+                  <input type="text" id="barangay" disabled />
                 </div>
 
                 <div class="container">
                   <label for="city">City</label>
-                  <input type="text" id="city" />
+                  <input type="text" id="city" disabled />
                 </div>
 
                 <div class="container">
                   <label for="province">Province</label>
-                  <input type="text" id="province" />
+                  <input type="text" id="province" disabled />
                 </div>
 
                 <div class="container">
                   <label for="country">Country</label>
-                  <input type="text" id="country" />
+                  <input type="text" id="country" disabled />
                 </div>
 
                 <div class="container">
                   <label for="zip-code">Zip Code</label>
-                  <input type="text" id="zip-code" />
+                  <input type="text" id="zip-code" disabled />
                 </div>
               </div>
 
@@ -204,47 +226,47 @@
               <div class="alternate-address-container">
                 <div class="container">
                   <label for="alt-unit">Unit</label>
-                  <input type="text" id="alt-unit" />
+                  <input type="text" id="alt-unit" disabled />
                 </div>
 
                 <div class="container">
                   <label for="alt-building">Building</label>
-                  <input type="text" id="alt-building" />
+                  <input type="text" id="alt-building" disabled />
                 </div>
 
                 <div class="container">
                   <label for="alt-street">Street</label>
-                  <input type="text" id="alt-street" />
+                  <input type="text" id="alt-street" disabled />
                 </div>
 
                 <div class="container">
                   <label for="alt-subdivision">Subdivision</label>
-                  <input type="text" id="alt-subdivision" />
+                  <input type="text" id="alt-subdivision" disabled />
                 </div>
 
                 <div class="container">
                   <label for="alt-barangay">Barangay</label>
-                  <input type="text" id="alt-barangay" />
+                  <input type="text" id="alt-barangay" disabled />
                 </div>
 
                 <div class="container">
                   <label for="alt-city">City</label>
-                  <input type="text" id="alt-city" />
+                  <input type="text" id="alt-city" disabled />
                 </div>
 
                 <div class="container">
                   <label for="alt-province">Province</label>
-                  <input type="text" id="alt-province" />
+                  <input type="text" id="alt-province" disabled />
                 </div>
 
                 <div class="container">
                   <label for="alt-country">Country</label>
-                  <input type="text" id="alt-country" />
+                  <input type="text" id="alt-country" disabled />
                 </div>
 
                 <div class="container">
                   <label for="alt-zip-code">Zip Code</label>
-                  <input type="text" id="alt-zip-code" />
+                  <input type="text" id="alt-zip-code" disabled />
                 </div>
               </div>
             </div>
@@ -252,43 +274,43 @@
             <div class="employment-data-container">
               <h1 class="title">
                 Employment & Financial Data
-                <img
-                  src="/assets/edit-logo.png"
-                  alt=""
-                  onclick="location.href='update-work1.html'"
-                />
               </h1>
               <div class="work-details-container">
+                <div class="container">
+                  <label for="primary-employer">Employer/Business Name</label>
+                  <input type="text" id="primary-employer" disabled />
+                </div>
+
                 <div class="container">
                   <label for="work-email-address"
                     >Work/Business Email Address</label
                   >
-                  <input type="text" id="work-email-address" />
+                  <input type="text" id="work-email-address" disabled />
                 </div>
 
                 <div class="container">
                   <label for="work-landline-number">Work Landline Number</label>
-                  <input type="text" id="work-landline-number" />
+                  <input type="text" id="work-landline-number" disabled />
                 </div>
 
                 <div class="container">
                   <label for="tin-number">TIN Number</label>
-                  <input type="text" id="tin-number" />
+                  <input type="text" id="tin-number" disabled />
                 </div>
 
                 <div class="container">
                   <label for="primary-employer">Name of Primary Employer</label>
-                  <input type="text" id="primary-employer" />
+                  <input type="text" id="primary-employer" disabled />
                 </div>
 
                 <div class="container">
                   <label for="position">Position/Job Title</label>
-                  <input type="text" id="position" />
+                  <input type="text" id="position" disabled />
                 </div>
 
                 <div class="container">
-                  <label for="monthly-income">Monthly Income</label>
-                  <input type="text" id="monthly-income" />
+                  <label for="monthly-income">Gross Income</label>
+                  <input type="text" id="monthly-income" disabled />
                 </div>
               </div>
 
@@ -296,47 +318,47 @@
               <div class="work-address-container">
                 <div class="container">
                   <label for="work-unit">Unit</label>
-                  <input type="text" id="work-unit" />
+                  <input type="text" id="work-unit" disabled />
                 </div>
 
                 <div class="container">
                   <label for="work-building">Building</label>
-                  <input type="text" id="work-building" />
+                  <input type="text" id="work-building" disabled />
                 </div>
 
                 <div class="container">
                   <label for="work-street">Street</label>
-                  <input type="text" id="work-street" />
+                  <input type="text" id="work-street" disabled />
                 </div>
 
                 <div class="container">
                   <label for="work-subdivision">Subdivision</label>
-                  <input type="text" id="work-subdivision" />
+                  <input type="text" id="work-subdivision" disabled />
                 </div>
 
                 <div class="container">
                   <label for="work-barangay">Barangay</label>
-                  <input type="text" id="work-barangay" />
+                  <input type="text" id="work-barangay" disabled />
                 </div>
 
                 <div class="container">
                   <label for="work-city">City</label>
-                  <input type="text" id="work-city" />
+                  <input type="text" id="work-city" disabled />
                 </div>
 
                 <div class="container">
                   <label for="work-province">Province</label>
-                  <input type="text" id="work-province" />
+                  <input type="text" id="work-province" disabled />
                 </div>
 
                 <div class="container">
                   <label for="work-country">Country</label>
-                  <input type="text" id="work-country" />
+                  <input type="text" id="work-country" disabled />
                 </div>
 
                 <div class="container">
                   <label for="work-zip-code">Zip Code</label>
-                  <input type="text" id="work-zip-code" />
+                  <input type="text" id="work-zip-code" disabled />
                 </div>
               </div>
             </div>
@@ -344,45 +366,12 @@
             <div class="work-nature-container">
               <div class="title-container">
                 <h1 class="title">Work/Business Nature</h1>
-                <div class="button">
-                  <button
-                    onclick="location.href='update-work-nature1.html'"
-                    id="add"
-                  >
-                    +Add
-                  </button>
-                  <button class="remove-button" id="remove-work-nature">
-                    -Remove
-                  </button>
-                </div>
+                <!-- Removed +Add and -Remove buttons from Work/Business Nature section -->
               </div>
-
-              <div
-                onclick="location.href='remove-business-nature.html'"
-                class="work-business-nature-container"
-              >
+              <div class="work-business-nature-container">
                 <div class="container">
-                  <label for="work-email-address">Work/Business Nature</label>
-                  <input type="text" id="work-business-nature" />
-                </div>
-              </div>
-              <div
-                onclick="location.href='remove-business-nature.html'"
-                class="work-business-nature-container"
-              >
-                <div class="container">
-                  <label for="work-email-address">Work/Business Nature</label>
-                  <input type="text" id="work-business-nature" />
-                </div>
-              </div>
-
-              <div
-                onclick="location.href='remove-business-nature.html'"
-                class="work-business-nature-container"
-              >
-                <div class="container">
-                  <label for="work-email-address">Work/Business Nature</label>
-                  <input type="text" id="work-business-nature" />
+                  <label for="work-business-nature">Work/Business Nature</label>
+                  <input type="text" id="work-business-nature" disabled />
                 </div>
               </div>
             </div>
@@ -391,25 +380,12 @@
               <div class="fund-source-container">
                 <div class="title-container">
                   <h1 class="title">Fund Source</h1>
-                  <div class="button">
-                    <button
-                      onclick="location.href='update-fund-source1.html'"
-                      id="add"
-                    >
-                      +Add
-                    </button>
-                    <button class="remove-button" id="remove-fund-source">
-                      -Remove
-                    </button>
-                  </div>
+                  <!-- Removed +Add and -Remove buttons from Fund Source section -->
                 </div>
-                <div
-                  onclick="location.href='remove-fund-source.html'"
-                  class="source-of-fund-container"
-                >
+                <div class="source-of-fund-container">
                   <div class="container">
                     <label for="source-of-fund">Source of Funds</label>
-                    <input type="text" id="source-of-fund" />
+                    <input type="text" id="source-of-fund" disabled />
                   </div>
                 </div>
               </div>
@@ -418,36 +394,25 @@
                 <div class="alias-full-name-container">
                   <div class="title-container">
                     <h1 class="title">Aliases</h1>
-                    <div class="button">
-                      <button
-                        onclick="location.href='update-alias1.html'"
-                        id="add"
-                      >
-                        +Add
-                      </button>
-                      <button class="remove-button" id="remove-alias">
-                        -Remove
-                      </button>
+                    <!-- Removed +Add and -Remove buttons from Aliases section -->
+                    <div style="margin-top: 8px; float: right;">
+                      <input type="checkbox" id="has-alias-checkbox" disabled />
+                      <label for="has-alias-checkbox">I do not have aliases</label>
                     </div>
                   </div>
-                  <div
-                    onclick="location.href='remove-alias.html'"
-                    class="full-name-container-2"
-                  >
-                    <div class="container">
-                      <label for="alias-first-name">First Name</label>
-                      <input type="text" id="alias-first-name" />
-                    </div>
+                  <div class="container">
+                    <label for="alias-first-name">First Name</label>
+                    <input type="text" id="alias-first-name" disabled />
+                  </div>
 
-                    <div class="container">
-                      <label for="alias-middle-name">Middle Name</label>
-                      <input type="text" id="alias-middle-name" />
-                    </div>
+                  <div class="container">
+                    <label for="alias-middle-name">Middle Name</label>
+                    <input type="text" id="alias-middle-name" disabled />
+                  </div>
 
-                    <div class="container">
-                      <label for="alias-last-name">Last Name</label>
-                      <input type="text" id="alias-last-name" />
-                    </div>
+                  <div class="container">
+                    <label for="alias-last-name">Last Name</label>
+                    <input type="text" id="alias-last-name" disabled />
                   </div>
                 </div>
               </div>
@@ -456,37 +421,5 @@
         </div>
       </div>
     </div>
-
-    <script>
-      // EXISTING ONES
-      document
-        .getElementById("remove-work-nature")
-        ?.addEventListener("click", function () {
-          document
-            .querySelectorAll(".work-business-nature-container")
-            .forEach((el) => {
-              el.classList.add("active");
-            });
-        });
-
-      document
-        .getElementById("remove-fund-source")
-        ?.addEventListener("click", function () {
-          document
-            .querySelectorAll(".source-of-fund-container")
-            .forEach((el) => {
-              el.classList.add("active");
-            });
-        });
-
-      // NEW ONE
-      document
-        .getElementById("remove-alias")
-        ?.addEventListener("click", function () {
-          document.querySelectorAll(".full-name-container-2").forEach((el) => {
-            el.classList.add("active");
-          });
-        });
-    </script>
   </body>
 </html>

@@ -22,10 +22,6 @@ body {
   font-family: var(--font-family);
 }
 
-.red-text {
-  color: red;
-}
-
 .title {
   font-size: 55px;
   color: var(--primary-color);

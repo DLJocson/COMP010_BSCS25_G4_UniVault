@@ -28,7 +28,7 @@ document.addEventListener("DOMContentLoaded", () => {
         "Please select either 'I give consent' or 'I do not give consent.'";
     } else {
       errorMessage.textContent = "";
-      window.location.href = "update-profile5.html";
+      window.location.href = "update-profile7.html";
     }
   });
 });

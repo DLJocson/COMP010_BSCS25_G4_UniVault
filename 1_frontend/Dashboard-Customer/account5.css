@@ -575,6 +575,8 @@ input[type="checkbox"] {
     box-shadow 0.3s cubic-bezier(0.25, 1, 0.5, 1),
     background-color 0.3s cubic-bezier(0.25, 1, 0.5, 1),
     color 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+  margin: 32px auto 0 auto;
+  max-width: 900px;
 }
 
 .account-info-card:hover {
@@ -587,28 +589,65 @@ input[type="checkbox"] {
 .account {
   display: flex;
   align-items: center;
-  gap: 1em;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  margin-bottom: 24px;
+  padding: 24px 32px;
+  gap: 24px;
+  min-height: 120px;
 }
 
-.account-name {
+.account .account-icon {
+  flex: 0 0 80px;
   display: flex;
-  flex-direction: column;
+  align-items: center;
   justify-content: center;
-  margin: 0 1.5em;
 }
 
-.account-name .title {
-  font-size: 1em;
-  margin: 0;
-  line-height: 1.2;
+.account .account-field {
+  flex: 1 1 0;
+  min-width: 120px;
+  font-size: 1.1rem;
+  color: #222;
+  text-align: left;
+  display: flex;
+  align-items: center;
 }
 
-.top-label-2 > * {
-  text-align: center;
-  min-width: 5em;
+.account .account-field.account-type {
+  font-weight: 600;
+  color: #222;
 }
 
-.top-label-3 > * {
-  text-align: center;
-  min-width: 5em;
+.account .account-field.account-number {
+  font-family: monospace;
+  color: #1f65b4;
+}
+
+.account .account-field.account-balance {
+  color: #1f65b4;
+  font-weight: 600;
+}
+
+.account .account-field.account-status {
+  color: #009900;
+  font-weight: 500;
+}
+
+@media (max-width: 900px) {
+  .account-info-card {
+    max-width: 100%;
+    padding: 0 8px;
+  }
+  .account {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 16px;
+  }
+  .account .account-field {
+    min-width: 0;
+    width: 100%;
+  }
 }

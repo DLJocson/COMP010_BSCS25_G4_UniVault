@@ -152,90 +152,29 @@
           </div>
         </div>
       </div>
-
-      <!-- Only keep the multi-select dropdown for Source of Funds -->
       <div id="source-of" class="source-of-funds">
-        <label for="">Source(s) of Funds</label>
-        <div
-          class="dropdown-multiselect"
-          style="position: relative; display: inline-block; width: 100%"
-        >
-          <button
-            type="button"
-            id="dropdownBtn"
-            style="
-              width: 100%;
-              text-align: left;
-              padding: 8px;
-              border: 1px solid #ccc;
-              background: #fff;
-            "
-          >
-            Select Source(s) of Funds
-          </button>
-          <div
-            id="dropdownMenu"
-            style="
-              display: none;
-              position: absolute;
-              width: 100%;
-              background: #fff;
-              border: 1px solid #ccc;
-              z-index: 10;
-              max-height: 200px;
-              overflow-y: auto;
-            "
-          >
-            <label style="display: block; padding: 5px"
-              ><input type="checkbox" value="employed_fixed" /> Employed - Fixed
-              Income</label
-            >
-            <label style="display: block; padding: 5px"
-              ><input type="checkbox" value="employed_variable" /> Employed -
-              Variable Income</label
-            >
-            <label style="display: block; padding: 5px"
-              ><input type="checkbox" value="self_employed_fixed" />
-              Self-Employed - Fixed Income</label
-            >
-            <label style="display: block; padding: 5px"
-              ><input type="checkbox" value="remittances" /> Remittances</label
-            >
-            <label style="display: block; padding: 5px"
-              ><input type="checkbox" value="pension" /> Pension</label
-            >
-            <label style="display: block; padding: 5px"
-              ><input type="checkbox" value="savings_retirement" /> Personal
-              Savings / Retirement Proceeds</label
-            >
-            <label style="display: block; padding: 5px"
-              ><input type="checkbox" value="allowance" /> Allowance</label
-            >
-            <label style="display: block; padding: 5px"
-              ><input type="checkbox" value="inheritance" /> Inheritance</label
-            >
-            <label style="display: block; padding: 5px"
-              ><input type="checkbox" value="investment_income" /> Investment /
-              Dividend Income</label
-            >
-            <label style="display: block; padding: 5px"
-              ><input type="checkbox" value="rental_income" /> Rental
-              Income</label
-            >
-            <label style="display: block; padding: 5px"
-              ><input type="checkbox" value="asset_sale" /> Sale of Asset /
-              Property</label
-            >
-            <label style="display: block; padding: 5px"
-              ><input type="checkbox" value="other" /> Other Sources</label
-            >
-          </div>
-          <input
-            type="hidden"
-            id="source-of-funds-multi"
-            name="source-of-funds-multi"
-          />
-        </div>
+        <label for="">Source of Funds</label>
+        <select name="" id="source-of-funds">
+          <option value="" disabled selected>Select</option>
+          <option value="employed_fixed">Employed - Fixed Income</option>
+          <option value="employed_variable">Employed - Variable Income</option>
+          <option value="self_employed_fixed">
+            Self-Employed - Fixed Income
+          </option>
+          <option value="remittances">Remittances</option>
+          <option value="pension">Pension</option>
+          <option value="savings_retirement">
+            Personal Savings / Retirement Proceeds
+          </option>
+          <option value="allowance">Allowance</option>
+          <option value="inheritance">Inheritance</option>
+          <option value="investment_income">
+            Investment / Dividend Income
+          </option>
+          <option value="rental_income">Rental Income</option>
+          <option value="asset_sale">Sale of Asset / Property</option>
+          <option value="other">Other Sources</option>
+        </select>
         <p>Please refer to <a href="#">Instruction</a> for more information.</p>
         <div class="error-message"></div>
       </div>
@@ -472,272 +411,134 @@
             </div>
 
             <div>
-              <input
-                type="text"
-                id="remittance-purpose"
-                placeholder="Enter remittance purpose"
-              />
+              <select name="" id="remittance-purpose">
+                <option value=""></option>
+              </select>
               <div class="error-message"></div>
             </div>
           </div>
 
           <div class="business-nature">
             <label for="">Work/Business Nature</label>
-            <div
-              class="dropdown-multiselect"
-              style="position: relative; display: inline-block; width: 100%"
-            >
-              <button
-                type="button"
-                id="businessNatureDropdownBtn"
-                style="
-                  width: 100%;
-                  text-align: left;
-                  padding: 8px;
-                  border: 1px solid #ccc;
-                  background: #fff;
-                "
-              >
-                Select Work/Business Nature
-              </button>
-              <div
-                id="businessNatureDropdownMenu"
-                style="
-                  display: none;
-                  position: absolute;
-                  width: 100%;
-                  background: #fff;
-                  border: 1px solid #ccc;
-                  z-index: 10;
-                  max-height: 200px;
-                  overflow-y: auto;
-                "
-              >
-                <label style="display: block; padding: 5px"
-                  ><input type="checkbox" value="accounting" />
-                  Accounting/Auditing/Tax Practice Services</label
-                >
-                <label style="display: block; padding: 5px"
-                  ><input type="checkbox" value="legal" /> Legal Services</label
-                >
-                <label style="display: block; padding: 5px"
-                  ><input type="checkbox" value="architecture" />
-                  Architecture/Engineering</label
-                >
-                <label style="display: block; padding: 5px"
-                  ><input type="checkbox" value="consultancy" /> Other
-                  Professional Services / Consultancy / Coaching</label
-                >
-                <label style="display: block; padding: 5px"
-                  ><input type="checkbox" value="pawnshop" /> Pawnshop</label
-                >
-                <label style="display: block; padding: 5px"
-                  ><input type="checkbox" value="lending" /> Lending</label
-                >
-                <label style="display: block; padding: 5px"
-                  ><input type="checkbox" value="msb_emi" /> Money Service
-                  Business - Electronic Money Issuer</label
-                >
-                <label style="display: block; padding: 5px"
-                  ><input type="checkbox" value="msb_virtual_currency" /> Money
-                  Service Business - Virtual Currency Exchange</label
-                >
-                <label style="display: block; padding: 5px"
-                  ><input type="checkbox" value="msb_remittance" /> Money
-                  Service Business - Remittance Transfer Company</label
-                >
-                <label style="display: block; padding: 5px"
-                  ><input type="checkbox" value="msb_forex_dealer" /> Money
-                  Service Business - Foreign Exchange Dealer / Money
-                  Changer</label
-                >
-                <label style="display: block; padding: 5px"
-                  ><input type="checkbox" value="banking" /> Banking</label
-                >
-                <label style="display: block; padding: 5px"
-                  ><input type="checkbox" value="insurance" /> Insurance</label
-                >
-                <label style="display: block; padding: 5px"
-                  ><input type="checkbox" value="securities" /> Securities
-                  Broker / Dealer</label
-                >
-                <label style="display: block; padding: 5px"
-                  ><input type="checkbox" value="construction" /> Construction
-                  and Civil Engineering</label
-                >
-                <label style="display: block; padding: 5px"
-                  ><input type="checkbox" value="real_estate" /> Real Estate
-                  Brokerage and Sales</label
-                >
-                <label style="display: block; padding: 5px"
-                  ><input type="checkbox" value="media" /> Media</label
-                >
-                <label style="display: block; padding: 5px"
-                  ><input type="checkbox" value="arts" />
-                  Arts/Entertainment/Recreation</label
-                >
-                <label style="display: block; padding: 5px"
-                  ><input type="checkbox" value="sports" />
-                  Sports/eSports</label
-                >
-                <label style="display: block; padding: 5px"
-                  ><input type="checkbox" value="gambling" />
-                  Gambling/Casino/eGames</label
-                >
-                <label style="display: block; padding: 5px"
-                  ><input type="checkbox" value="healthcare" /> Healthcare
-                  (Doctor, Dentist, Nurse, Psychiatrist and others)</label
-                >
-                <label style="display: block; padding: 5px"
-                  ><input type="checkbox" value="social_work" /> Social Work /
-                  Non-Government and Non-Profit Organizations</label
-                >
-                <label style="display: block; padding: 5px"
-                  ><input type="checkbox" value="education" /> Education /
-                  Online Education</label
-                >
-                <label style="display: block; padding: 5px"
-                  ><input type="checkbox" value="ict" />
-                  Information/Communication/Telecommunication</label
-                >
-                <label style="display: block; padding: 5px"
-                  ><input type="checkbox" value="publishing" />
-                  Publishing/Printing</label
-                >
-                <label style="display: block; padding: 5px"
-                  ><input type="checkbox" value="advertising" />
-                  Advertising/Marketing</label
-                >
-                <label style="display: block; padding: 5px"
-                  ><input type="checkbox" value="tech" /> Robotics/AI/Cloud/Data
-                  Engineering/Software Development/Cybersecurity</label
-                >
-                <label style="display: block; padding: 5px"
-                  ><input type="checkbox" value="manufacturing" />
-                  Manufacturing/Packaging</label
-                >
-                <label style="display: block; padding: 5px"
-                  ><input type="checkbox" value="firearms" />
-                  Manufacturing/Trading of Firearms and Ammunition</label
-                >
-                <label style="display: block; padding: 5px"
-                  ><input type="checkbox" value="antiques" /> Art / Antiques
-                  Dealership</label
-                >
-                <label style="display: block; padding: 5px"
-                  ><input type="checkbox" value="vehicle_dealership" />
-                  Car/Boat/Plane Dealership</label
-                >
-                <label style="display: block; padding: 5px"
-                  ><input type="checkbox" value="jewelry" /> Jewelry / Precious
-                  Metals / Precious Stones Dealership</label
-                >
-                <label style="display: block; padding: 5px"
-                  ><input type="checkbox" value="retail" /> Wholesale / Retail
-                  Trade / E-Commerce / Online Selling</label
-                >
-                <label style="display: block; padding: 5px"
-                  ><input type="checkbox" value="repair" /> Repair
-                  Services</label
-                >
-                <label style="display: block; padding: 5px"
-                  ><input type="checkbox" value="transport" /> Transportation
-                  (Land, Sea and Air)</label
-                >
-                <label style="display: block; padding: 5px"
-                  ><input type="checkbox" value="shipping" /> Shipping/Cargo /
-                  Storage</label
-                >
-                <label style="display: block; padding: 5px"
-                  ><input type="checkbox" value="seafarer" /> Seaman /
-                  Seafarer</label
-                >
-                <label style="display: block; padding: 5px"
-                  ><input type="checkbox" value="agriculture" /> Agriculture /
-                  Fishing</label
-                >
-                <label style="display: block; padding: 5px"
-                  ><input type="checkbox" value="forestry" /> Forestry</label
-                >
-                <label style="display: block; padding: 5px"
-                  ><input type="checkbox" value="mining" />
-                  Mining/Quarrying</label
-                >
-                <label style="display: block; padding: 5px"
-                  ><input type="checkbox" value="electric" /> Electric
-                  Utilities</label
-                >
-                <label style="display: block; padding: 5px"
-                  ><input type="checkbox" value="oil" /> Oil/Gasoline</label
-                >
-                <label style="display: block; padding: 5px"
-                  ><input type="checkbox" value="water" /> Water
-                  Supply/Sewerage/Waste Management</label
-                >
-                <label style="display: block; padding: 5px"
-                  ><input type="checkbox" value="government" /> Public
-                  Administration / Government</label
-                >
-                <label style="display: block; padding: 5px"
-                  ><input type="checkbox" value="peace_order" /> Peace and Order
-                  (Military, Police, Fireman, Jail Warden and Others)</label
-                >
-                <label style="display: block; padding: 5px"
-                  ><input type="checkbox" value="hospitality" />
-                  Hotel/Accommodation/Restaurant/Food Services</label
-                >
-                <label style="display: block; padding: 5px"
-                  ><input type="checkbox" value="diplomatic" />
-                  Embassies/Diplomatic Services / Attached Offices</label
-                >
-                <label style="display: block; padding: 5px"
-                  ><input type="checkbox" value="travel" /> Travel / Travel
-                  Agencies</label
-                >
-                <label style="display: block; padding: 5px"
-                  ><input type="checkbox" value="employment_agency" />
-                  Employment Agency / Human Resources</label
-                >
-                <label style="display: block; padding: 5px"
-                  ><input type="checkbox" value="security_agency" /> Security
-                  Agency / Services</label
-                >
-                <label style="display: block; padding: 5px"
-                  ><input type="checkbox" value="other_services" /> Other
-                  Service Activities (Hairdresser, Manicurist, Masseuse and
-                  others)</label
-                >
-                <label style="display: block; padding: 5px"
-                  ><input type="checkbox" value="household" /> Private Household
-                  / Household Employee / Household Staff</label
-                >
-                <label style="display: block; padding: 5px"
-                  ><input type="checkbox" value="religious" /> Religious
-                  Organization</label
-                >
-                <label style="display: block; padding: 5px"
-                  ><input
-                    type="checkbox"
-                    value="designated_non_financial_business_professions"
-                  />
-                  Designated Non Financial Business And Professions
-                  (DNFBP)</label
-                >
-                <label style="display: block; padding: 5px"
-                  ><input type="checkbox" value="pogo_direct" /> Direct OGB/POGO
-                  Licensee and Authorized Gaming Agent</label
-                >
-                <label style="display: block; padding: 5px"
-                  ><input type="checkbox" value="pogo_indirect" /> Indirect
-                  OGB/POGO Allied Service Provider</label
-                >
-              </div>
-              <input
-                type="hidden"
-                id="business-nature-multi"
-                name="business-nature-multi"
-              />
-            </div>
+            <select name="" id="business-nature">
+              <option value="" hidden selected>Select</option>
+              <option value="accounting">
+                Accounting/Auditing/Tax Practice Services
+              </option>
+              <option value="legal">Legal Services</option>
+              <option value="architecture">Architecture/Engineering</option>
+              <option value="consultancy">
+                Other Professional Services / Consultancy / Coaching
+              </option>
+              <option value="pawnshop">Pawnshop</option>
+              <option value="lending">Lending</option>
+              <option value="msb_emi">
+                Money Service Business - Electronic Money Issuer
+              </option>
+              <option value="msb_virtual_currency">
+                Money Service Business - Virtual Currency Exchange
+              </option>
+              <option value="msb_remittance">
+                Money Service Business - Remittance Transfer Company
+              </option>
+              <option value="msb_forex">
+                Money Service Business - Foreign Exchange Dealer / Money Changer
+              </option>
+              <option value="banking">Banking</option>
+              <option value="insurance">Insurance</option>
+              <option value="securities">Securities Broker / Dealer</option>
+              <option value="construction">
+                Construction and Civil Engineering
+              </option>
+              <option value="real_estate">
+                Real Estate Brokerage and Sales
+              </option>
+              <option value="media">Media</option>
+              <option value="arts">Arts/Entertainment/Recreation</option>
+              <option value="sports">Sports/eSports</option>
+              <option value="gambling">Gambling/Casino/eGames</option>
+              <option value="healthcare">
+                Healthcare (Doctor, Dentist, Nurse, Psychiatrist and others)
+              </option>
+              <option value="social_work">
+                Social Work / Non-Government and Non-Profit Organizations
+              </option>
+              <option value="education">Education / Online Education</option>
+              <option value="ict">
+                Information/Communication/Telecommunication
+              </option>
+              <option value="publishing">Publishing/Printing</option>
+              <option value="advertising">Advertising/Marketing</option>
+              <option value="tech">
+                Robotics/AI/Cloud/Data Engineering/Software
+                Development/Cybersecurity
+              </option>
+              <option value="manufacturing">Manufacturing/Packaging</option>
+              <option value="firearms">
+                Manufacturing/Trading of Firearms and Ammunition
+              </option>
+              <option value="antiques">Art / Antiques Dealership</option>
+              <option value="vehicle_dealership">
+                Car/Boat/Plane Dealership
+              </option>
+              <option value="jewelry">
+                Jewelry / Precious Metals / Precious Stones Dealership
+              </option>
+              <option value="retail">
+                Wholesale / Retail Trade / E-Commerce / Online Selling
+              </option>
+              <option value="repair">Repair Services</option>
+              <option value="transport">
+                Transportation (Land, Sea and Air)
+              </option>
+              <option value="shipping">Shipping/Cargo / Storage</option>
+              <option value="seafarer">Seaman / Seafarer</option>
+              <option value="agriculture">Agriculture / Fishing</option>
+              <option value="forestry">Forestry</option>
+              <option value="mining">Mining/Quarrying</option>
+              <option value="electric">Electric Utilities</option>
+              <option value="oil">Oil/Gasoline</option>
+              <option value="water">
+                Water Supply/Sewerage/Waste Management
+              </option>
+              <option value="government">
+                Public Administration / Government
+              </option>
+              <option value="peace_order">
+                Peace and Order (Military, Police, Fireman, Jail Warden and
+                Others)
+              </option>
+              <option value="hospitality">
+                Hotel/Accommodation/Restaurant/Food Services
+              </option>
+              <option value="diplomatic">
+                Embassies/Diplomatic Services / Attached Offices
+              </option>
+              <option value="travel">Travel / Travel Agencies</option>
+              <option value="employment_agency">
+                Employment Agency / Human Resources
+              </option>
+              <option value="security_agency">
+                Security Agency / Services
+              </option>
+              <option value="other_services">
+                Other Service Activities (Hairdresser, Manicurist, Masseuse and
+                others)
+              </option>
+              <option value="household">
+                Private Household / Household Employee / Household Staff
+              </option>
+              <option value="religious">Religious Organization</option>
+              <option value="dnfbp">
+                Designated Non Financial Business And Professions (DNFBP)
+              </option>
+              <option value="pogos_direct">
+                Direct OGB/POGO Licensee and Authorized Gaming Agent
+              </option>
+              <option value="pogos_indirect">
+                Indirect OGB/POGO Allied Service Provider
+              </option>
+            </select>
             <div class="error-message"></div>
           </div>
 
@@ -791,183 +592,3 @@
     </div>
   </body>
 </html>
-<script>
-  document.addEventListener("DOMContentLoaded", function () {
-    function setEmploymentDetailsVisibility(visible) {
-      document.querySelector(".containers").style.display = visible
-        ? ""
-        : "none";
-      document.querySelector(".containers2").style.display = visible
-        ? ""
-        : "none";
-      document.getElementById("source-of").style.display = "";
-      document.getElementById("gross-inc").style.display = "";
-    }
-
-    setEmploymentDetailsVisibility(false);
-
-    const employedCheckbox = document.getElementById("yes");
-    employedCheckbox.addEventListener("change", function () {
-      setEmploymentDetailsVisibility(this.checked);
-    });
-
-    // Dropdown multiselect logic for Source of Funds
-    const dropdownBtn = document.getElementById("dropdownBtn");
-    const dropdownMenu = document.getElementById("dropdownMenu");
-    const hiddenInput = document.getElementById("source-of-funds-multi");
-
-    dropdownBtn.addEventListener("click", function (e) {
-      e.stopPropagation();
-      dropdownMenu.style.display =
-        dropdownMenu.style.display === "block" ? "none" : "block";
-    });
-
-    document.addEventListener("click", function (e) {
-      if (!dropdownBtn.contains(e.target) && !dropdownMenu.contains(e.target)) {
-        dropdownMenu.style.display = "none";
-      }
-    });
-
-    dropdownMenu.addEventListener("change", function () {
-      const checked = Array.from(
-        dropdownMenu.querySelectorAll("input[type=checkbox]:checked")
-      );
-      const values = checked.map((cb) => cb.value);
-      hiddenInput.value = values.join(",");
-      dropdownBtn.textContent = values.length
-        ? checked.map((cb) => cb.parentNode.textContent.trim()).join(", ")
-        : "Select Source(s) of Funds";
-    });
-
-    // Dropdown multiselect logic for Work/Business Nature
-    const businessNatureDropdownBtn = document.getElementById(
-      "businessNatureDropdownBtn"
-    );
-    const businessNatureDropdownMenu = document.getElementById(
-      "businessNatureDropdownMenu"
-    );
-    const businessNatureHiddenInput = document.getElementById(
-      "business-nature-multi"
-    );
-
-    businessNatureDropdownBtn.addEventListener("click", function (e) {
-      e.stopPropagation();
-      businessNatureDropdownMenu.style.display =
-        businessNatureDropdownMenu.style.display === "block" ? "none" : "block";
-    });
-
-    document.addEventListener("click", function (e) {
-      if (
-        !businessNatureDropdownBtn.contains(e.target) &&
-        !businessNatureDropdownMenu.contains(e.target)
-      ) {
-        businessNatureDropdownMenu.style.display = "none";
-      }
-    });
-
-    businessNatureDropdownMenu.addEventListener("change", function () {
-      const checked = Array.from(
-        businessNatureDropdownMenu.querySelectorAll(
-          "input[type=checkbox]:checked"
-        )
-      );
-      const values = checked.map((cb) => cb.value);
-      businessNatureHiddenInput.value = values.join(",");
-      businessNatureDropdownBtn.textContent = values.length
-        ? checked.map((cb) => cb.parentNode.textContent.trim()).join(", ")
-        : "Select Work/Business Nature";
-    });
-  });
-</script>
-
-<script>
-  document.addEventListener("DOMContentLoaded", function () {
-    function addAsterisk(label) {
-      if (!label.querySelector(".required-asterisk")) {
-        const span = document.createElement("span");
-        span.className = "required-asterisk";
-        span.textContent = "*";
-        label.appendChild(span);
-      }
-    }
-
-    // List of label texts to skip for asterisk
-    const skipAsterisk = [
-      "Are you currently employed?",
-      "Unit",
-      "Building",
-      "Street",
-      "Subdivision",
-      "Barangay",
-    ];
-
-    document.querySelectorAll("label").forEach((label) => {
-      // Skip if label text matches any in skipAsterisk
-      if (skipAsterisk.includes(label.textContent.trim())) return;
-
-      const next = label.nextElementSibling;
-      if (
-        next &&
-        (next.tagName === "INPUT" ||
-          next.tagName === "SELECT" ||
-          (next.tagName === "DIV" &&
-            next.classList.contains("dropdown-multiselect")))
-      ) {
-        addAsterisk(label);
-      }
-    });
-
-    document.querySelectorAll(".dropdown-multiselect").forEach((drop) => {
-      let prev = drop.previousElementSibling;
-      while (prev && prev.tagName !== "LABEL")
-        prev = prev.previousElementSibling;
-      if (prev && !skipAsterisk.includes(prev.textContent.trim()))
-        addAsterisk(prev);
-    });
-
-    [
-      ".unit-building",
-      ".street-subdivision",
-      ".barangay-city",
-      ".province-country",
-      ".remittance",
-    ].forEach((selector) => {
-      document.querySelectorAll(selector + " label").forEach((label) => {
-        if (!skipAsterisk.includes(label.textContent.trim()))
-          addAsterisk(label);
-      });
-    });
-
-    [
-      "#zip-code",
-      "#gross-income",
-      "#primary-employer",
-      "#tin",
-      "#work-emai",
-      "#work",
-      "#business-number",
-      "#remittance-purpose",
-      "#remittance-country",
-      "#position",
-    ].forEach((id) => {
-      const input = document.getElementById(id.replace("#", ""));
-      if (input) {
-        let label = input.parentElement.querySelector("label");
-        if (!label) {
-          let prev = input.previousElementSibling;
-          if (prev && prev.tagName === "LABEL") label = prev;
-        }
-        if (!label) {
-          let prev = input.parentElement.previousElementSibling;
-          if (prev && prev.tagName === "LABEL") label = prev;
-        }
-        if (label && !skipAsterisk.includes(label.textContent.trim()))
-          addAsterisk(label);
-      }
-    });
-
-    // Add asterisk to "Work/Business Phone Number" label
-    const phoneLabel = document.querySelector(".work-business-number > label");
-    if (phoneLabel) addAsterisk(phoneLabel);
-  });
-</script>

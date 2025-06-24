@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="registration15.css" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manjari:wght@100;400;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="add-work-nature-page">
+      <h1 class="title">Biometric</h1>
+      <div class="select-container">
+        <label>Choose Biometrics Type</label>
+        <select name="biometric-type" id="biometric-type">
+          <option value="" hidden selected>Select Biometric Type</option>
+          <option value="fingerprint">Fingerprint</option>
+          <option value="facial_recognition">Facial Recognition</option>
+          <option value="iris_scan">Iris Scan</option>
+          <option value="voice_recognition">Voice Recognition</option>
+        </select>
+        <div class="error-message"></div>
+      </div>
+
+      <div class="button">
+        <div class="cancel">
+          <button onclick="location.href='registration13.html'" id="cancel">
+            Cancel
+          </button>
+        </div>
+
+        <div class="proceed">
+          <button onclick="location.href='add-account2.html'" id="proceed">
+            Proceed
+          </button>
+        </div>
+      </div>
+      <script src="registration15.js"></script>
+    </div>
+  </body>
+</html>

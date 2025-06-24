@@ -49,11 +49,27 @@ document.addEventListener("DOMContentLoaded", function () {
     );
     const zipCode = document.querySelector(".zip-code #zip-code");
 
+    if (!personalInput.value.trim()) {
+      showError(personalInput, "Personal code is required");
+      isValid = false;
+    } else if (!/^\d{2,3}$/.test(personalInput.value.trim())) {
+      showError(personalInput, "Personal code must be 2-3 digits");
+      isValid = false;
+    }
+
     if (!phoneInput.value.trim()) {
       showError(phoneInput, "Phone number is required");
       isValid = false;
     } else if (!/^\d{10}$/.test(phoneInput.value.trim())) {
       showError(phoneInput, "Phone number must be 10 digits");
+      isValid = false;
+    }
+
+    if (!homeInput.value.trim()) {
+      showError(homeInput, "Home code is required");
+      isValid = false;
+    } else if (!/^\d{2,3}$/.test(homeInput.value.trim())) {
+      showError(homeInput, "Home code must be 2-3 digits");
       isValid = false;
     }
 
@@ -70,6 +86,31 @@ document.addEventListener("DOMContentLoaded", function () {
       isValid = false;
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailInput.value.trim())) {
       showError(emailInput, "Please enter a valid email address");
+      isValid = false;
+    }
+
+    if (!unitInput.value.trim()) {
+      showError(unitInput, "Unit is required");
+      isValid = false;
+    }
+
+    if (!buildingInput.value.trim()) {
+      showError(buildingInput, "Building is required");
+      isValid = false;
+    }
+
+    if (!streetInput.value.trim()) {
+      showError(streetInput, "Street is required");
+      isValid = false;
+    }
+
+    if (!subdivisionInput.value.trim()) {
+      showError(subdivisionInput, "Subdivision is required");
+      isValid = false;
+    }
+
+    if (!barangayInput.value.trim()) {
+      showError(barangayInput, "Barangay is required");
       isValid = false;
     }
 
@@ -121,6 +162,31 @@ document.addEventListener("DOMContentLoaded", function () {
       const altZipCode = document.querySelector(
         "#third-container .zip-code #zip-code"
       );
+
+      if (altUnitInput && !altUnitInput.value.trim()) {
+        showError(altUnitInput, "Alternate unit is required");
+        isValid = false;
+      }
+
+      if (altBuildingInput && !altBuildingInput.value.trim()) {
+        showError(altBuildingInput, "Alternate building is required");
+        isValid = false;
+      }
+
+      if (altStreetInput && !altStreetInput.value.trim()) {
+        showError(altStreetInput, "Alternate street is required");
+        isValid = false;
+      }
+
+      if (altSubdivisionInput && !altSubdivisionInput.value.trim()) {
+        showError(altSubdivisionInput, "Alternate subdivision is required");
+        isValid = false;
+      }
+
+      if (altBarangayInput && !altBarangayInput.value.trim()) {
+        showError(altBarangayInput, "Alternate barangay is required");
+        isValid = false;
+      }
 
       if (altCityInput && !altCityInput.value.trim()) {
         showError(altCityInput, "Alternate city is required");

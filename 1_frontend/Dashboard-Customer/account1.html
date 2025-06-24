@@ -33,7 +33,7 @@
       <h2>Customer Profile</h2>
       <ul style="list-style: none; padding: 0;">
         <li><b>Name:</b> <span id="customer-name"></span></li>
-        <li><b>Account Type:</b> <span id="customer-type"></span></li>
+        <!-- Removed Account Type and any static info not belonging to the current cif_number -->
       </ul>
     </div>
 
@@ -62,18 +62,18 @@
 
         <div class="wrapper">
           <nav class="nav-bar">
-            <input type="text" id="search" placeholder="Search" />
-            <div class="icon-container">
-              <img id="log-out" src="/assets/log-out-logo.png" alt="Log Out" />
+            <div class="icon-container" style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+              <img id="log-out" src="/assets/log-out-logo.png" alt="Log Out" style="width: 32px; height: 32px;" />
+              <span id="logout-text-btn" style="color: #0056b3; font-size: 20px; font-weight: 400; text-decoration: underline; cursor: pointer;">Log out</span>
             </div>
           </nav>
 
           <header class="header">
             <div class="welcome-message">
               <h1 class="welcome">
-                Welcome Back, <span class="blue-text">FirstName!</span>
+                Welcome Back, <span class="blue-text"></span>
               </h1>
-              <p>Your last login was at <span>04/06/2024 at 5:60 PM.</span></p>
+              <p>Your last login was at <span></span></p>
             </div>
             <div class="picture-logo">
               <img src="/assets/header-logo.png" alt="Header Logo" />
@@ -221,84 +221,102 @@
         </div>
       </div>
     </div>
-<<<<<<< HEAD
-    <script>
-      // Get cif_number from URL
-      const params = new URLSearchParams(window.location.search);
-      const cif_number = params.get('cif_number');
 
-      // Fetch customer info from backend and update welcome message
-      fetch(`/api/customer/${cif_number}`)
-        .then(res => res.json())
-        .then(data => {
-          if (data.customer_first_name) {
-            document.querySelector('.welcome').innerHTML =
-              `Welcome Back, <span class="blue-text">${data.customer_first_name}!</span>`;
+    <script>
+      // Get cif_number from URL path (e.g., /Dashboard-Customer/account1.html/123456)
+      function getCifNumberFromUrl() {
+        const pathParts = window.location.pathname.split('/');
+        // Find the part after 'account1.html', if present
+        const idx = pathParts.findIndex(p => p.startsWith('account1.html'));
+        if (idx !== -1 && pathParts.length > idx + 1) {
+          return pathParts[idx + 1];
+        }
+        return null;
+      }
+      const cif_number = getCifNumberFromUrl() || localStorage.getItem('cif_number');
+      // Try to get cached customer data
+      let customerData = null;
+      if (localStorage.getItem('customerData')) {
+        try {
+          const cached = JSON.parse(localStorage.getItem('customerData'));
+          if (cached && cached.cif_number == cif_number) {
+            customerData = cached;
           }
-=======
-
-    <script>
-      // Replace with actual cif_number from login/session/localStorage
-      const cif_number = localStorage.getItem('cif_number') || '1000000006';
-      fetch(`/api/customer/${cif_number}`)
-        .then((res) => res.json())
-        .then((data) => {
-          document.getElementById('customer-name').textContent =
-            [
-              data.customer_first_name,
-              data.customer_middle_name,
-              data.customer_last_name,
-              data.customer_suffix_name,
-            ]
-              .filter(Boolean)
-              .join(' ');
-          document.getElementById('customer-type').textContent = data.customer_type;
-          // Removed Username, Birth Date, Gender, Civil Status, Birth Country, Citizenship, CIF Number from display
-          // document.getElementById('customer-username').textContent = data.customer_username;
-          // document.getElementById('customer-birthdate').textContent = data.birth_date;
-          // document.getElementById('customer-gender').textContent = data.gender;
-          // document.getElementById('customer-civil').textContent = data.civil_status_code;
-          // document.getElementById('customer-birthcountry').textContent = data.birth_country;
-          // document.getElementById('customer-citizenship').textContent = data.citizenship;
-          // document.getElementById('customer-cif').textContent = data.cif_number;
-
-          // Display address fields
-          const addressFields = [
-            { label: 'Unit', value: data.address_unit },
-            { label: 'Building', value: data.address_building },
-            { label: 'Street', value: data.address_street },
-            { label: 'Subdivision', value: data.address_subdivision },
-            { label: 'Barangay', value: data.address_barangay },
-            { label: 'City', value: data.address_city },
-            { label: 'Province', value: data.address_province },
-            { label: 'Country', value: data.address_country },
-            { label: 'Zip', value: data.address_zip_code },
-            { label: 'Alternate Address Same As Home', value: data.is_alternate_address_same_as_home },
-            { label: 'Alt Unit', value: data.alt_unit },
-            { label: 'Alt Building', value: data.alt_building },
-            { label: 'Alt Street', value: data.alt_street },
-            { label: 'Alt Subdivision', value: data.alt_subdivision },
-            { label: 'Alt Barangay', value: data.alt_barangay },
-            { label: 'Alt City', value: data.alt_city },
-            { label: 'Alt Province', value: data.alt_province },
-            { label: 'Alt Country', value: data.alt_country },
-            { label: 'Alt Zip', value: data.alt_zip },
-            { label: 'Biometric Type', value: data.biometric_type },
-          ];
-          const infoDiv = document.getElementById('customer-info');
-          const ul = infoDiv.querySelector('ul');
-          addressFields.forEach(f => {
-            if (f.value) {
-              const li = document.createElement('li');
-              li.innerHTML = `<b>${f.label}:</b> <span>${f.value}</span>`;
-              ul.appendChild(li);
-            }
-          });
-        })
-        .catch((err) => {
-          document.getElementById('customer-info').textContent = 'Failed to load customer data.';
->>>>>>> main
+        } catch (e) {}
+      }
+      function displayCustomer(data) {
+        // Welcome message with real first name
+        const welcome = document.querySelector('.welcome .blue-text');
+        if (welcome) welcome.textContent = data.customer_first_name || '';
+        // Show last login time if available
+        const lastLoginSpan = document.querySelector('.welcome-message p span');
+        if (lastLoginSpan) {
+          let lastLogin = localStorage.getItem('last_login');
+          if (!lastLogin) {
+            // If not set, use now and save for next login
+            lastLogin = new Date().toLocaleString();
+            localStorage.setItem('last_login', lastLogin);
+          }
+          lastLoginSpan.textContent = lastLogin;
+        }
+        // Name in profile
+        document.getElementById('customer-name').textContent =
+          [data.customer_first_name, data.customer_middle_name, data.customer_last_name, data.customer_suffix_name]
+            .filter(Boolean).join(' ');
+        // Accounts section (replace with real data)
+        // Example: data.accounts = [{account_name, account_number, currency, balance, status, ...}]
+        const accounts = data.accounts || [];
+        const accountInfoCard = document.querySelector('.account-info-card');
+        accountInfoCard.innerHTML = '';
+        accounts.forEach(acc => {
+          const div = document.createElement('div');
+          div.className = 'account';
+          div.innerHTML = `
+            <img src="/assets/savings.png" alt="" />
+            <div class="account-name">
+              <h2 class="account-title">${acc.account_name || ''}</h2>
+              <h4>${acc.nickname || ''}</h4>
+            </div>
+            <div class="top-label-2">
+              <label>${acc.account_number ? '*******' + acc.account_number.slice(-4) : ''}</label>
+              <label class="blue-text">${acc.currency || ''}</label>
+              <label>${acc.balance ? acc.balance.toLocaleString() : ''}</label>
+            </div>
+            <div class="top-label-3">
+              <label>${acc.status || ''}</label>
+            </div>
+          `;
+          accountInfoCard.appendChild(div);
         });
+        // Account details (show first account by default)
+        const details = accounts[0] || {};
+        document.querySelector('.account-nickname textarea').value = details.nickname || '';
+        document.querySelector('.account-number textarea').value = details.account_number || '';
+        document.querySelector('.open-date textarea').value = details.open_date || '';
+        document.querySelector('.close-date textarea').value = details.close_date || '';
+        document.querySelector('.current-balance textarea').value = details.balance ? details.balance.toLocaleString() : '';
+        document.querySelector('.biometrics-type textarea').value = details.biometrics_type || '';
+      }
+      function fetchAndDisplay() {
+        fetch(`/api/customer/${cif_number}`)
+          .then(res => res.json())
+          .then((data) => {
+            // Optionally fetch accounts for this customer
+            // fetch(`/api/accounts/${cif_number}`) ...
+            // For now, assume accounts are included in data.accounts
+            localStorage.setItem('customerData', JSON.stringify(data));
+            displayCustomer(data);
+          })
+          .catch(() => {
+            document.getElementById('customer-info').textContent = 'Failed to load customer data.';
+          });
+      }
+      if (customerData) {
+        displayCustomer(customerData);
+      } else {
+        fetchAndDisplay();
+      }
     </script>
+    <script src="account1.js"></script>
   </body>
 </html>

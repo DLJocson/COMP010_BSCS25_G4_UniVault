@@ -11,10 +11,6 @@
   box-sizing: border-box;
 }
 
-.red-text {
-  color: red;
-}
-
 body {
   position: relative;
   display: flex;

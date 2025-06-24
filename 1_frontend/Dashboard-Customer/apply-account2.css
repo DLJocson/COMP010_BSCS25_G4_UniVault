@@ -486,27 +486,3 @@ select:focus {
   border: 1px solid #c3e6cb;
   border-radius: 5px;
 }
-
-.red-text {
-  color: red;
-}
-
-.required-asterisk {
-  color: red;
-}
-
-#issue-month-id1,
-#issue-day-id1,
-#issue-year-id1,
-#issue-month-id2,
-#issue-day-id2,
-#issue-year-id2 {
-  border: 3px solid var(--tertiary-color);
-  border-radius: 5px;
-  width: 220px;
-  height: 50px;
-  font-size: 32px;
-  margin-bottom: 10px;
-  padding-left: 10px;
-  font-family: "Manjari", sans-serif;
-}

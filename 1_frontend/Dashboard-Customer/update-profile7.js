@@ -53,7 +53,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!validate()) {
       e.preventDefault();
     } else {
-      window.location.href = "update-profile8.html";
+      window.location.href = "../Dashboard-Customer/profile.html";
     }
   });
 });
