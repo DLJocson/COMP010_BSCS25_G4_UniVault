@@ -356,7 +356,7 @@ function addInputListeners() {
 }
 
 function initializeFormValidation() {
-  console.log("Initializing form validation...");
+  
 
   const firstName = document.getElementById("first-name");
   const middleName = document.getElementById("middle-name");
@@ -372,7 +372,7 @@ function initializeFormValidation() {
   const proceedButton = document.getElementById("proceed");
   const residencyStatusSelect = document.getElementById("residency-status");
 
-  console.log("Proceed button found:", !!proceedButton);
+  
 
   if (!proceedButton) {
     console.error("Proceed button not found!");
@@ -492,7 +492,7 @@ function initializeFormValidation() {
 
   proceedButton.addEventListener("click", (e) => {
     e.preventDefault();
-    console.log("Proceed button clicked!");
+    
 
     const isFormValid = validateInputs();
 
@@ -515,14 +515,14 @@ function initializeFormValidation() {
         document.querySelector(".button")
       );
     } else {
-      console.log("Form has validation errors.");
+      
     }
   });
   addInputListeners();
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  console.log("DOM loaded, initializing...");
+  
   populateCountryDropdown("country");
   populateCitizenshipDropdown();
   initializeDateDropdowns();

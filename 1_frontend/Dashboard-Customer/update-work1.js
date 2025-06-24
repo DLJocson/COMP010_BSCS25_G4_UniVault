@@ -153,18 +153,18 @@ document.addEventListener("DOMContentLoaded", function () {
   function setupEventListeners() {
     // Get ALL select elements on the page
     const allSelects = document.querySelectorAll("select");
-    console.log("Found selects:", allSelects.length);
+    
 
     allSelects.forEach((select, index) => {
-      console.log(`Select ${index}: id="${select.id}"`);
+      
 
       // Add change event listener
       select.addEventListener("change", function () {
-        console.log(`SELECT CHANGED: ${this.id} = "${this.value}"`);
+        
 
         // Clear error if valid value selected
         if (this.value && this.value.trim() !== "") {
-          console.log(`Clearing error for ${this.id}`);
+          
           clearFieldError(this);
         }
       });
@@ -174,16 +174,16 @@ document.addEventListener("DOMContentLoaded", function () {
     const allInputs = document.querySelectorAll(
       'input[type="text"], input[type="email"]'
     );
-    console.log("Found inputs:", allInputs.length);
+    
 
     allInputs.forEach((input, index) => {
-      console.log(`Input ${index}: id="${input.id}"`);
+      
 
       input.addEventListener("input", function () {
-        console.log(`INPUT CHANGED: ${this.id} = "${this.value}"`);
+        
 
         if (this.value.trim()) {
-          console.log(`Clearing error for ${this.id}`);
+          
           clearFieldError(this);
         }
       });
@@ -197,13 +197,13 @@ document.addEventListener("DOMContentLoaded", function () {
   if (proceedBtn) {
     proceedBtn.onclick = function (e) {
       e.preventDefault();
-      console.log("Validating form...");
+      
 
       if (validateForm()) {
-        console.log("Form valid - redirecting");
+        
         window.location.href = "update-work2.html";
       } else {
-        console.log("Form invalid - showing errors");
+        
         const firstError = document.querySelector(".error");
         if (firstError) {
           firstError.scrollIntoView({ behavior: "smooth", block: "center" });
@@ -220,27 +220,27 @@ document.addEventListener("DOMContentLoaded", function () {
     const businessNature = document.getElementById("business-nature");
 
     if (sourceOfFunds) {
-      console.log("MANUAL SETUP: source-of-funds found");
+      
       sourceOfFunds.onchange = function () {
-        console.log("MANUAL: source-of-funds changed to:", this.value);
+        
         if (this.value && this.value.trim() !== "") {
           clearFieldError(this);
         }
       };
     } else {
-      console.log("ERROR: source-of-funds NOT FOUND");
+      
     }
 
     if (businessNature) {
-      console.log("MANUAL SETUP: business-nature found");
+      
       businessNature.onchange = function () {
-        console.log("MANUAL: business-nature changed to:", this.value);
+        
         if (this.value && this.value.trim() !== "") {
           clearFieldError(this);
         }
       };
     } else {
-      console.log("ERROR: business-nature NOT FOUND");
+      
     }
   }, 500);
 });

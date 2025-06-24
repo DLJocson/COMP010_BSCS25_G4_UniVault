@@ -88,7 +88,7 @@ body {
   border: 3px solid var(--tertiary-color);
 }
 
-#personal::placeholder {
+#phone-country-code::placeholder {
   font-size: 28px;
 }
 
@@ -110,7 +110,7 @@ body {
   font-size: 28px;
 }
 
-#personal {
+#phone-country-code {
   border-radius: 5px;
   width: 215px;
   height: 50px;
@@ -557,6 +557,10 @@ input[type="text"]:focus {
 
 .checkbox-container.success input {
   border-color: var(--primary-color);
+}
+
+input.error {
+  border-color: #ff3860 !important;
 }
 
 .checkbox-container.error input {

@@ -30,8 +30,8 @@ form.addEventListener("submit", function (event) {
 
   // Save only customer type to localStorage
   let customerType = '';
-  if (accountOwner.checked) customerType = 'account_owner';
-  if (businessOwner.checked) customerType = 'business_owner';
+  if (accountOwner.checked) customerType = 'Account Owner';
+  if (businessOwner.checked) customerType = 'Business Owner / Officer / Signatory';
   localStorage.setItem('customer_type', customerType);
 
   // Only proceed if a selection is made

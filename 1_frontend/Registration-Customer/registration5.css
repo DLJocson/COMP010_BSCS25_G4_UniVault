@@ -232,7 +232,7 @@ input[type="checkbox"] {
   font-size: 32px;
 }
 
-#zip-code {
+#work-zip-code {
   border-radius: 5px;
   width: 380px;
   height: 50px;
@@ -242,7 +242,7 @@ input[type="checkbox"] {
   border: 3px solid var(--tertiary-color);
 }
 
-#zip-code::placeholder {
+#work-zip-code::placeholder {
   font-size: 28px;
 }
 
@@ -284,7 +284,7 @@ input[type="checkbox"] {
   margin-bottom: 10px;
 }
 
-#unit {
+#work-unit {
   border-radius: 5px;
   width: 200px;
   height: 50px;
@@ -294,11 +294,11 @@ input[type="checkbox"] {
   border: 3px solid var(--tertiary-color);
 }
 
-#unit::placeholder {
+#work-unit::placeholder {
   font-size: 28px;
 }
 
-#building {
+#work-building {
   border-radius: 5px;
   width: 477px;
   height: 50px;
@@ -308,7 +308,7 @@ input[type="checkbox"] {
   border: 3px solid var(--tertiary-color);
 }
 
-#building::placeholder {
+#work-building::placeholder {
   font-size: 28px;
 }
 
@@ -321,7 +321,7 @@ input[type="checkbox"] {
   font-size: 32px;
 }
 
-#street {
+#work-street {
   border-radius: 5px;
   width: 350px;
   height: 50px;
@@ -331,11 +331,11 @@ input[type="checkbox"] {
   border: 3px solid var(--tertiary-color);
 }
 
-#street::placeholder {
+#work-street::placeholder {
   font-size: 28px;
 }
 
-#subdivision {
+#work-subdivision {
   border-radius: 5px;
   width: 350px;
   height: 50px;
@@ -345,7 +345,7 @@ input[type="checkbox"] {
   border: 3px solid var(--tertiary-color);
 }
 
-#subdivision::placeholder {
+#work-subdivision::placeholder {
   font-size: 28px;
 }
 
@@ -368,7 +368,7 @@ input[type="checkbox"] {
   font-size: 32px;
 }
 
-#barangay {
+#work-barangay {
   border-radius: 5px;
   width: 350px;
   height: 50px;
@@ -378,11 +378,11 @@ input[type="checkbox"] {
   border: 3px solid var(--tertiary-color);
 }
 
-#barangay::placeholder {
+#work-barangay::placeholder {
   font-size: 28px;
 }
 
-#city {
+#work-city {
   border-radius: 5px;
   width: 350px;
   height: 50px;
@@ -392,7 +392,7 @@ input[type="checkbox"] {
   border: 3px solid var(--tertiary-color);
 }
 
-#city::placeholder {
+#work-city::placeholder {
   font-size: 28px;
 }
 
@@ -425,7 +425,7 @@ input[type="checkbox"] {
   font-size: 32px;
 }
 
-#province {
+#work-province {
   border-radius: 5px;
   width: 350px;
   height: 50px;
@@ -435,11 +435,11 @@ input[type="checkbox"] {
   border: 3px solid var(--tertiary-color);
 }
 
-#province::placeholder {
+#work-province::placeholder {
   font-size: 28px;
 }
 
-#country {
+#work-country {
   border-radius: 5px;
   width: 350px;
   height: 50px;
@@ -449,7 +449,7 @@ input[type="checkbox"] {
   border: 3px solid var(--tertiary-color);
 }
 
-#country::placeholder {
+#work-country::placeholder {
   font-size: 28px;
 }
 
@@ -700,6 +700,54 @@ input[type="checkbox"] {
   font-size: 32px;
   margin-bottom: 10px;
   border: 3px solid var(--tertiary-color);
+}
+
+.employment-start-date {
+  display: flex;
+  font-size: 32px;
+  flex-direction: column;
+  margin-bottom: 10px;
+}
+
+.employment-start-date label {
+  font-size: 32px;
+  color: var(--primary-color);
+  margin-bottom: 10px;
+}
+
+#employment-start-date {
+  border-radius: 5px;
+  width: 735px;
+  height: 50px;
+  font-size: 32px;
+  margin-bottom: 10px;
+  border: 3px solid var(--tertiary-color);
+  padding-left: 10px;
+  font-family: var(--font-family);
+  color: var(--primary-color);
+  background: white;
+  box-sizing: border-box;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+#employment-start-date:focus {
+  border: 4px solid var(--tertiary-color);
+  color: var(--primary-color);
+  box-shadow: 0 0 3px var(--tertiary-color);
+  outline: none;
+  animation: inputFocusPop 0.2s;
+}
+
+#employment-start-date:hover {
+  border-color: #5c95ec;
+  box-shadow: 0 4px 10px rgba(0, 114, 216, 0.1);
+}
+
+.employment-start-date small {
+  color: #666;
+  font-size: 20px;
+  margin-top: 5px;
+  font-style: italic;
 }
 
 .gross-income {

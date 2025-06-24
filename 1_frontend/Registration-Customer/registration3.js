@@ -1,6 +1,5 @@
 const config = {
-  cUrl: "https://api.countrystatecity.in/v1/countries",
-  ckey: "NHhvOEcyWk50N2Vna3VFTE00bFp3MjFKR0ZEOUhkZlg4RTk1MlJlaA==",
+  cUrl: "/api/countries",
 };
 
 function populateCountryDropdown(selectId) {
@@ -10,21 +9,40 @@ function populateCountryDropdown(selectId) {
     return;
   }
 
-  fetch(config.cUrl, {
-    headers: { "X-CSCAPI-KEY": config.ckey },
-  })
-    .then((res) => res.json())
+  console.log(`Starting to populate countries for ${selectId}...`);
+  console.log(`Fetching from: ${config.cUrl}`);
+  
+  fetch(config.cUrl)
+    .then((res) => {
+      console.log(`Response status: ${res.status}`);
+      if (!res.ok) {
+        throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+      }
+      return res.json();
+    })
     .then((data) => {
+      console.log(`Received ${data.length} countries`);
+      // Clear existing options except the first one
+      const options = selectElement.querySelectorAll('option:not(:first-child)');
+      options.forEach(option => option.remove());
+      
       data.forEach((country) => {
         const option = document.createElement("option");
         option.value = country.iso2;
         option.textContent = country.name;
         selectElement.appendChild(option);
       });
+      console.log(`Successfully populated ${data.length} countries for ${selectId}`);
     })
-    .catch((error) =>
-      console.error(`Error loading countries for ${selectId}:`, error)
-    );
+    .catch((error) => {
+      console.error(`Error loading countries for ${selectId}:`, error);
+      // Add an error option to make it visible something went wrong
+      const errorOption = document.createElement("option");
+      errorOption.value = "";
+      errorOption.textContent = "Error loading countries";
+      errorOption.disabled = true;
+      selectElement.appendChild(errorOption);
+    });
 }
 
 function populateCitizenshipDropdown() {
@@ -235,6 +253,20 @@ function populateCitizenshipDropdown() {
   });
 }
 
+// Age calculation function (global scope)
+function calculateAge(birthYear, birthMonth, birthDay) {
+  const today = new Date();
+  const birthDate = new Date(birthYear, birthMonth - 1, birthDay); // Month is 0-indexed
+  let age = today.getFullYear() - birthDate.getFullYear();
+  const monthDiff = today.getMonth() - birthDate.getMonth();
+  
+  if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+    age--;
+  }
+  
+  return age;
+}
+
 function initializeDateDropdowns() {
   const monthSelect = document.getElementById("month");
   const daySelect = document.getElementById("day");
@@ -299,8 +331,68 @@ function initializeDateDropdowns() {
     populateDays(daysInMonth);
   }
 
-  monthSelect.addEventListener("change", updateDays);
-  yearSelect.addEventListener("change", updateDays);
+  // Age validation function to be used in change listeners
+  const validateAgeOnChange = () => {
+    if (monthSelect.value && daySelect.value && yearSelect.value) {
+      const age = calculateAge(
+        parseInt(yearSelect.value),
+        parseInt(monthSelect.value),
+        parseInt(daySelect.value)
+      );
+      
+      const existingAgeWarning = document.querySelector('.age-warning');
+      
+      if (age < 18) {
+        if (!existingAgeWarning) {
+          const ageWarning = document.createElement('div');
+          ageWarning.className = 'age-warning';
+          ageWarning.style.cssText = `
+            background: #ffe6e6;
+            border: 2px solid #ff3860;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            color: #d32f2f;
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+            animation: fadeInDown 0.5s;
+          `;
+          ageWarning.innerHTML = `
+            <strong>⚠️ Age Restriction</strong><br>
+            You must be at least 18 years old to open a bank account.<br>
+            Current age: ${age} years old<br>
+            <small style="font-weight: normal;">Please verify your birth date is correct.</small>
+          `;
+          
+          const dateContainer = document.querySelector('.date-container');
+          dateContainer.parentNode.insertBefore(ageWarning, dateContainer.nextSibling);
+        } else {
+          // Update existing warning with current age
+          existingAgeWarning.innerHTML = `
+            <strong>⚠️ Age Restriction</strong><br>
+            You must be at least 18 years old to open a bank account.<br>
+            Current age: ${age} years old<br>
+            <small style="font-weight: normal;">Please verify your birth date is correct.</small>
+          `;
+        }
+      } else {
+        if (existingAgeWarning) {
+          existingAgeWarning.remove();
+        }
+      }
+    }
+  };
+
+  monthSelect.addEventListener("change", () => {
+    updateDays();
+    validateAgeOnChange();
+  });
+  yearSelect.addEventListener("change", () => {
+    updateDays();
+    validateAgeOnChange();
+  });
+  daySelect.addEventListener("change", validateAgeOnChange);
 
   populateDays();
 }
@@ -356,7 +448,7 @@ function addInputListeners() {
 }
 
 function initializeFormValidation() {
-  console.log("Initializing form validation...");
+  
 
   const firstName = document.getElementById("first-name");
   const middleName = document.getElementById("middle-name");
@@ -372,7 +464,7 @@ function initializeFormValidation() {
   const proceedButton = document.getElementById("proceed");
   const residencyStatusSelect = document.getElementById("residency-status");
 
-  console.log("Proceed button found:", !!proceedButton);
+  
 
   if (!proceedButton) {
     console.error("Proceed button not found!");
@@ -417,8 +509,9 @@ function initializeFormValidation() {
       setSuccess(firstName);
     }
 
-    if (!middleName.value.trim()) {
-      setError(middleName, "Middle Name is required");
+    // Middle name is optional
+    if (middleName.value.trim() && middleName.value.trim().length < 2) {
+      setError(middleName, "Middle Name must be at least 2 characters if provided");
       isValid = false;
     } else {
       setSuccess(middleName);
@@ -450,6 +543,59 @@ function initializeFormValidation() {
       isValid = false;
     } else {
       setSuccess(yearSelect);
+    }
+
+    // Age validation - must be 18 or older
+    if (monthSelect.value && daySelect.value && yearSelect.value) {
+      const age = calculateAge(
+        parseInt(yearSelect.value),
+        parseInt(monthSelect.value),
+        parseInt(daySelect.value)
+      );
+      
+      
+      
+      if (age < 18) {
+        setError(yearSelect, "You must be at least 18 years old to register");
+        isValid = false;
+        
+        // Show additional warning message
+        const existingAgeWarning = document.querySelector('.age-warning');
+        if (existingAgeWarning) {
+          existingAgeWarning.remove();
+        }
+        
+        const ageWarning = document.createElement('div');
+        ageWarning.className = 'age-warning';
+        ageWarning.style.cssText = `
+          background: #ffe6e6;
+          border: 2px solid #ff3860;
+          border-radius: 8px;
+          padding: 15px;
+          margin: 15px 0;
+          color: #d32f2f;
+          font-size: 18px;
+          font-weight: bold;
+          text-align: center;
+          animation: fadeInDown 0.5s;
+        `;
+        ageWarning.innerHTML = `
+          <strong>⚠️ Age Restriction</strong><br>
+          You must be at least 18 years old to open a bank account.<br>
+          Current age: ${age} years old<br>
+          <small style="font-weight: normal;">Please verify your birth date is correct.</small>
+        `;
+        
+        const dateContainer = document.querySelector('.date-container');
+        dateContainer.parentNode.insertBefore(ageWarning, dateContainer.nextSibling);
+      } else {
+        // Remove age warning if age is valid
+        const existingAgeWarning = document.querySelector('.age-warning');
+        if (existingAgeWarning) {
+          existingAgeWarning.remove();
+        }
+        setSuccess(yearSelect);
+      }
     }
 
     if (!countrySelect.value) {
@@ -492,7 +638,7 @@ function initializeFormValidation() {
 
   proceedButton.addEventListener("click", (e) => {
     e.preventDefault();
-    console.log("Proceed button clicked!");
+    
 
     const isFormValid = validateInputs();
 
@@ -527,14 +673,14 @@ function initializeFormValidation() {
         document.querySelector(".button")
       );
     } else {
-      console.log("Form has validation errors.");
+      
     }
   });
   addInputListeners();
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  console.log("DOM loaded, initializing...");
+  
   populateCountryDropdown("country");
   populateCitizenshipDropdown();
   initializeDateDropdowns();
@@ -574,19 +720,7 @@ document.getElementById("year").addEventListener("change", function () {
   }
 });
 
-const proceedBtn = document.getElementById("proceed");
-if (proceedBtn) {
-  proceedBtn.onclick = function (e) {
-    // Save all relevant fields to localStorage here
-    // Example: localStorage.setItem('birth_date', birthDateInput.value);
-    // Add similar lines for all fields on this page
-    localStorage.setItem('birth_date', `${document.getElementById("year").value}-${document.getElementById("month").value}-${document.getElementById("day").value}`);
-    localStorage.setItem('gender', document.getElementById("gender").value);
-    localStorage.setItem('civil_status_code', document.getElementById("civil-status").value);
-    localStorage.setItem('birth_country', document.getElementById("country").value);
-    localStorage.setItem('citizenship', document.getElementById("citizenship").value);
-  };
-}
+
 
 document.addEventListener("DOMContentLoaded", function () {
   // AUTO-FILL TEST DATA (remove/comment out for production)

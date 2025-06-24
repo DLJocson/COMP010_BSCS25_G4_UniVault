@@ -59,14 +59,5 @@ document.addEventListener("DOMContentLoaded", () => {
     };
   }
 
-  // AUTO-FILL TEST DATA (remove/comment out for production)
-  // Simulate all checkboxes as 'yes' for demo
-  document
-    .querySelectorAll(
-      '.checkbox input[type="checkbox"], .third-checkbox input[type="checkbox"], .fourth-checkbox input[type="checkbox"]'
-    )
-    .forEach((cb, i) => {
-      if (cb.classList.contains("yes")) cb.checked = true;
-      else cb.checked = false;
-    });
+  // Production ready - no auto-fill test data
 });

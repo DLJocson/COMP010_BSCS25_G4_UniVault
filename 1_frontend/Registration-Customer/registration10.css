@@ -26,16 +26,19 @@ body {
   font-family: var(--font-family);
 }
 
-.data-privacy-consent-page {
+.issuance-consent-page {
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  height: 1450px;
-  width: 1500px;
-  padding: 50px 50px;
+  width: 1000px;
+  padding-left: 70px;
+  padding-right: 70px;
+  padding-top: 70px;
+  padding-bottom: 70px;
+  border-radius: 30px;
   background-color: white;
-  box-shadow: 0 5px 5px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
 }
 
 .title {
@@ -141,46 +144,41 @@ input[type="checkbox"] {
   width: 100%;
 }
 
-input[type="checkbox"] {
-  width: 30px;
-  height: 30px;
-}
-
 /* Fade-in animation for the main container */
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(40px);}
-  to { opacity: 1; transform: translateY(0);}
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-.data-privacy-consent-page {
+.issuance-consent-page {
   animation: fadeIn 0.8s ease;
 }
 
-/* Slide-in for title */
-@keyframes slideInLeft {
-  from { opacity: 0; transform: translateX(-60px);}
-  to { opacity: 1; transform: translateX(0);}
+/* Button press animation */
+.button button:active {
+  transform: scale(0.97);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.12);
 }
 
-.title {
-  animation: slideInLeft 0.7s 0.2s both;
+/* Checkbox check animation */
+input[type="checkbox"] {
+  transition: accent-color 0.3s, box-shadow 0.2s;
+}
+input[type="checkbox"]:focus {
+  box-shadow: 0 0 0 2px var(--tertiary-color, #0072d8);
 }
 
-/* Fade-in for containers */
-.first-container, .second-container {
-  opacity: 0;
-  animation: fadeIn 0.7s 0.4s forwards;
+/* Error message fade-in */
+@keyframes errorFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
-
-/* Animate checkboxes on hover */
-input[type="checkbox"]:hover {
-  transform: scale(1.15);
-  transition: transform 0.2s;
-}
-
-/* Button pop effect on hover */
-.button button:hover {
-  transform: translateY(-3px) scale(1.04);
-  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
-  transition: transform 0.2s, box-shadow 0.2s;
+.error-message {
+  animation: errorFadeIn 0.5s;
 }

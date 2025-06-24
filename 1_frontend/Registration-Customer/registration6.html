@@ -109,12 +109,12 @@
             </div>
           </div>
 
-          <h2 class="subtitle">ID 1 Expiration Date</h2>
+          <h2 class="subtitle">ID 1 Expiration Date (Optional)</h2>
           <div class="date-container">
             <div class="date">
               <label for="month">Month</label>
               <select id="month">
-                <option value="" disabled selected>Select Month</option>
+                <option value="" disabled selected>Select Month (Optional)</option>
               </select>
               <div class="error-message" id="error-month"></div>
             </div>
@@ -217,7 +217,7 @@
           </div>
 
           <div class="id2-expiration">
-            <h2 class="subtitle">ID 2 Expiration Date</h2>
+            <h2 class="subtitle">ID 2 Expiration Date (Optional)</h2>
             <div class="date-container">
               <div class="date">
                 <label for="month-id2">Month</label>
@@ -290,12 +290,50 @@
         </div>
       </div>
 
+      <script src="../shared/upload-utils.js"></script>
       <script src="registration6.js"></script>
     </div>
   </body>
 </html>
 
 <script>
+  function getAliasDocTypeCode(displayName) {
+    // Normalize input
+    const key = displayName.trim().toLowerCase();
+    const map = {
+      "driver's license": "A01",
+      "passport": "A02",
+      "new philippine passport": "A02",
+      "old philippine passport": "A02", 
+      "sss id": "A03",
+      "philhealth id": "A04",
+      "tin id": "A05",
+      "voter's id": "A06",
+      "senior citizen id": "A07",
+      "pwd id": "A08",
+      "postal id": "A09",
+      "professional id": "A10",
+      "company id": "A11",
+      "school id": "A12",
+      "barangay id": "A13",
+      "umid": "A14",
+      "prc id": "A15",
+      "gsis id": "A16",
+      "philsys id": "A17",
+      "owwa id": "A18",
+      "ofw id": "A19",
+      "other government id": "A20",
+      "ibp id": "A10",
+      "marina id": "A20",
+      "gov't / gocc id": "A20",
+      "government office and gocc id": "A20",
+      "dswd certification": "A20",
+      "ncwdp certification": "A20",
+      "seaman's book": "A20"
+    };
+    return map[key] || "A20"; // Default to "Other Government ID"
+  }
+
   function addIdOptions(selectId) {
     const options = [
       "PhilSys ID",
@@ -365,11 +403,24 @@
     while (select.options.length > 1) {
       select.remove(1);
     }
-    for (let year = currentYear; year >= 1900; year--) {
-      const option = document.createElement("option");
-      option.value = year;
-      option.textContent = year;
-      select.appendChild(option);
+    
+    // Check if this is an issue year (past) or expiry year (future)
+    if (selectId.includes('issue-year')) {
+      // Issue years: past years (current year down to 1900)
+      for (let year = currentYear; year >= 1900; year--) {
+        const option = document.createElement("option");
+        option.value = year;
+        option.textContent = year;
+        select.appendChild(option);
+      }
+    } else {
+      // Expiry years: future years (current year up to 2050)
+      for (let year = 2050; year >= currentYear; year--) {
+        const option = document.createElement("option");
+        option.value = year;
+        option.textContent = year;
+        select.appendChild(option);
+      }
     }
   }
 

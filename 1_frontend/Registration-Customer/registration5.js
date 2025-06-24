@@ -132,22 +132,23 @@ document.addEventListener("DOMContentLoaded", function () {
         regexMessage: "Business number must be 10-15 digits",
       },
       { id: "tin", name: "TIN" },
-      { id: "zip-code", name: "Zip code" },
+      { id: "work-zip-code", name: "Work zip code" },
       {
-        id: "work-emai",
+        id: "work-email",
         name: "Work email",
         regex: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
         regexMessage: "Please enter a valid email address",
       },
       { id: "primary-employer", name: "Primary employer" },
-      { id: "unit", name: "Unit" },
-      { id: "building", name: "Building" },
-      { id: "street", name: "Street" },
-      { id: "subdivision", name: "Subdivision" },
-      { id: "barangay", name: "Barangay" },
-      { id: "city", name: "City" },
-      { id: "province", name: "Province" },
-      { id: "country", name: "Country" },
+      { id: "employment-start-date", name: "Employment start date", required: false },
+      { id: "work-unit", name: "Work Unit" },
+      { id: "work-building", name: "Work Building" },
+      { id: "work-street", name: "Work Street" },
+      { id: "work-subdivision", name: "Work Subdivision" },
+      { id: "work-barangay", name: "Work Barangay" },
+      { id: "work-city", name: "Work City" },
+      { id: "work-province", name: "Work Province" },
+      { id: "work-country", name: "Work Country" },
     ];
 
     elements.forEach(({ id, name, regex, regexMessage }) => {
@@ -203,18 +204,18 @@ document.addEventListener("DOMContentLoaded", function () {
   function setupEventListeners() {
     // Get ALL select elements on the page
     const allSelects = document.querySelectorAll("select");
-    console.log("Found selects:", allSelects.length);
+
 
     allSelects.forEach((select, index) => {
-      console.log(`Select ${index}: id="${select.id}"`);
+
 
       // Add change event listener
       select.addEventListener("change", function () {
-        console.log(`SELECT CHANGED: ${this.id} = "${this.value}"`);
+
 
         // Clear error if valid value selected
         if (this.value && this.value.trim() !== "") {
-          console.log(`Clearing error for ${this.id}`);
+
           clearFieldError(this);
         }
       });
@@ -224,16 +225,16 @@ document.addEventListener("DOMContentLoaded", function () {
     const allInputs = document.querySelectorAll(
       'input[type="text"], input[type="email"]'
     );
-    console.log("Found inputs:", allInputs.length);
+    
 
     allInputs.forEach((input, index) => {
-      console.log(`Input ${index}: id="${input.id}"`);
+      
 
       input.addEventListener("input", function () {
-        console.log(`INPUT CHANGED: ${this.id} = "${this.value}"`);
+        
 
         if (this.value.trim()) {
-          console.log(`Clearing error for ${this.id}`);
+
           clearFieldError(this);
         }
       });
@@ -268,7 +269,7 @@ document.addEventListener("DOMContentLoaded", function () {
   if (proceedBtn) {
     proceedBtn.onclick = function (e) {
       e.preventDefault();
-      console.log("Validating form...");
+      
 
       // Save all relevant fields to localStorage here
       const fieldsToSave = [
@@ -283,17 +284,18 @@ document.addEventListener("DOMContentLoaded", function () {
         "work",
         "business-number",
         "tin",
-        "zip-code",
-        "work-emai",
+        "work-zip-code",
+        "work-email",
         "primary-employer",
-        "unit",
-        "building",
-        "street",
-        "subdivision",
-        "barangay",
-        "city",
-        "province",
-        "country",
+        "employment-start-date",
+        "work-unit",
+        "work-building", 
+        "work-street",
+        "work-subdivision",
+        "work-barangay",
+        "work-city",
+        "work-province",
+        "work-country",
       ];
 
       fieldsToSave.forEach((fieldId) => {
@@ -339,10 +341,10 @@ document.addEventListener("DOMContentLoaded", function () {
       }
 
       if (enhancedValidateForm()) {
-        console.log("Form valid - redirecting");
+        
         window.location.href = "registration6.html";
       } else {
-        console.log("Form invalid - showing errors");
+        
         const firstError = document.querySelector(".error");
         if (firstError) {
           firstError.scrollIntoView({ behavior: "smooth", block: "center" });
@@ -359,27 +361,27 @@ document.addEventListener("DOMContentLoaded", function () {
     const businessNature = document.getElementById("business-nature");
 
     if (sourceOfFunds) {
-      console.log("MANUAL SETUP: source-of-funds found");
+      
       sourceOfFunds.onchange = function () {
-        console.log("MANUAL: source-of-funds changed to:", this.value);
+        
         if (this.value && this.value.trim() !== "") {
           clearFieldError(this);
         }
       };
     } else {
-      console.log("ERROR: source-of-funds NOT FOUND");
+      
     }
 
     if (businessNature) {
-      console.log("MANUAL SETUP: business-nature found");
+      
       businessNature.onchange = function () {
-        console.log("MANUAL: business-nature changed to:", this.value);
+        
         if (this.value && this.value.trim() !== "") {
           clearFieldError(this);
         }
       };
     } else {
-      console.log("ERROR: business-nature NOT FOUND");
+      
     }
   }, 500);
 });
@@ -411,7 +413,7 @@ function enhancedValidateForm() {
 if (proceedBtn) {
   proceedBtn.onclick = function (e) {
     e.preventDefault();
-    console.log("Validating form...");
+    
 
     // Save all relevant fields to localStorage here
     const fieldsToSave = [
@@ -426,17 +428,18 @@ if (proceedBtn) {
       "work",
       "business-number",
       "tin",
-      "zip-code",
+      "work-zip-code",
       "work-email",
       "primary-employer",
-      "unit",
-      "building",
-      "street",
-      "subdivision",
-      "barangay",
-      "city",
-      "province",
-      "country",
+      "employment-start-date",
+      "work-unit",
+      "work-building",
+      "work-street", 
+      "work-subdivision",
+      "work-barangay",
+      "work-city",
+      "work-province",
+      "work-country",
     ];
 
     // Save single-value fields
@@ -444,7 +447,7 @@ if (proceedBtn) {
       const field = document.getElementById(fieldId);
       if (field && field.offsetParent !== null) {
         localStorage.setItem(fieldId, field.value);
-        console.log(`Saved ${fieldId}:`, field.value);
+        
       }
     });
 
@@ -456,7 +459,7 @@ if (proceedBtn) {
       const selected = Array.from(sourceOfFundsMulti.selectedOptions).map(opt => opt.value);
       sourceOfFundsMultiValue = selected.join(",");
       localStorage.setItem("source-of-funds-multi", sourceOfFundsMultiValue);
-      console.log("Saved source-of-funds-multi (native):", sourceOfFundsMultiValue);
+      
     } else {
       // Custom multi-checkbox dropdown
       const dropdownMenu = document.getElementById("dropdownMenu");
@@ -465,7 +468,7 @@ if (proceedBtn) {
         const values = checked.map(cb => cb.value);
         sourceOfFundsMultiValue = values.join(",");
         localStorage.setItem("source-of-funds-multi", sourceOfFundsMultiValue);
-        console.log("Saved source-of-funds-multi (custom):", sourceOfFundsMultiValue);
+        
       }
     }
 
@@ -475,7 +478,7 @@ if (proceedBtn) {
       const selected = Array.from(businessNatureMulti.selectedOptions).map(opt => opt.value);
       const value = selected.join(",");
       localStorage.setItem("business-nature-multi", value);
-      console.log("Saved business-nature-multi (native):", value);
+      
     } else {
       // Custom multi-checkbox dropdown for business nature
       const dropdownMenu = document.getElementById("businessNatureDropdownMenu");
@@ -484,7 +487,7 @@ if (proceedBtn) {
         const values = checked.map(cb => cb.value);
         const value = values.join(",");
         localStorage.setItem("business-nature-multi", value);
-        console.log("Saved business-nature-multi (custom):", value);
+        
       }
     }
 

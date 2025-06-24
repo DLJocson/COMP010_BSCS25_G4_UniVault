@@ -3,105 +3,126 @@ document.addEventListener("DOMContentLoaded", () => {
   attachInputListeners();
   handleFileUploadValidation();
   handleProceedClick();
-  setupImagePreviews();
+  
+  // Add real-time duplicate ID type validation
+  const id1Select = document.getElementById("select-id1");
+  const id2Select = document.getElementById("select-id2");
+  
+  function checkDuplicateIdTypes() {
+    const id1Type = id1Select?.value;
+    const id2Type = id2Select?.value;
+    
+    if (id1Type && id2Type && id1Type === id2Type) {
+      showError("select-id2", "ID 2 type must be different from ID 1 type");
+    } else {
+      clearError("select-id2");
+    }
+  }
+  
+  if (id1Select) id1Select.addEventListener("change", checkDuplicateIdTypes);
+  if (id2Select) id2Select.addEventListener("change", checkDuplicateIdTypes);
 });
 
 function handleFileUploadValidation() {
-  const validTypes = ["image/jpeg", "image/png"];
-  const fileInputs = ["front-id-1", "back-id-1", "front-id-2", "back-id-2", "supporting-doc"];
+  // Initialize standardized upload handler
+  const uploadHandler = new ImageUploadHandler();
+  const imageInputs = ["front-id-1", "back-id-1", "front-id-2", "back-id-2"];
+  
+  // Initialize image uploads with the standardized handler
+  uploadHandler.initializeUploads(imageInputs);
+  
+  // Handle supporting document separately (allows PDF)
+  const supportingDocInput = document.getElementById("supporting-doc");
+  if (supportingDocInput) {
+    setupSupportingDocUpload(supportingDocInput);
+  }
+  
+  // Store reference for validation
+  window.uploadHandler = uploadHandler;
+}
 
-  fileInputs.forEach((id) => {
-    const input = document.getElementById(id);
-    if (input) {
-      input.addEventListener("change", async () => {
-        const file = input.files[0];
-        const errorElement = document.getElementById(`error-${id}`);
-        const uploadBox = input.closest(".upload-box");
-        if (!file) return;
-        // For supporting-doc, allow PDF too
-        if (id === "supporting-doc") {
-          if (!["image/jpeg", "image/png", "application/pdf"].includes(file.type)) {
-            errorElement.textContent = "Only JPG, PNG, or PDF files are allowed.";
-            input.value = "";
-            uploadBox.classList.add("error");
-            return;
-          }
-        } else {
-          if (!validTypes.includes(file.type)) {
-            errorElement.textContent = "Only JPG and PNG files are allowed.";
-            input.value = "";
-            uploadBox.classList.add("error");
-            return;
-          }
-        }
-        errorElement.textContent = "";
-        uploadBox.classList.remove("error");
-        const direction = uploadBox.querySelector(".direction");
-        direction.textContent = `Uploading ${file.name}...`;
-        direction.style.color = "#007bff";
-        // Upload file to backend
-        const formData = new FormData();
-        formData.append("file", file);
-        formData.append("field", id); // Optional: send field name
-        try {
-          const response = await fetch("/upload", {
-            method: "POST",
-            body: formData
-          });
-          if (!response.ok) throw new Error("Upload failed");
-          const data = await response.json();
-          if (data && data.filePath) {
-            localStorage.setItem(id + '_path', data.filePath);
-            direction.textContent = `✓ ${file.name} uploaded`;
-            direction.style.color = "green";
-          } else {
-            throw new Error("No file path returned");
-          }
-        } catch (err) {
-          errorElement.textContent = "Upload failed. Please try again.";
-          direction.textContent = "Upload failed.";
-          direction.style.color = "red";
-          localStorage.setItem(id + '_path', null);
-        }
-        // Save file name for reference (not uploaded)
-        localStorage.setItem(id + '_filename', file.name);
-        // Show preview for images
-        if (id !== "supporting-doc" && file.type.startsWith('image/')) {
-          const preview = document.getElementById('preview-' + id) || (() => {
-            const img = document.createElement('img');
-            img.id = 'preview-' + id;
-            img.style.display = 'none';
-            img.style.maxWidth = '200px';
-            img.style.marginTop = '10px';
-            input.parentNode.insertBefore(img, input.nextSibling);
-            return img;
-          })();
-          preview.src = URL.createObjectURL(file);
-          preview.style.display = 'block';
-        }
+// Special handler for supporting document (allows PDF)
+function setupSupportingDocUpload(input) {
+  input.addEventListener("change", async () => {
+    const file = input.files[0];
+    const errorElement = document.getElementById("error-supporting-doc");
+    const uploadBox = input.closest(".upload-box");
+    const direction = uploadBox?.querySelector(".direction");
+    
+    if (!file) return;
+    
+    // Validate file type (allow PDF for supporting doc)
+    const allowedTypes = ["image/jpeg", "image/jpg", "image/png", "application/pdf"];
+    if (!allowedTypes.includes(file.type)) {
+      errorElement.textContent = "Only JPG, PNG, or PDF files are allowed.";
+      input.value = "";
+      uploadBox.classList.add("error");
+      return;
+    }
+    
+    // Validate file size
+    const maxSize = 5 * 1024 * 1024; // 5MB
+    if (file.size > maxSize) {
+      errorElement.textContent = "File too large. Maximum size is 5MB.";
+      input.value = "";
+      uploadBox.classList.add("error");
+      return;
+    }
+    
+    // Clear errors
+    errorElement.textContent = "";
+    uploadBox.classList.remove("error");
+    
+    // Show upload progress
+    if (direction) {
+      direction.textContent = `Uploading ${file.name}...`;
+      direction.style.color = "#007bff";
+    }
+    
+    try {
+      // Upload to server
+      const formData = new FormData();
+      formData.append("file", file);
+      
+      const response = await fetch("/upload", {
+        method: "POST",
+        body: formData
       });
+      
+      const data = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(data.error || "Upload failed");
+      }
+      
+      // Success
+      localStorage.setItem("supporting-doc_path", data.filePath);
+      localStorage.setItem("supporting-doc_filename", file.name);
+      
+      if (direction) {
+        direction.textContent = `✓ ${file.name} uploaded successfully`;
+        direction.style.color = "#28a745";
+      }
+      
+    } catch (error) {
+      // Error handling
+      errorElement.textContent = error.message || "Upload failed. Please try again.";
+      uploadBox.classList.add("error");
+      
+      if (direction) {
+        direction.textContent = "Upload failed.";
+        direction.style.color = "#dc3545";
+      }
+      
+      // Clear stored data
+      localStorage.removeItem("supporting-doc_path");
+      localStorage.removeItem("supporting-doc_filename");
+      input.value = "";
     }
   });
 }
 
-function setupImagePreviews() {
-  ["front-id-1", "back-id-1", "front-id-2", "back-id-2"].forEach(id => {
-    const input = document.getElementById(id);
-    if (input) {
-      let preview = document.getElementById('preview-' + id);
-      if (!preview) {
-        preview = document.createElement('img');
-        preview.id = 'preview-' + id;
-        preview.style.display = 'none';
-        preview.style.maxWidth = '200px';
-        preview.style.marginTop = '10px';
-        input.parentNode.insertBefore(preview, input.nextSibling);
-      }
-      // No preview from localStorage, only show after upload
-      preview.style.display = 'none';
-    }
-  });
-}
+
 
 function populateDateDropdowns() {
   // Get all month selects
@@ -139,10 +160,11 @@ function populateDateDropdowns() {
     }
   });
 
-  // Populate issue years (1900–2025)
+  // Populate issue years (current year down to 1900)
   issueYearSelects.forEach(yearSelect => {
     if (yearSelect) {
-      for (let y = 2025; y >= 1900; y--) {
+      const currentYear = new Date().getFullYear();
+      for (let y = currentYear; y >= 1900; y--) {
         const option = document.createElement("option");
         option.value = y;
         option.textContent = y;
@@ -151,11 +173,11 @@ function populateDateDropdowns() {
     }
   });
 
-  // Populate expiry years (2025 and up, 20 years ahead)
+  // Populate expiry years (current year up to 2050)
   expiryYearSelects.forEach(yearSelect => {
     if (yearSelect) {
       const currentYear = new Date().getFullYear();
-      for (let y = 2025; y <= currentYear + 20; y++) {
+      for (let y = 2050; y >= currentYear; y--) {
         const option = document.createElement("option");
         option.value = y;
         option.textContent = y;
@@ -175,16 +197,30 @@ function setupDayPopulation(monthId, yearId, dayId) {
   const monthSelect = document.getElementById(monthId);
   const yearSelect = document.getElementById(yearId);
   const daySelect = document.getElementById(dayId);
-  if (!monthSelect || !yearSelect || !daySelect) return;
+  if (!monthSelect || !daySelect) return;
+  
   function updateDays() {
     const month = parseInt(monthSelect.value);
-    const year = parseInt(yearSelect.value);
-    if (isNaN(month) || isNaN(year)) {
-      daySelect.innerHTML = '<option value="" disabled selected>Select Day</option>';
+    
+    // Clear previous day options
+    daySelect.innerHTML = '<option value="" disabled selected>Select Day</option>';
+    
+    // If no month selected, keep day dropdown empty
+    if (isNaN(month)) {
       return;
     }
-    const daysInMonth = new Date(year, month, 0).getDate();
-    daySelect.innerHTML = '<option value="" disabled selected>Select Day</option>';
+    
+    let daysInMonth;
+    // Calculate days in month (February = 29 to support leap years)
+    if (month === 2) {
+      daysInMonth = 29; // Always use 29 for February to support leap years
+    } else if ([4, 6, 9, 11].includes(month)) {
+      daysInMonth = 30; // April, June, September, November
+    } else {
+      daysInMonth = 31; // All other months
+    }
+    
+    // Populate day options immediately after month selection
     for (let d = 1; d <= daysInMonth; d++) {
       const option = document.createElement("option");
       option.value = d;
@@ -192,8 +228,9 @@ function setupDayPopulation(monthId, yearId, dayId) {
       daySelect.appendChild(option);
     }
   }
+  
+  // Only listen to month changes for Month → Day flow
   monthSelect.addEventListener("change", updateDays);
-  yearSelect.addEventListener("change", updateDays);
 }
 
 function attachInputListeners() {
@@ -243,10 +280,8 @@ function validateForm() {
     { id: "id1-num", msg: "ID 1 number is required" },
     { id: "issue-month-id1", msg: "ID 1 issue month is required" },
     { id: "issue-day-id1", msg: "ID 1 issue day is required" },
-    { id: "issue-year-id1", msg: "ID 1 issue year is required" },
-    { id: "month", msg: "ID 1 expiry month is required" },
-    { id: "day", msg: "ID 1 expiry day is required" },
-    { id: "year", msg: "ID 1 expiry year is required" }
+    { id: "issue-year-id1", msg: "ID 1 issue year is required" }
+    // Removed expiry date fields as they're not required (some IDs don't have expiration dates)
   ];
   id1Fields.forEach(({ id, msg }) => {
     const el = document.getElementById(id);
@@ -274,10 +309,8 @@ function validateForm() {
     { id: "id2-num", msg: "ID 2 number is required" },
     { id: "issue-month-id2", msg: "ID 2 issue month is required" },
     { id: "issue-day-id2", msg: "ID 2 issue day is required" },
-    { id: "issue-year-id2", msg: "ID 2 issue year is required" },
-    { id: "month-id2", msg: "ID 2 expiry month is required" },
-    { id: "day-id2", msg: "ID 2 expiry day is required" },
-    { id: "year-id2", msg: "ID 2 expiry year is required" }
+    { id: "issue-year-id2", msg: "ID 2 issue year is required" }
+    // Removed expiry date fields as they're not required (some IDs don't have expiration dates)
   ];
   id2Fields.forEach(({ id, msg }) => {
     const el = document.getElementById(id);
@@ -298,6 +331,16 @@ function validateForm() {
       isValid = false;
     }
   });
+  
+  // Check for duplicate ID types
+  const id1Type = document.getElementById("select-id1").value;
+  const id2Type = document.getElementById("select-id2").value;
+  
+  if (id1Type && id2Type && id1Type === id2Type) {
+    showError("select-id2", "ID 2 type must be different from ID 1 type");
+    isValid = false;
+  }
+  
   return isValid;
 }
 
@@ -305,18 +348,20 @@ function getIdTypeCode(displayName) {
   // Normalize input
   const key = displayName.trim().toLowerCase();
   const map = {
-    "new philippine passport": "PAS",
-    "old philippine passport": "PAS",
-    "passport": "PAS",
+    "philsys id": "PSY",
+    "new philippine passport": "NPP",
+    "old philippine passport": "OPP",
+    "passport": "NPP",
     "driver's license": "DRV",
     "prc id": "PRC",
-    "umid": "UMI",
+    "umid": "UMD",
     "sss id": "SSS",
     "postal id": "POS",
     "tin id": "TIN",
+    "barangay certification / id": "BRG",
     "barangay id": "BRG",
     "gsis id": "GSI",
-    "philhealth id": "PHI",
+    "philhealth id": "PHL",
     "owwa id": "OWW",
     "ofw id": "OFW",
     "ibp id": "IBP",
@@ -325,9 +370,12 @@ function getIdTypeCode(displayName) {
     "voter's id": "VOT",
     "senior citizen id": "SEN",
     "seaman's book": "SEA",
+    "government office and gocc id": "GOV",
     "gov't / gocc id": "GOV",
     "dswd certification": "DSW",
+    "certification from the national council for the welfare of disabled persons": "NCW",
     "ncwdp certification": "NCW",
+    "person with disability (pwd) id issued by national council on disability affairs": "PWD",
     "pwd id": "PWD"
   };
   return map[key] || key.substring(0,3).toUpperCase();

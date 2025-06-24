@@ -32,9 +32,9 @@
             <label for="">Work/Business Email Address</label>
             <div>
               <input
-                id="work-emai"
-                type="text"
-                placeholder="e.g. business@gmail.com"
+              id="work-email"
+              type="text"
+              placeholder="e.g. business@gmail.com"
               />
               <div class="error-message"></div>
             </div>
@@ -61,7 +61,7 @@
           <div class="tin">
             <label for="">TIN Number</label>
             <div>
-              <input id="tin" type="text" placeholder="e.g. 123456789000" />
+              <input id="tin" type="text" placeholder="e.g. 123456789000" maxlength="25" />
               <div class="error-message"></div>
             </div>
           </div>
@@ -76,12 +76,12 @@
           </div>
           <div class="unit-building-text">
             <div>
-              <input id="unit" type="text" placeholder="e.g. 1234" />
+              <input id="work-unit" type="text" placeholder="e.g. 1234" />
               <div class="error-message"></div>
             </div>
 
             <div>
-              <input id="building" type="text" placeholder="e.g. Building 1" />
+              <input id="work-building" type="text" placeholder="e.g. Building 1" />
               <div class="error-message"></div>
             </div>
           </div>
@@ -92,13 +92,13 @@
           </div>
           <div class="street-subdivision-text">
             <div>
-              <input id="street" type="text" placeholder="e.g. 123 Street" />
+              <input id="work-street" type="text" placeholder="e.g. 123 Street" />
               <div class="error-message"></div>
             </div>
 
             <div>
               <input
-                id="subdivision"
+                id="work-subdivision"
                 type="text"
                 placeholder="e.g. Subdivision 1"
               />
@@ -113,7 +113,7 @@
           <div class="barangay-city-text">
             <div>
               <input
-                id="barangay"
+                id="work-barangay"
                 type="text"
                 placeholder="e.g. Barangay 123"
               />
@@ -121,7 +121,7 @@
             </div>
 
             <div>
-              <input id="city" type="text" placeholder="e.g. Makati" />
+              <input id="work-city" type="text" placeholder="e.g. Makati" />
               <div class="error-message"></div>
             </div>
           </div>
@@ -133,7 +133,7 @@
           <div class="province-country-text">
             <div>
               <input
-                id="province"
+                id="work-province"
                 type="text"
                 placeholder="e.g. Metro Manila"
               />
@@ -141,13 +141,13 @@
             </div>
 
             <div>
-              <input id="country" type="text" placeholder="e.g. Philippines" />
+              <input id="work-country" type="text" placeholder="e.g. Philippines" />
               <div class="error-message"></div>
             </div>
           </div>
           <div class="zip-code">
             <label for="">Zip Code</label>
-            <input id="zip-code" type="text" placeholder="e.g. 1234" />
+            <input id="work-zip-code" type="text" placeholder="e.g. 1234" />
             <div class="error-message"></div>
           </div>
         </div>
@@ -161,18 +161,18 @@
             Select Source(s) of Funds
           </button>
           <div id="dropdownMenu" style="display: none; position: absolute; width: 100%; background: #fff; border: 1px solid #ccc; z-index: 10; max-height: 200px; overflow-y: auto;">
-            <label style="display:block; padding: 5px;"><input type="checkbox" value="employed_fixed"> Employed - Fixed Income</label>
-            <label style="display:block; padding: 5px;"><input type="checkbox" value="employed_variable"> Employed - Variable Income</label>
-            <label style="display:block; padding: 5px;"><input type="checkbox" value="self_employed_fixed"> Self-Employed - Fixed Income</label>
-            <label style="display:block; padding: 5px;"><input type="checkbox" value="remittances"> Remittances</label>
-            <label style="display:block; padding: 5px;"><input type="checkbox" value="pension"> Pension</label>
-            <label style="display:block; padding: 5px;"><input type="checkbox" value="savings_retirement"> Personal Savings / Retirement Proceeds</label>
-            <label style="display:block; padding: 5px;"><input type="checkbox" value="allowance"> Allowance</label>
-            <label style="display:block; padding: 5px;"><input type="checkbox" value="inheritance"> Inheritance</label>
-            <label style="display:block; padding: 5px;"><input type="checkbox" value="investment_income"> Investment / Dividend Income</label>
-            <label style="display:block; padding: 5px;"><input type="checkbox" value="rental_income"> Rental Income</label>
-            <label style="display:block; padding: 5px;"><input type="checkbox" value="asset_sale"> Sale of Asset / Property</label>
-            <label style="display:block; padding: 5px;"><input type="checkbox" value="other"> Other Sources</label>
+            <label style="display:block; padding: 5px;"><input type="checkbox" value="Employed - Fixed Income"> Employed - Fixed Income</label>
+            <label style="display:block; padding: 5px;"><input type="checkbox" value="Employed - Variable Income"> Employed - Variable Income</label>
+            <label style="display:block; padding: 5px;"><input type="checkbox" value="Self-Employed - Business Income"> Self-Employed - Business Income</label>
+            <label style="display:block; padding: 5px;"><input type="checkbox" value="Remittances"> Remittances</label>
+            <label style="display:block; padding: 5px;"><input type="checkbox" value="Pension"> Pension</label>
+            <label style="display:block; padding: 5px;"><input type="checkbox" value="Personal Savings / Retirement Proceeds"> Personal Savings / Retirement Proceeds</label>
+            <label style="display:block; padding: 5px;"><input type="checkbox" value="Allowance"> Allowance</label>
+            <label style="display:block; padding: 5px;"><input type="checkbox" value="Inheritance"> Inheritance</label>
+            <label style="display:block; padding: 5px;"><input type="checkbox" value="Investment/Dividend Income"> Investment/Dividend Income</label>
+            <label style="display:block; padding: 5px;"><input type="checkbox" value="Rental Income"> Rental Income</label>
+            <label style="display:block; padding: 5px;"><input type="checkbox" value="Sale of Asset / Property"> Sale of Asset / Property</label>
+            <label style="display:block; padding: 5px;"><input type="checkbox" value="Other Sources (Lottery, Donations, Tax Refunds, and Insurance/Legal Claims)"> Other Sources (Lottery, Donations, Tax Refunds, and Insurance/Legal Claims)</label>
           </div>
           <input type="hidden" id="source-of-funds-multi" name="source-of-funds-multi">
         </div>
@@ -186,7 +186,7 @@
 
           <p>
             If <span class="blue-text">Source of Funds</span> is
-            <span class="blue-text">004 - Remitances</span>, provide the
+            <span class="blue-text">004 - Remittances</span>, provide the
             following:
           </p>
         </div>
@@ -513,6 +513,17 @@
             </select>
             <div class="error-message"></div>
           </div>
+
+          <div class="employment-start-date">
+            <label for="">Employment Start Date (Optional)</label>
+            <input
+              id="employment-start-date"
+              type="date"
+              title="When did you start working at this employer? Leave blank if unsure."
+            />
+            <div class="error-message"></div>
+            <small style="color: #666; font-size: 12px;">If left blank, we'll use a default date</small>
+          </div>
         </div>
       </div>
 
@@ -658,11 +669,11 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   [
-    '#zip-code',
+    '#work-zip-code',
     '#gross-income',
     '#primary-employer',
     '#tin',
-    '#work-emai',
+    '#work-email',
     '#work',
     '#business-number',
     '#remittance-purpose',

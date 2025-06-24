@@ -29,6 +29,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // On load, ensure correct state
   updateAliasForm();
+  
+  // Initialize all functionality
+  handleFileUploadValidation(); // <-- Initialize file upload handlers
+  populateDateDropdowns(); // <-- Initialize date dropdowns
+  attachInputListeners(); // <-- Initialize input listeners for error clearing
   handleProceedClick(); // <-- Attach the Proceed button logic on page load
 });
 
@@ -62,36 +67,15 @@ function clearAllErrorsInContainers() {
 
 
 function handleFileUploadValidation() {
-  const validTypes = ["image/jpeg", "image/png"];
+  // Initialize standardized upload handler
+  const uploadHandler = new ImageUploadHandler();
   const fileInputs = ["front-id-1", "back-id-1", "front-id-2", "back-id-2"];
-
-  fileInputs.forEach((id) => {
-    const input = document.getElementById(id);
-
-    // Check if input element exists before adding event listener
-    if (input) {
-        input.addEventListener("change", () => {
-        const file = input.files[0];
-        const errorElement = document.getElementById(`error-${id}`);
-        const uploadBox = input.closest(".upload-box");
-
-        if (!file) return;
-
-        if (!validTypes.includes(file.type)) {
-            errorElement.textContent = "Only JPG and PNG files are allowed.";
-            input.value = ""; // Clear the selected file
-            uploadBox.classList.add("error");
-        } else {
-            errorElement.textContent = "";
-            uploadBox.classList.remove("error");
-
-            const direction = uploadBox.querySelector(".direction");
-            direction.textContent = `✓ ${file.name} uploaded`;
-            direction.style.color = "green";
-        }
-        });
-    }
-  });
+  
+  // Initialize uploads with the standardized handler
+  uploadHandler.initializeUploads(fileInputs);
+  
+  // Store reference for validation
+  window.uploadHandler = uploadHandler;
 }
 
 function populateDateDropdowns() {
@@ -133,9 +117,11 @@ function populateDateDropdowns() {
     });
   }
 
-
+  // Populate years for expiry dates (extend to 2050)
   if (yearSelect1 && yearSelect2) {
-    for (let y = new Date().getFullYear(); y >= 1900; y--) {
+    const currentYear = new Date().getFullYear();
+    // For expiry dates, start from current year and go up to 2050
+    for (let y = 2050; y >= currentYear; y--) {
       const option1 = document.createElement("option");
       option1.value = y;
       option1.textContent = y;
@@ -148,22 +134,31 @@ function populateDateDropdowns() {
     }
   }
 
-
-  function updateDays(monthSelect, yearSelect, daySelect) {
-    if (!monthSelect || !yearSelect || !daySelect) return; // Ensure elements exist
+  // Enhanced updateDays function - Month → Day → Year flow
+  function updateDays(monthSelect, daySelect) {
+    if (!monthSelect || !daySelect) return;
 
     const month = parseInt(monthSelect.value);
-    const year = parseInt(yearSelect.value);
-    // Handle cases where month/year might not be selected yet (value is NaN)
-    if (isNaN(month) || isNaN(year) || month === 0) { // month === 0 if "Select Month" is chosen after initial load
-        daySelect.innerHTML = '<option value="" disabled selected>Select Day</option>';
-        return;
+    
+    // Clear previous day options
+    daySelect.innerHTML = '<option value="" disabled selected>Select Day</option>';
+    
+    // If no month selected, keep day dropdown empty
+    if (isNaN(month) || month === 0) {
+      return;
     }
 
-    const daysInMonth = new Date(year, month, 0).getDate();
+    let daysInMonth;
+    // Calculate days in month (February = 29 to support leap years)
+    if (month === 2) {
+      daysInMonth = 29; // Always use 29 for February to support leap years
+    } else if ([4, 6, 9, 11].includes(month)) {
+      daysInMonth = 30; // April, June, September, November
+    } else {
+      daysInMonth = 31; // All other months
+    }
 
-    daySelect.innerHTML =
-      '<option value="" disabled selected>Select Day</option>';
+    // Populate day options immediately after month selection
     for (let d = 1; d <= daysInMonth; d++) {
       const option = document.createElement("option");
       option.value = d;
@@ -172,23 +167,16 @@ function populateDateDropdowns() {
     }
   }
 
-  // Attach listeners only if elements exist
-  if (monthSelect1 && yearSelect1 && daySelect1) {
+  // Attach listeners - Month → Day flow (day populates as soon as month is selected)
+  if (monthSelect1 && daySelect1) {
     monthSelect1.addEventListener("change", () =>
-      updateDays(monthSelect1, yearSelect1, daySelect1)
-    );
-    yearSelect1.addEventListener("change", () =>
-      updateDays(monthSelect1, yearSelect1, daySelect1)
+      updateDays(monthSelect1, daySelect1)
     );
   }
 
-
-  if (monthSelect2 && yearSelect2 && daySelect2) {
+  if (monthSelect2 && daySelect2) {
     monthSelect2.addEventListener("change", () =>
-      updateDays(monthSelect2, yearSelect2, daySelect2)
-    );
-    yearSelect2.addEventListener("change", () =>
-      updateDays(monthSelect2, yearSelect2, daySelect2)
+      updateDays(monthSelect2, daySelect2)
     );
   }
 }
@@ -235,12 +223,7 @@ function clearError(id) {
   }
 }
 
-// Removed the old validateForm() as validateAliasAndIDs() is more comprehensive for this page.
-/*
-function validateForm() {
-  // ... (old validateForm content)
-}
-*/
+
 
 function handleProceedClick() {
   const proceedBtn = document.getElementById("proceed");
@@ -260,6 +243,28 @@ function handleProceedClick() {
         localStorage.setItem("alias_first_name", document.getElementById("first-name").value);
         localStorage.setItem("alias_middle_name", document.getElementById("middle-name").value);
         localStorage.setItem("alias_last_name", document.getElementById("last-name").value);
+        
+        // Save alias ID 1 documentation
+        const alias_id1_type_raw = document.getElementById("select-id1").value;
+        const alias_id1_type = alias_id1_type_raw ? getAliasDocTypeCode(document.getElementById("select-id1").options[document.getElementById("select-id1").selectedIndex].text) : "";
+        console.log("Alias ID1 debug:", {
+          raw: alias_id1_type_raw,
+          text: document.getElementById("select-id1").options[document.getElementById("select-id1").selectedIndex].text,
+          mapped: alias_id1_type
+        });
+        localStorage.setItem("alias_id1_type", alias_id1_type);
+        localStorage.setItem("alias_id1_number", document.getElementById("id1-num").value);
+        localStorage.setItem("alias_id1_issue_month", document.getElementById("issue-month-id1").value);
+        localStorage.setItem("alias_id1_issue_year", document.getElementById("issue-year-id1").value);
+        
+        // Save alias ID 2 documentation  
+        const alias_id2_type_raw = document.getElementById("select-id2").value;
+        const alias_id2_type = alias_id2_type_raw ? getAliasDocTypeCode(document.getElementById("select-id2").options[document.getElementById("select-id2").selectedIndex].text) : "";
+        localStorage.setItem("alias_id2_type", alias_id2_type);
+        localStorage.setItem("alias_id2_number", document.getElementById("id2-num").value);
+        localStorage.setItem("alias_id2_issue_month", document.getElementById("issue-month-id2").value);
+        localStorage.setItem("alias_id2_issue_year", document.getElementById("issue-year-id2").value);
+        
         window.location.href = "registration7.html";
       }
     } else if (noCheckbox && noCheckbox.checked) {
@@ -313,21 +318,17 @@ function validateAliasAndIDs() {
     }
   });
 
-  // ID 1 file fields - front and back uploads are required
-  const id1FileFields = [
-    { id: "front-id-1", msg: "Front image of ID 1 is required" },
-    { id: "back-id-1", msg: "Back image of ID 1 is required" }
-  ];
-
-  id1FileFields.forEach(({ id, msg }) => {
-    const el = document.getElementById(id);
-    if (el && containers.contains(el)) {
-        if (!el.files || !el.files.length) {
-            showError(id, msg);
-            isValid = false;
-        }
-    }
-  });
+  // Validate file uploads using standardized upload handler
+  const fileFields = ["front-id-1", "back-id-1", "front-id-2", "back-id-2"];
+  const uploadValidation = window.uploadHandler?.validateAllUploads(fileFields);
+  
+  if (uploadValidation && !uploadValidation.isValid) {
+    uploadValidation.missing.forEach(id => {
+      const fieldName = id.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+      showError(id, `${fieldName} upload is required`);
+    });
+    isValid = false;
+  }
 
   // Required ID 2 fields - only ID Type, ID Number, and Issue Date (Month and Year)
   const id2Fields = [
@@ -348,22 +349,6 @@ function validateAliasAndIDs() {
     }
   });
 
-  // ID 2 file fields - front and back uploads are required
-  const id2FileFields = [
-    { id: "front-id-2", msg: "Front image of ID 2 is required" },
-    { id: "back-id-2", msg: "Back image of ID 2 is required" }
-  ];
-
-  id2FileFields.forEach(({ id, msg }) => {
-    const el = document.getElementById(id);
-    if (el && containers.contains(el)) {
-        if (!el.files || !el.files.length) {
-            showError(id, msg);
-            isValid = false;
-        }
-    }
-  });
-
   return isValid;
 }
 
@@ -375,10 +360,15 @@ function populateDays(daySelectId, monthSelectId, yearSelectId) {
   function updateDays() {
     const month = parseInt(monthSelect.value, 10);
     let daysInMonth;
+    
+    // Clear previous day options
+    daySelect.innerHTML = '<option value="" disabled selected>Select Day</option>';
+    
     if (isNaN(month)) {
-      daySelect.innerHTML = '<option value="" disabled selected>Select Day</option>';
       return;
     }
+    
+    // February always shows 29 days to support leap years
     if (month === 2) {
       daysInMonth = 29;
     } else if ([4, 6, 9, 11].includes(month)) {
@@ -386,7 +376,8 @@ function populateDays(daySelectId, monthSelectId, yearSelectId) {
     } else {
       daysInMonth = 31;
     }
-    daySelect.innerHTML = '<option value="" disabled selected>Select Day</option>';
+    
+    // Populate day options immediately after month selection
     for (let d = 1; d <= daysInMonth; d++) {
       const option = document.createElement("option");
       option.value = d;
@@ -395,6 +386,7 @@ function populateDays(daySelectId, monthSelectId, yearSelectId) {
     }
   }
 
+  // Only listen to month changes for Month → Day flow
   monthSelect.addEventListener("change", updateDays);
 }
 

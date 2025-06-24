@@ -17,8 +17,8 @@ document.addEventListener("DOMContentLoaded", function () {
     let isValid = true;
     clearErrors();
 
-    const personalInput = document.querySelector(
-      ".phone-number-text #personal"
+    const phoneCountryCodeInput = document.querySelector(
+      ".phone-number-text #phone-country-code"
     );
     const phoneInput = document.querySelector(".phone-number-text #phone-num");
     const homeInput = document.querySelector(".home-landline-text #home");
@@ -49,11 +49,11 @@ document.addEventListener("DOMContentLoaded", function () {
     );
     const zipCode = document.querySelector(".zip-code #zip-code");
 
-    if (!personalInput.value.trim()) {
-      showError(personalInput, "Personal code is required");
+    if (!phoneCountryCodeInput.value.trim()) {
+      showError(phoneCountryCodeInput, "Phone country code is required");
       isValid = false;
-    } else if (!/^\d{2,3}$/.test(personalInput.value.trim())) {
-      showError(personalInput, "Personal code must be 2-3 digits");
+    } else if (!/^\d{2,3}$/.test(phoneCountryCodeInput.value.trim())) {
+      showError(phoneCountryCodeInput, "Phone country code must be 2-3 digits");
       isValid = false;
     }
 
@@ -257,7 +257,7 @@ document.addEventListener("DOMContentLoaded", function () {
       e.preventDefault();
 
       // Save all relevant fields to localStorage here
-      const personalCode = document.querySelector(".phone-number-text #personal").value.trim();
+      const phoneCountryCode = document.querySelector(".phone-number-text #phone-country-code").value.trim();
       const phoneNumber = document.querySelector(".phone-number-text #phone-num").value.trim();
       const homeCode = document.querySelector(".home-landline-text #home").value.trim();
       const landlineNumber = document.querySelector(".home-landline-text #landline").value.trim();
@@ -274,7 +274,7 @@ document.addEventListener("DOMContentLoaded", function () {
       const zip = document.querySelector(".zip-code #zip-code").value.trim();
 
       // Save to localStorage
-      localStorage.setItem("personalCode", personalCode);
+      localStorage.setItem("phoneCountryCode", phoneCountryCode);
       localStorage.setItem("phoneNumber", phoneNumber);
       localStorage.setItem("homeCode", homeCode);
       localStorage.setItem("landlineNumber", landlineNumber);

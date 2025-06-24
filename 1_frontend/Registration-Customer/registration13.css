@@ -11,6 +11,10 @@
   box-sizing: border-box;
 }
 
+.blue-text {
+  color: #004ea8;
+}
+
 body {
   position: relative;
   display: flex;
@@ -23,14 +27,16 @@ body {
 }
 
 .title {
-  font-size: 55px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 45px;
   color: var(--primary-color);
-  text-align: left;
   width: 100%;
   margin-bottom: 40px;
 }
 
-.username-password-page {
+.enrollment-successful-page {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -45,158 +51,124 @@ body {
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
 }
 
-.text-box label {
-  font-size: 25px;
+.enrollment-successful-page > img {
+  width: 130px;
+  margin-bottom: 30px;
 }
 
-.text-box input[type="text"] {
-  border-radius: 10px;
-  width: 100%;
-  height: 50px;
+.enrollment-successful-page p {
   font-size: 32px;
-  margin-bottom: 10px;
-  padding-left: 10px;
-  border: 3px solid var(--tertiary-color);
-}
-
-input[type="text"]::placeholder {
-  font-size: 28px;
-}
-
-input[type="password"] {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 10px;
-  width: 700px;
-  height: 50px;
-  font-size: 32px;
-  margin-bottom: 15px;
-  padding-left: 10px;
-  border: 3px solid var(--tertiary-color);
-}
-
-input[type="password"],
-input[type="text"]:focus {
-  border: 3px solid var(--tertiary-color);
-  color: black;
-  box-shadow: 0 0 3px var(--tertiary-color);
-  outline: none;
-}
-
-input[type="password"]::placeholder {
-  font-size: 28px;
-}
-
-.password-note {
-  color: var(--secondary-color);
-  margin-top: 10px;
-  align-items: left;
-  width: 100%;
-  padding-left: 20px;
-}
-
-.password-note h4 {
-  font-weight: bold;
-}
-
-.password-note ul {
-  padding-left: 20px;
 }
 
 .button {
   display: flex;
-  gap: 20px;
-  margin-top: 60px;
-  align-self: center;
-  gap: 40px;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding-top: 70px;
 }
 
 .button button {
-  height: 54px;
-  width: 239px;
-  border-radius: 20px;
+  height: 60px;
+  width: 400px;
+  background-color: var(--tertiary-color);
+  color: white;
+  border: 0px;
+  border-radius: 30px;
   cursor: pointer;
-  font-size: 25px;
+  font-size: 30px;
   font-family: var(--font-family);
-  transition: background-color 0.3s ease, box-shadow 0.3s ease;
-  border: none;
 }
 
-#back {
-  background-color: white;
-  color: var(--tertiary-color);
-  border: 2px solid var(--tertiary-color);
-}
-
-#back:hover {
-  background-color: var(--tertiary-color);
-  color: white;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-}
-
-#proceed {
-  background-color: var(--tertiary-color);
-  color: white;
-}
-
-#proceed:hover {
+button:hover {
   background-color: var(--secondary-color);
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
-.error-message {
-  color: #ff3860;
-  font-size: 16px;
-  margin-bottom: 20px;
-  padding-left: 10px;
-  text-align: left;
-  width: 100%;
+button {
+  background-color: var(--tertiary-color);
+  color: white;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: translateY(0);
 }
 
-/* Fade-in animation for the main container */
+button::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+button:hover {
+  background-color: var(--secondary-color);
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.2),
+    0 0 0 3px rgba(var(--secondary-color-rgb, 0, 0, 0), 0.1);
+  transform: translateY(-3px) scale(1.02);
+}
+
+button:hover::before {
+  width: 400px;
+  height: 300px;
+}
+
+/* Fade-in animation for the whole page */
+.enrollment-successful-page {
+  opacity: 0;
+  transform: translateY(40px);
+  animation: fadeInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
 @keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(40px);
-  }
   to {
     opacity: 1;
     transform: translateY(0);
   }
 }
 
-.username-password-page {
-  animation: fadeInUp 0.7s cubic-bezier(0.23, 1, 0.32, 1);
+/* Animate the image with a pop effect */
+.enrollment-successful-page > img {
+  opacity: 0;
+  transform: scale(0.8);
+  animation: popIn 0.7s 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
-/* Smooth input focus effect */
-.text-box input[type="text"],
-input[type="password"] {
-  transition: border 0.3s, box-shadow 0.3s;
-}
-
-/* Button hover animation */
-.button button {
-  transition: background-color 0.3s, color 0.3s, box-shadow 0.3s, transform 0.2s;
-}
-
-.button button:hover {
-  transform: translateY(-2px) scale(1.03);
-}
-
-/* Fade-in for error messages */
-@keyframes fadeInError {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
+@keyframes popIn {
+  to {
+    opacity: 1;
+    transform: scale(1);
   }
+}
+
+/* Fade in the paragraph after the image */
+.enrollment-successful-page p {
+  opacity: 0;
+  animation: fadeInText 0.7s 0.7s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes fadeInText {
+  to {
+    opacity: 1;
+  }
+}
+
+/* Slide up the button with a delay */
+.button {
+  opacity: 0;
+  transform: translateY(30px);
+  animation: slideUp 0.7s 1.1s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes slideUp {
   to {
     opacity: 1;
     transform: translateY(0);
   }
-}
-
-.error-message {
-  animation: fadeInError 0.4s;
 }

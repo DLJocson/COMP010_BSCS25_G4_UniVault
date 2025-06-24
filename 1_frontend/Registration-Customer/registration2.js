@@ -24,9 +24,10 @@ document.getElementById("proceed").addEventListener("click", () => {
   errorMessage.textContent = "";
 
   // Save account_type to localStorage (do not overwrite customer_type)
-  const accountTypeInput = document.querySelector('input[name="customer_type"]:checked');
+  const accountTypeInput = document.querySelector('input[name="account_type"]:checked');
   localStorage.setItem('account_type', accountTypeInput.value.trim());
 
+  // Proceed directly to next registration step
   window.location.href = "registration3.html";
 });
 

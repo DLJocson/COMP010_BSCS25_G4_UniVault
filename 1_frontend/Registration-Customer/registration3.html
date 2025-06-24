@@ -20,19 +20,19 @@
       <div class="first-container">
         <div class="checkbox-container">
           <label for="first-name">First Name</label>
-          <input id="first-name" type="text" placeholder="e.g. Juan" />
+          <input id="first-name" type="text" placeholder="e.g. Juan" maxlength="255" />
           <div class="error-message" id="error-first-name"></div>
         </div>
 
         <div class="checkbox-container">
           <label for="middle-name">Middle Name</label>
-          <input id="middle-name" type="text" placeholder="e.g. Garcia" />
+          <input id="middle-name" type="text" placeholder="e.g. Garcia" maxlength="255" />
           <div class="error-message" id="error-middle-name"></div>
         </div>
 
         <div class="checkbox-container">
           <label for="last-name">Last Name</label>
-          <input id="last-name" type="text" placeholder="e.g. Dela Cruz" />
+          <input id="last-name" type="text" placeholder="e.g. Dela Cruz" maxlength="255" />
           <div class="error-message" id="error-last-name"></div>
         </div>
 
@@ -42,6 +42,7 @@
             id="suffix-name"
             type="text"
             placeholder="e.g. III (Press 0 if not applicable)"
+            maxlength="255"
           />
           <div class="error-message" id="error-suffix-name"></div>
         </div>
@@ -121,9 +122,10 @@
               </option>
               <option value="Single">Single</option>
               <option value="Married">Married</option>
+              <option value="Legally Separated">Legally Separated</option>
               <option value="Divorced">Divorced</option>
-              <option value="Widowed">Widowed</option>
-              <option value="Separated">Separated</option>
+              <option value="Annulled">Annulled</option>
+              <option value="Widow/er">Widow/er</option>
             </select>
             <div class="error-message" id="error-civil-status"></div>
           </div>
