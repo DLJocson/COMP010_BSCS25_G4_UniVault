@@ -1,5 +1,0 @@
-Upload all source code for the backend application here. 
-Make sure to organize the files into different folders based on their category.
-
-*Additional Reminders*:
-- For running the univault_connected.js file, simply run in the terminal: node univault_connected.js
