@@ -1,4 +1,7 @@
 document.addEventListener("DOMContentLoaded", function () {
+  // --- AUTO-FILL REMOVED ---
+  // (No auto-fill code here; user will fill out manually)
+
   const checkbox = document.getElementById("yes");
   const containers = document.querySelector(".containers");
   const containers2 = document.querySelector(".containers2");
@@ -21,22 +24,15 @@ document.addEventListener("DOMContentLoaded", function () {
 
   function clearFieldError(field) {
     if (!field) return;
-
-    // Remove error styling
     field.style.borderColor = "#0072d8";
     field.classList.remove("error");
-
-    // Find and hide error message - try multiple approaches
     const parent = field.parentNode;
     if (parent) {
-      // Method 1: Look for error-message class in parent
       const errorMsg = parent.querySelector(".error-message");
       if (errorMsg) {
         errorMsg.textContent = "";
         errorMsg.style.display = "none";
       }
-
-      // Method 2: Look for next sibling
       let next = field.nextElementSibling;
       if (next && next.classList && next.classList.contains("error-message")) {
         next.textContent = "";
@@ -47,19 +43,15 @@ document.addEventListener("DOMContentLoaded", function () {
 
   function showError(input, message) {
     if (!input) return;
-
     input.style.borderColor = "#ff3860";
     input.classList.add("error");
-
     const parent = input.parentNode;
     let errorDiv = parent.querySelector(".error-message");
-
     if (!errorDiv) {
       errorDiv = document.createElement("div");
       errorDiv.className = "error-message";
       parent.appendChild(errorDiv);
     }
-
     errorDiv.textContent = message;
     errorDiv.style.display = "block";
     errorDiv.style.color = "#ff3860";
@@ -133,7 +125,7 @@ document.addEventListener("DOMContentLoaded", function () {
       { id: "tin", name: "TIN" },
       { id: "zip-code", name: "Zip code" },
       {
-        id: "work-emai",
+        id: "work-email", // <-- fixed typo here
         name: "Work email",
         regex: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
         regexMessage: "Please enter a valid email address",
@@ -148,17 +140,11 @@ document.addEventListener("DOMContentLoaded", function () {
     elements.forEach(({ id, name, regex, regexMessage }) => {
       const input = document.getElementById(id);
       if (!input) return;
-
-      // ✅ Skip fields not visible on screen
-      if (input.offsetParent === null) {
-        return;
-      }
-
+      if (input.offsetParent === null) return;
       const isEmpty =
         input.tagName === "SELECT"
           ? isSelectInvalid(input)
           : !input.value.trim();
-
       if (isEmpty) {
         showError(input, `${name} is required`);
         isValid = false;
@@ -194,61 +180,136 @@ document.addEventListener("DOMContentLoaded", function () {
     return isValid;
   }
 
-  // SIMPLE EVENT LISTENERS - This should work!
   function setupEventListeners() {
-    // Get ALL select elements on the page
     const allSelects = document.querySelectorAll("select");
-    console.log("Found selects:", allSelects.length);
-
-    allSelects.forEach((select, index) => {
-      console.log(`Select ${index}: id="${select.id}"`);
-
-      // Add change event listener
+    allSelects.forEach((select) => {
       select.addEventListener("change", function () {
-        console.log(`SELECT CHANGED: ${this.id} = "${this.value}"`);
-
-        // Clear error if valid value selected
         if (this.value && this.value.trim() !== "") {
-          console.log(`Clearing error for ${this.id}`);
           clearFieldError(this);
         }
       });
     });
 
-    // Get ALL text/email inputs
     const allInputs = document.querySelectorAll(
       'input[type="text"], input[type="email"]'
     );
-    console.log("Found inputs:", allInputs.length);
-
-    allInputs.forEach((input, index) => {
-      console.log(`Input ${index}: id="${input.id}"`);
-
+    allInputs.forEach((input) => {
       input.addEventListener("input", function () {
-        console.log(`INPUT CHANGED: ${this.id} = "${this.value}"`);
-
         if (this.value.trim()) {
-          console.log(`Clearing error for ${this.id}`);
           clearFieldError(this);
         }
       });
     });
   }
 
-  // Setup event listeners
   setupEventListeners();
 
-  // Proceed button
+<<<<<<< HEAD:2_backend/public/registration5.js
+=======
+  // --- Validation helpers must be defined before use ---
+  function validateMultiSelect() {
+    const multiSelect = document.getElementById("source-of-funds-multi");
+    if (!multiSelect) return true;
+    if (multiSelect.offsetParent === null) return true;
+    const selected = Array.from(multiSelect.options).filter(opt => opt.selected);
+    if (selected.length === 0) {
+      showError(multiSelect, "Please select at least one source of funds");
+      return false;
+    } else {
+      clearFieldError(multiSelect);
+      return true;
+    }
+  }
+
+  function enhancedValidateForm() {
+    let isValid = validateForm();
+    if (!validateMultiSelect()) isValid = false;
+    return isValid;
+  }
+
+  // --- Only one proceedBtn.onclick assignment ---
+>>>>>>> main:1_frontend/Registration-Customer/registration5.js
   if (proceedBtn) {
     proceedBtn.onclick = function (e) {
       e.preventDefault();
-      console.log("Validating form...");
 
+<<<<<<< HEAD:2_backend/public/registration5.js
       if (validateForm()) {
+        // Save all form values to localStorage
+        const elements = [
+          "source-of-funds",
+          "remittance-country",
+          "remittance-purpose",
+          "business-nature",
+          "position",
+          "gross-income",
+          "work",
+          "business-number",
+          "tin",
+          "zip-code",
+          "work-email",
+          "primary-employer",
+          "unit",
+          "building",
+          "street",
+          "subdivision",
+          "barangay",
+          "city",
+          "province",
+          "country",
+        ];
+        elements.forEach((id) => {
+          const input = document.getElementById(id);
+          if (input && input.value !== undefined) {
+            localStorage.setItem(id, input.value.trim());
+          }
+        });
+
+=======
+      // Save all relevant fields to localStorage here
+      const fieldsToSave = [
+        "source-of-funds",
+        "business-nature",
+        "position",
+        "gross-income",
+        "work",
+        "business-number",
+        "tin",
+        "zip-code",
+        "work-emai",
+        "primary-employer",
+        "unit",
+        "building",
+        "street",
+        "subdivision",
+        "barangay",
+        "city",
+        "province",
+        "country",
+      ];
+
+      fieldsToSave.forEach((fieldId) => {
+        const field = document.getElementById(fieldId);
+        if (field) {
+          localStorage.setItem(fieldId, field.value);
+        }
+      });
+
+      // Save employment checkbox state
+      const employedCheckbox = document.getElementById("yes");
+      if (employedCheckbox) {
+        if (employedCheckbox.checked) {
+          localStorage.setItem("currentlyEmployed", "Yes");
+        } else {
+          localStorage.setItem("currentlyEmployed", "No");
+        }
+      }
+
+      if (enhancedValidateForm()) {
         console.log("Form valid - redirecting");
+>>>>>>> main:1_frontend/Registration-Customer/registration5.js
         window.location.href = "registration6.html";
       } else {
-        console.log("Form invalid - showing errors");
         const firstError = document.querySelector(".error");
         if (firstError) {
           firstError.scrollIntoView({ behavior: "smooth", block: "center" });
@@ -259,35 +320,28 @@ document.addEventListener("DOMContentLoaded", function () {
     };
   }
 
-  // DIRECT FIX - Manually setup the problematic elements
   setTimeout(() => {
     const sourceOfFunds = document.getElementById("source-of-funds");
     const businessNature = document.getElementById("business-nature");
 
     if (sourceOfFunds) {
-      console.log("MANUAL SETUP: source-of-funds found");
       sourceOfFunds.onchange = function () {
-        console.log("MANUAL: source-of-funds changed to:", this.value);
         if (this.value && this.value.trim() !== "") {
           clearFieldError(this);
         }
       };
-    } else {
-      console.log("ERROR: source-of-funds NOT FOUND");
     }
-
     if (businessNature) {
-      console.log("MANUAL SETUP: business-nature found");
       businessNature.onchange = function () {
-        console.log("MANUAL: business-nature changed to:", this.value);
         if (this.value && this.value.trim() !== "") {
           clearFieldError(this);
         }
       };
-    } else {
-      console.log("ERROR: business-nature NOT FOUND");
     }
   }, 500);
+<<<<<<< HEAD:2_backend/public/registration5.js
+});
+=======
 });
 
 function validateMultiSelect() {
@@ -318,6 +372,45 @@ function enhancedValidateForm() {
 if (proceedBtn) {
   proceedBtn.onclick = function (e) {
     e.preventDefault();
+    // Save all relevant fields to localStorage here
+    const fieldsToSave = [
+      "source-of-funds",
+      "business-nature",
+      "position",
+      "gross-income",
+      "work",
+      "business-number",
+      "tin",
+      "zip-code",
+      "work-emai",
+      "primary-employer",
+      "unit",
+      "building",
+      "street",
+      "subdivision",
+      "barangay",
+      "city",
+      "province",
+      "country",
+    ];
+
+    fieldsToSave.forEach((fieldId) => {
+      const field = document.getElementById(fieldId);
+      if (field) {
+        localStorage.setItem(fieldId, field.value);
+      }
+    });
+
+    // Save employment checkbox state
+    const employedCheckbox = document.getElementById("yes");
+    if (employedCheckbox) {
+      if (employedCheckbox.checked) {
+        localStorage.setItem("currentlyEmployed", "Yes");
+      } else {
+        localStorage.setItem("currentlyEmployed", "No");
+      }
+    }
+
     if (enhancedValidateForm()) {
       window.location.href = "registration6.html";
     } else {
@@ -591,3 +684,7 @@ if (multiSelect) {
   // Initial display update
   updateSelectionDisplay();
 })();
+<<<<<<< HEAD:1_frontend/Registration-Customer/registration5.js
+=======
+>>>>>>> main:1_frontend/Registration-Customer/registration5.js
+>>>>>>> 31125a608a20536a7ea110043595514d34ccee82:2_backend/public/registration5.js

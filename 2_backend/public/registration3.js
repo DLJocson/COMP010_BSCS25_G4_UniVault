@@ -483,34 +483,68 @@ function initializeFormValidation() {
     return isValid;
   };
 
-  proceedButton.addEventListener("click", (e) => {
-    e.preventDefault();
-    console.log("Proceed button clicked!");
+proceedButton.addEventListener("click", (e) => {
+  e.preventDefault();
+  console.log("Proceed button clicked!");
 
-    const isFormValid = validateInputs();
+  const isFormValid = validateInputs();
 
+<<<<<<< HEAD:2_backend/public/registration3.js
+  if (isFormValid) {
+    // Save values to localStorage
+    localStorage.setItem("customer_first_name", firstName.value.trim());
+    localStorage.setItem("customer_middle_name", middleName.value.trim());
+    localStorage.setItem("customer_last_name", lastName.value.trim());
+    localStorage.setItem("customer_suffix_name", suffix.value.trim());
+    localStorage.setItem("birth_month", monthSelect.value);
+    localStorage.setItem("birth_day", daySelect.value);
+    localStorage.setItem("birth_year", yearSelect.value);
+    localStorage.setItem("birth_country", countrySelect.value);
+    localStorage.setItem("citizenship", citizenshipSelect.value);
+    localStorage.setItem("gender", genderSelect.value);
+    localStorage.setItem("civil_status_code", civilStatusSelect.value);
+=======
     if (isFormValid) {
+      // Save all relevant fields to localStorage with backend-compatible keys
+      localStorage.setItem('customer_first_name', firstName.value.trim());
+      localStorage.setItem('customer_middle_name', middleName.value.trim());
+      localStorage.setItem('customer_last_name', lastName.value.trim());
+      localStorage.setItem('customer_suffix_name', suffix.value.trim());
+      localStorage.setItem('birth_date', `${yearSelect.value}-${monthSelect.value}-${daySelect.value}`);
+      localStorage.setItem('gender', genderSelect.value);
+      localStorage.setItem('civil_status_code', civilStatusSelect.value);
+      localStorage.setItem('birth_country', countrySelect.value);
+      localStorage.setItem('citizenship', citizenshipSelect.value);
+      localStorage.setItem('residency_status', residencyStatusSelect.value);
+
       location.href = "registration4.html";
+>>>>>>> main:1_frontend/Registration-Customer/registration3.js
 
-      const existingMessage = document.querySelector(".success-message");
-      if (existingMessage) {
-        existingMessage.remove();
-      }
+    // Combine date parts for backend
+    const birth_date = `${yearSelect.value}-${monthSelect.value.padStart(2, '0')}-${daySelect.value.padStart(2, '0')}`;
+    localStorage.setItem("birth_date", birth_date);
 
-      const successMessage = document.createElement("div");
-      successMessage.className = "success-message";
-      successMessage.textContent =
-        "✓ Form is valid! Ready to proceed to the next step.";
+    location.href = "registration4.html";
 
-      const secondContainer = document.querySelector(".second-container");
-      secondContainer.insertBefore(
-        successMessage,
-        document.querySelector(".button")
-      );
-    } else {
-      console.log("Form has validation errors.");
+    const existingMessage = document.querySelector(".success-message");
+    if (existingMessage) {
+      existingMessage.remove();
     }
-  });
+
+    const successMessage = document.createElement("div");
+    successMessage.className = "success-message";
+    successMessage.textContent =
+      "✓ Form is valid! Ready to proceed to the next step.";
+
+    const secondContainer = document.querySelector(".second-container");
+    secondContainer.insertBefore(
+      successMessage,
+      document.querySelector(".button")
+    );
+  } else {
+    console.log("Form has validation errors.");
+  }
+});
   addInputListeners();
 }
 
@@ -555,3 +589,25 @@ document.getElementById("year").addEventListener("change", function () {
     daySelect.appendChild(option);
   }
 });
+<<<<<<< HEAD:1_frontend/Registration-Customer/registration3.js
+=======
+
+const proceedBtn = document.getElementById("proceed");
+if (proceedBtn) {
+  proceedBtn.onclick = function (e) {
+    // Save all relevant fields to localStorage here
+    // Example: localStorage.setItem('birth_date', birthDateInput.value);
+    // Add similar lines for all fields on this page
+    localStorage.setItem('birth_date', `${document.getElementById("year").value}-${document.getElementById("month").value}-${document.getElementById("day").value}`);
+    localStorage.setItem('gender', document.getElementById("gender").value);
+    localStorage.setItem('civil_status_code', document.getElementById("civil-status").value);
+    localStorage.setItem('birth_country', document.getElementById("country").value);
+    localStorage.setItem('citizenship', document.getElementById("citizenship").value);
+  };
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+  // AUTO-FILL TEST DATA (remove/comment out for production)
+  // Removed: No auto-fill, user must enter data manually.
+});
+>>>>>>> 31125a608a20536a7ea110043595514d34ccee82:2_backend/public/registration3.js

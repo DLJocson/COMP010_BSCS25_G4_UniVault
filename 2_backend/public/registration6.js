@@ -1,35 +1,43 @@
 document.addEventListener("DOMContentLoaded", () => {
   const containers = document.getElementById("containers");
-  const checkbox = document.getElementById("yes");
+  const yesCheckbox = document.getElementById("yes-alias");
+  const noCheckbox = document.getElementById("no-alias");
 
-  // Initial state: Hide the 'containers' div by default
+<<<<<<< HEAD:2_backend/public/registration6.js
+  if (checkbox && containers) {
+    checkbox.addEventListener("change", () => {
+      containers.style.display = checkbox.checked ? "none" : "block";
+    });
+  }
+=======
+  // Hide the alias form by default
   if (containers) containers.style.display = "none";
 
-  if (checkbox) {
-    function showHideMainContent() {
-      if (checkbox.checked) {
-        // If "Yes" is checked, show the 'containers' div
-        if (containers) containers.style.display = "block";
-
-        // Initialize the rest of the form only once
-        if (!containers.dataset.initialized) {
-          populateDateDropdowns();
-          attachInputListeners();
-          handleProceedClick(); // Re-attach listener after content is potentially shown
-          handleFileUploadValidation();
-          containers.dataset.initialized = "true";
-        }
-      } else {
-        // If "Yes" is NOT checked, hide the 'containers' div
-        if (containers) containers.style.display = "none";
-        // Optionally, clear any error messages if the user unchecks "Yes" after seeing errors
-        clearAllErrorsInContainers(); // New helper function
-      }
+  function updateAliasForm() {
+    if (yesCheckbox && yesCheckbox.checked) {
+      if (noCheckbox) noCheckbox.checked = false;
+      if (containers) containers.style.display = "block";
+      localStorage.removeItem("alias"); // User will fill alias fields
+    } else if (noCheckbox && noCheckbox.checked) {
+      if (yesCheckbox) yesCheckbox.checked = false;
+      if (containers) containers.style.display = "none";
+      localStorage.setItem("alias", "No");
+      clearAllErrorsInContainers();
+    } else {
+      // If neither is checked, hide the form
+      if (containers) containers.style.display = "none";
+      localStorage.removeItem("alias");
+      clearAllErrorsInContainers();
     }
-    // Run on load in case checkbox is already checked (e.g., after a page refresh preserving state)
-    showHideMainContent();
-    checkbox.addEventListener("change", showHideMainContent);
   }
+
+  if (yesCheckbox) yesCheckbox.addEventListener("change", updateAliasForm);
+  if (noCheckbox) noCheckbox.addEventListener("change", updateAliasForm);
+
+  // On load, ensure correct state
+  updateAliasForm();
+  handleProceedClick(); // <-- Attach the Proceed button logic on page load
+>>>>>>> main:1_frontend/Registration-Customer/registration6.js
 });
 
 // New helper function to clear errors when hiding the form
@@ -77,6 +85,7 @@ function handleFileUploadValidation() {
 
   fileInputs.forEach((id) => {
     const input = document.getElementById(id);
+    if (!input) return;
 
     // Check if input element exists before adding event listener
     if (input) {
@@ -87,6 +96,23 @@ function handleFileUploadValidation() {
 
         if (!file) return;
 
+<<<<<<< HEAD:2_backend/public/registration6.js
+      if (!validTypes.includes(file.type)) {
+        if (errorElement) errorElement.textContent = "Only JPG and PNG files are allowed.";
+        input.value = "";
+        if (uploadBox) uploadBox.classList.add("error");
+      } else {
+        if (errorElement) errorElement.textContent = "";
+        if (uploadBox) uploadBox.classList.remove("error");
+
+        const direction = uploadBox ? uploadBox.querySelector(".direction") : null;
+        if (direction) {
+          direction.textContent = `✓ ${file.name} uploaded`;
+          direction.style.color = "green";
+        }
+      }
+    });
+=======
         if (!validTypes.includes(file.type)) {
           errorElement.textContent = "Only JPG and PNG files are allowed.";
           input.value = ""; // Clear the selected file
@@ -101,6 +127,7 @@ function handleFileUploadValidation() {
         }
       });
     }
+>>>>>>> main:1_frontend/Registration-Customer/registration6.js
   });
 }
 
@@ -114,21 +141,14 @@ function populateDateDropdowns() {
   const yearSelect2 = document.getElementById("year-id2");
 
   const months = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
+    "January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December",
   ];
 
+<<<<<<< HEAD:2_backend/public/registration6.js
+=======
   // Only populate if elements exist
+>>>>>>> main:1_frontend/Registration-Customer/registration6.js
   if (monthSelect1 && monthSelect2) {
     months.forEach((month, index) => {
       const option1 = document.createElement("option");
@@ -141,6 +161,23 @@ function populateDateDropdowns() {
       option2.textContent = month;
       monthSelect2.appendChild(option2);
     });
+<<<<<<< HEAD:2_backend/public/registration6.js
+  }
+
+  if (yearSelect1 && yearSelect2) {
+    for (let y = new Date().getFullYear(); y >= 1900; y--) {
+      const option1 = document.createElement("option");
+      option1.value = y;
+      option1.textContent = y;
+      yearSelect1.appendChild(option1);
+
+      const option2 = document.createElement("option");
+      option2.value = y;
+      option2.textContent = y;
+      yearSelect2.appendChild(option2);
+    }
+=======
+>>>>>>> main:1_frontend/Registration-Customer/registration6.js
   }
 
   if (yearSelect1 && yearSelect2) {
@@ -158,6 +195,12 @@ function populateDateDropdowns() {
   }
 
   function updateDays(monthSelect, yearSelect, daySelect) {
+<<<<<<< HEAD:2_backend/public/registration6.js
+    if (!monthSelect || !yearSelect || !daySelect) return;
+    const month = parseInt(monthSelect.value);
+    const year = parseInt(yearSelect.value);
+    if (!month || !year) return;
+=======
     if (!monthSelect || !yearSelect || !daySelect) return; // Ensure elements exist
 
     const month = parseInt(monthSelect.value);
@@ -170,10 +213,10 @@ function populateDateDropdowns() {
       return;
     }
 
+>>>>>>> main:1_frontend/Registration-Customer/registration6.js
     const daysInMonth = new Date(year, month, 0).getDate();
 
-    daySelect.innerHTML =
-      '<option value="" disabled selected>Select Day</option>';
+    daySelect.innerHTML = '<option value="" disabled selected>Select Day</option>';
     for (let d = 1; d <= daysInMonth; d++) {
       const option = document.createElement("option");
       option.value = d;
@@ -182,6 +225,15 @@ function populateDateDropdowns() {
     }
   }
 
+<<<<<<< HEAD:2_backend/public/registration6.js
+  if (monthSelect1 && yearSelect1 && daySelect1) {
+    monthSelect1.addEventListener("change", () => updateDays(monthSelect1, yearSelect1, daySelect1));
+    yearSelect1.addEventListener("change", () => updateDays(monthSelect1, yearSelect1, daySelect1));
+  }
+  if (monthSelect2 && yearSelect2 && daySelect2) {
+    monthSelect2.addEventListener("change", () => updateDays(monthSelect2, yearSelect2, daySelect2));
+    yearSelect2.addEventListener("change", () => updateDays(monthSelect2, yearSelect2, daySelect2));
+=======
   // Attach listeners only if elements exist
   if (monthSelect1 && yearSelect1 && daySelect1) {
     monthSelect1.addEventListener("change", () =>
@@ -199,6 +251,7 @@ function populateDateDropdowns() {
     yearSelect2.addEventListener("change", () =>
       updateDays(monthSelect2, yearSelect2, daySelect2)
     );
+>>>>>>> main:1_frontend/Registration-Customer/registration6.js
   }
 }
 
@@ -255,25 +308,35 @@ function validateForm() {
 
 function handleProceedClick() {
   const proceedBtn = document.getElementById("proceed");
+  const yesCheckbox = document.getElementById("yes-alias");
+  const noCheckbox = document.getElementById("no-alias");
 
+<<<<<<< HEAD:1_frontend/Registration-Customer/registration6.js
   // Ensure the event listener is only attached once
   // This check is important because handleProceedClick is called inside showHideMainContent
   // which might be called multiple times if the checkbox is toggled.
   if (proceedBtn.dataset.listenerAttached) {
     return;
+=======
+  if (!proceedBtn || proceedBtn.dataset.listenerAttached) {
+      return;
+>>>>>>> 31125a608a20536a7ea110043595514d34ccee82:2_backend/public/registration6.js
   }
-  proceedBtn.dataset.listenerAttached = "true"; // Mark as attached
+  proceedBtn.dataset.listenerAttached = "true";
 
   proceedBtn.addEventListener("click", () => {
-    const checkbox = document.getElementById("yes");
-
-    if (checkbox.checked) {
-      // If "Yes" is checked, validate only required alias and ID fields
+    if (yesCheckbox && yesCheckbox.checked) {
+      // Validate alias and ID fields if Yes
       if (validateAliasAndIDs()) {
+        // Save all alias fields to localStorage
+        localStorage.setItem("alias_first_name", document.getElementById("first-name").value);
+        localStorage.setItem("alias_middle_name", document.getElementById("middle-name").value);
+        localStorage.setItem("alias_last_name", document.getElementById("last-name").value);
         window.location.href = "registration7.html";
       }
-    } else {
-      // If "Yes" is NOT checked, proceed without validating alias/ID fields
+    } else if (noCheckbox && noCheckbox.checked) {
+      // Allow direct proceed if No
+      localStorage.setItem("alias", "No");
       window.location.href = "registration7.html";
     }
   });
@@ -292,12 +355,25 @@ function validateAliasAndIDs() {
 
   aliasFields.forEach(({ id, msg }) => {
     const el = document.getElementById(id);
+<<<<<<< HEAD:2_backend/public/registration6.js
+    if (!el || el.value === "" || (el.tagName === "SELECT" && !el.value)) {
+      showError(id, msg);
+      isValid = false;
+=======
     // Only validate if the element exists and is inside the visible 'containers'
     if (el && containers.contains(el)) {
+<<<<<<< HEAD:1_frontend/Registration-Customer/registration6.js
       if (el.value.trim() === "") {
         showError(id, msg);
         isValid = false;
       }
+=======
+        if (el.value.trim() === "") {
+            showError(id, msg);
+            isValid = false;
+        }
+>>>>>>> main:1_frontend/Registration-Customer/registration6.js
+>>>>>>> 31125a608a20536a7ea110043595514d34ccee82:2_backend/public/registration6.js
     }
   });
 
@@ -380,6 +456,33 @@ function populateDays(daySelectId, monthSelectId, yearSelectId) {
   const monthSelect = document.getElementById(monthSelectId);
   const yearSelect = document.getElementById(yearSelectId);
 
+<<<<<<< HEAD:2_backend/public/registration6.js
+  if (!proceedBtn) return;
+
+  proceedBtn.addEventListener("click", () => {
+    const checkbox = document.getElementById("yes");
+    const aliasSkipped = checkbox && checkbox.checked;
+
+    if (aliasSkipped || validateForm()) {
+      // Save form data to localStorage
+      const fieldsToSave = [
+        "first-name", "middle-name", "last-name",
+        "month", "day", "year",
+        "select-id1", "id1-num", "front-id-1", "back-id-1",
+        "month-id2", "day-id2", "year-id2",
+        "select-id2", "id2-num", "front-id-2", "back-id-2"
+      ];
+      fieldsToSave.forEach((id) => {
+        const el = document.getElementById(id);
+        if (el && el.value !== undefined) {
+          localStorage.setItem(id, el.value);
+        }
+      });
+      window.location.href = "registration7.html";
+    }
+  });
+}
+=======
   function updateDays() {
     const month = parseInt(monthSelect.value, 10);
     let daysInMonth;
@@ -414,3 +517,7 @@ document.addEventListener("DOMContentLoaded", function () {
   populateDays("issue-day-id2", "issue-month-id2", "issue-year-id2");
   populateDays("day-id2", "month-id2", "year-id2");
 });
+<<<<<<< HEAD:1_frontend/Registration-Customer/registration6.js
+=======
+>>>>>>> main:1_frontend/Registration-Customer/registration6.js
+>>>>>>> 31125a608a20536a7ea110043595514d34ccee82:2_backend/public/registration6.js
