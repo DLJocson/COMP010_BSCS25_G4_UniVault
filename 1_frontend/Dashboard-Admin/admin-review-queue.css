@@ -4,7 +4,7 @@
   --tertiary-color: #0072d8;
   --fields-color: #cbcbcb;
   --nav-bar-color: #e5f5ff;
-  --font-family: "Manjari", sans-serif;
+  --font-family: 'Manjari', sans-serif;
 }
 
 * {
@@ -19,12 +19,16 @@ body {
   padding: 0;
   width: 100vw;
   height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
-.deposite-page {
+.deposit-page {
   width: 100vw;
   min-height: 100vh;
   position: relative;
+  display: flex;
+  flex-direction: column;
 }
 
 .page-wrapper {
@@ -32,15 +36,16 @@ body {
   flex-direction: column;
   width: 100vw;
   min-height: 100vh;
+  flex: 1;
 }
 
 .wrapper {
   display: flex;
-
   flex-direction: column;
   margin-left: 300px;
   width: calc(100vw - 300px);
   padding-top: 80px;
+  flex: 1;
 }
 
 .nav-bar {
@@ -92,6 +97,8 @@ input[type="text"] {
   background-color: var(--secondary-color);
   padding-top: 80px;
   overflow-y: auto;
+  display: flex;
+  flex-direction: column;
 }
 
 .header {
@@ -108,14 +115,19 @@ input[type="text"] {
   margin-left: 30px;
   position: relative;
   z-index: 0;
+  box-sizing: border-box;
 }
 
 .page-body {
-  display: flex;
-  flex-direction: row;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   gap: 40px;
-  width: 100vw;
+  width: 100%;
+  max-width: 100vw;
   padding: 40px;
+  box-sizing: border-box;
+  justify-items: center;
+  align-items: flex-start;
 }
 
 .welcome-message {
@@ -138,6 +150,7 @@ input[type="text"] {
   padding: 0 100px;
   position: relative;
   z-index: 0;
+  box-sizing: border-box;
 }
 
 .progress-container {
@@ -241,7 +254,7 @@ input[type="text"] {
   overflow: hidden;
 }
 
-#review-queue-option {
+#user-management-option {
   background-color: white;
   color: black;
   height: 70px;
@@ -259,20 +272,22 @@ input[type="text"] {
   height: 70px;
 }
 
-.customer-options i {
-  margin-right: 10px;
-}
-
 .account-info {
   display: flex;
+  flex-direction: column;
+  align-items: center;
   position: relative;
-  height: 90vh;
-  width: 170vh;
+  min-height: 400px;
+  max-width: 100%;
+  width: 100%;
   border-radius: 20px;
   background-color: white;
   box-shadow: 0 5px 15px rgba(0.2, 0.2, 0.2, 0.2);
-  margin-left: 40px;
-  padding: 5vh 5vh;
+  margin: 40px auto;
+  padding: 2em 2em;
+  box-sizing: border-box;
+  overflow: hidden;
+  grid-column: 1 / span 2;
 }
 
 .right-container > img {
@@ -281,18 +296,30 @@ input[type="text"] {
   margin-right: 40px;
 }
 
-.title > img {
-  width: 30px;
-  height: 30px;
-}
-
-.account-title {
-  font-size: 12px;
-}
-
 .right-container {
-  height: 90vh;
-  width: 65vh;
+  flex: 0 0 350px;
+  max-width: 100%;
+  width: 100%;
+  min-width: 250px;
+  background-color: white;
+  box-shadow: 0 5px 15px rgba(0.2, 0.2, 0.2, 0.2);
+  margin-left: 40px;
+  padding: 5vh 5vh;
+  box-sizing: border-box;
+}
+
+.account-details {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 0;
+  min-width: 0;
+  min-height: 300px;
+  border-radius: 20px;
+  background-color: white;
+  box-shadow: 0 5px 15px rgba(0.2, 0.2, 0.2, 0.2);
+  padding: 2em 2em 1em 2em;
+  box-sizing: border-box;
+  overflow: auto;
 }
 
 .account-details {
@@ -305,6 +332,7 @@ input[type="text"] {
   box-shadow: 0 5px 15px rgba(0.2, 0.2, 0.2, 0.2);
   padding: 5vh 5vh;
   padding-bottom: 3vh;
+  box-sizing: border-box;
 }
 
 .title {
@@ -312,6 +340,7 @@ input[type="text"] {
   flex-direction: row;
   justify-content: space-between;
   margin-bottom: 20px;
+  align-items: center;
 }
 
 .title h2 {
@@ -337,11 +366,9 @@ textarea {
   width: 55vh;
   font-size: 30px;
   padding-left: 10px;
-  font-size: 30px;
-  padding-left: 10px;
   border-radius: 10px;
-  padding-left: 10px;
   border: 2px solid var(--fields-color);
+  box-sizing: border-box;
 }
 
 .account-number {
@@ -359,11 +386,9 @@ textarea {
   width: 55vh;
   font-size: 30px;
   padding-left: 10px;
-  font-size: 30px;
-  padding-left: 10px;
   border-radius: 10px;
-  padding-left: 10px;
   border: 2px solid var(--fields-color);
+  box-sizing: border-box;
 }
 
 .open-close-date {
@@ -382,11 +407,9 @@ textarea {
   width: 25vh;
   font-size: 30px;
   padding-left: 10px;
-  font-size: 30px;
-  padding-left: 10px;
   border-radius: 10px;
-  padding-left: 10px;
   border: 2px solid var(--fields-color);
+  box-sizing: border-box;
 }
 
 .close-date textarea {
@@ -394,11 +417,9 @@ textarea {
   width: 25vh;
   font-size: 30px;
   padding-left: 10px;
-  font-size: 30px;
-  padding-left: 10px;
   border-radius: 10px;
-  padding-left: 10px;
   border: 2px solid var(--fields-color);
+  box-sizing: border-box;
 }
 
 .current-balance label {
@@ -410,11 +431,9 @@ textarea {
   width: 55vh;
   font-size: 30px;
   padding-left: 10px;
-  font-size: 30px;
-  padding-left: 10px;
   border-radius: 10px;
-  padding-left: 10px;
   border: 2px solid var(--fields-color);
+  box-sizing: border-box;
 }
 
 .current-balance {
@@ -438,11 +457,9 @@ textarea {
   width: 55vh;
   font-size: 30px;
   padding-left: 10px;
-  font-size: 30px;
-  padding-left: 10px;
   border-radius: 10px;
-  padding-left: 10px;
   border: 2px solid var(--fields-color);
+  box-sizing: border-box;
 }
 
 .button {
@@ -452,6 +469,7 @@ textarea {
   margin-top: 30px;
   margin-bottom: 30px;
   transition: transform 0.3s ease;
+  align-items: stretch;
 }
 
 #add-existing-button,
@@ -460,6 +478,8 @@ textarea {
   border-radius: 20px;
   height: 40px;
   transition: transform 0.3s ease;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 #add-existing-button {
@@ -605,13 +625,13 @@ input[type="checkbox"] {
 }
 
 .top-label-2 > * {
-  flex: 1;
+  text-align: center;
+  min-width: 8em;
   max-width: 12em;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  text-align: center;
-  min-width: 5em;
+  flex: 1;
 }
 
 .top-label-3 > * {
