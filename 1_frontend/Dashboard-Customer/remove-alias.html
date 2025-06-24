@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="remove-alias.css" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manjari:wght@100;400;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="delete-account-page">
+      <h1 class="title">Confirm Deletion</h1>
+      <div class="message">
+        <p>Do you want to delete this alias?</p>
+        <br />
+        <br />
+        <p>
+          This action <span class="red-text">cannot be undone</span>. Once
+          approved, you will
+          <span class="red-text">not be able to access this account.</span>
+        </p>
+      </div>
+
+      <div class="button">
+        <div class="proceed">
+          <button onclick="location.href='profile.html'" id="proceed">
+            No
+          </button>
+        </div>
+
+        <div class="cancel">
+          <button onclick="location.href='remove-alias2.html'" id="cancel">
+            Yes
+          </button>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

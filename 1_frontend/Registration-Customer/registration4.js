@@ -49,27 +49,8 @@ document.addEventListener("DOMContentLoaded", function () {
     );
     const zipCode = document.querySelector(".zip-code #zip-code");
 
-    if (!personalInput.value.trim()) {
-      showError(personalInput, "Personal code is required");
-      isValid = false;
-    } else if (!/^\d{2,3}$/.test(personalInput.value.trim())) {
-      showError(personalInput, "Personal code must be 2-3 digits");
-      isValid = false;
-    }
-
     if (!phoneInput.value.trim()) {
       showError(phoneInput, "Phone number is required");
-      isValid = false;
-    } else if (!/^\d{10}$/.test(phoneInput.value.trim())) {
-      showError(phoneInput, "Phone number must be 10 digits");
-      isValid = false;
-    }
-
-    if (!homeInput.value.trim()) {
-      showError(homeInput, "Home code is required");
-      isValid = false;
-    } else if (!/^\d{2,3}$/.test(homeInput.value.trim())) {
-      showError(homeInput, "Home code must be 2-3 digits");
       isValid = false;
     }
 
@@ -90,18 +71,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // Address: at least one of unit, building, street, subdivision required
-    if (
-      !unitInput.value.trim() &&
-      !buildingInput.value.trim() &&
-      !streetInput.value.trim() &&
-      !subdivisionInput.value.trim()
-    ) {
-      showError(unitInput, "At least one of Unit, Building, Street, or Subdivision is required");
-      showError(buildingInput, "");
-      showError(streetInput, "");
-      showError(subdivisionInput, "");
-      isValid = false;
-    }
 
     // City, Province, Country, Zip Code are always required
     if (!cityInput.value.trim()) {
@@ -152,18 +121,6 @@ document.addEventListener("DOMContentLoaded", function () {
       );
 
       // At least one of alt unit, building, street, subdivision required
-      if (
-        (!altUnitInput || !altUnitInput.value.trim()) &&
-        (!altBuildingInput || !altBuildingInput.value.trim()) &&
-        (!altStreetInput || !altStreetInput.value.trim()) &&
-        (!altSubdivisionInput || !altSubdivisionInput.value.trim())
-      ) {
-        if (altUnitInput) showError(altUnitInput, "At least one of Unit, Building, Street, or Subdivision is required");
-        if (altBuildingInput) showError(altBuildingInput, "");
-        if (altStreetInput) showError(altStreetInput, "");
-        if (altSubdivisionInput) showError(altSubdivisionInput, "");
-        isValid = false;
-      }
 
       // City, Province, Country, Zip Code are always required for alt address
       if (altCityInput && !altCityInput.value.trim()) {

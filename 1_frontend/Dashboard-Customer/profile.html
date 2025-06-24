@@ -351,25 +351,35 @@
                   >
                     +Add
                   </button>
-                  <button id="remove">-Remove</button>
+                  <button class="remove-button" id="remove-work-nature">
+                    -Remove
+                  </button>
                 </div>
               </div>
 
-              <div class="work-business-nature-container">
+              <div
+                onclick="location.href='remove-business-nature.html'"
+                class="work-business-nature-container"
+              >
+                <div class="container">
+                  <label for="work-email-address">Work/Business Nature</label>
+                  <input type="text" id="work-business-nature" />
+                </div>
+              </div>
+              <div
+                onclick="location.href='remove-business-nature.html'"
+                class="work-business-nature-container"
+              >
                 <div class="container">
                   <label for="work-email-address">Work/Business Nature</label>
                   <input type="text" id="work-business-nature" />
                 </div>
               </div>
 
-              <div class="work-business-nature-container">
-                <div class="container">
-                  <label for="work-email-address">Work/Business Nature</label>
-                  <input type="text" id="work-business-nature" />
-                </div>
-              </div>
-
-              <div class="work-business-nature-container">
+              <div
+                onclick="location.href='remove-business-nature.html'"
+                class="work-business-nature-container"
+              >
                 <div class="container">
                   <label for="work-email-address">Work/Business Nature</label>
                   <input type="text" id="work-business-nature" />
@@ -388,10 +398,15 @@
                     >
                       +Add
                     </button>
-                    <button id="remove">-Remove</button>
+                    <button class="remove-button" id="remove-fund-source">
+                      -Remove
+                    </button>
                   </div>
                 </div>
-                <div class="source-of-fund-container">
+                <div
+                  onclick="location.href='remove-fund-source.html'"
+                  class="source-of-fund-container"
+                >
                   <div class="container">
                     <label for="source-of-fund">Source of Funds</label>
                     <input type="text" id="source-of-fund" />
@@ -410,22 +425,29 @@
                       >
                         +Add
                       </button>
-                      <button id="remove">-Remove</button>
+                      <button class="remove-button" id="remove-alias">
+                        -Remove
+                      </button>
                     </div>
                   </div>
-                  <div class="container">
-                    <label for="alias-first-name">First Name</label>
-                    <input type="text" id="alias-first-name" />
-                  </div>
+                  <div
+                    onclick="location.href='remove-alias.html'"
+                    class="full-name-container-2"
+                  >
+                    <div class="container">
+                      <label for="alias-first-name">First Name</label>
+                      <input type="text" id="alias-first-name" />
+                    </div>
 
-                  <div class="container">
-                    <label for="alias-middle-name">Middle Name</label>
-                    <input type="text" id="alias-middle-name" />
-                  </div>
+                    <div class="container">
+                      <label for="alias-middle-name">Middle Name</label>
+                      <input type="text" id="alias-middle-name" />
+                    </div>
 
-                  <div class="container">
-                    <label for="alias-last-name">Last Name</label>
-                    <input type="text" id="alias-last-name" />
+                    <div class="container">
+                      <label for="alias-last-name">Last Name</label>
+                      <input type="text" id="alias-last-name" />
+                    </div>
                   </div>
                 </div>
               </div>
@@ -434,5 +456,37 @@
         </div>
       </div>
     </div>
+
+    <script>
+      // EXISTING ONES
+      document
+        .getElementById("remove-work-nature")
+        ?.addEventListener("click", function () {
+          document
+            .querySelectorAll(".work-business-nature-container")
+            .forEach((el) => {
+              el.classList.add("active");
+            });
+        });
+
+      document
+        .getElementById("remove-fund-source")
+        ?.addEventListener("click", function () {
+          document
+            .querySelectorAll(".source-of-fund-container")
+            .forEach((el) => {
+              el.classList.add("active");
+            });
+        });
+
+      // NEW ONE
+      document
+        .getElementById("remove-alias")
+        ?.addEventListener("click", function () {
+          document.querySelectorAll(".full-name-container-2").forEach((el) => {
+            el.classList.add("active");
+          });
+        });
+    </script>
   </body>
 </html>

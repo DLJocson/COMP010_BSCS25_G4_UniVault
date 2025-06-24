@@ -7,20 +7,30 @@
   --slide-up: slideUp 0.7s cubic-bezier(0.4, 0.2, 0.2, 1) both;
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-@keyframes slideUp {
-  from { opacity: 0; transform: translateY(40px);}
-  to { opacity: 1; transform: translateY(0);}
-}
-
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+}
+
+@keyframes fadeInBg {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
 .blue-text {
@@ -56,12 +66,11 @@ body {
 
 .direction-text {
   display: flex;
-  justify-content: center;
-  align-items: center;
+  align-items: left;
   font-size: 48px;
   color: var(--primary-color);
   margin-bottom: 10px;
-  text-align: center;
+  text-align: left;
   width: 100%;
   animation: var(--fade-in);
 }
@@ -93,11 +102,11 @@ body {
   flex-shrink: 0;
   margin-top: 5px;
   transition: box-shadow 0.2s;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
 .checkbox input[type="checkbox"]:hover {
-  box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
   border-color: var(--primary-color);
 }
 
@@ -144,7 +153,6 @@ body {
   cursor: pointer;
   display: flex;
   flex-direction: column;
-  gap: 8px;
   flex: 1;
   animation: var(--fade-in);
 }
@@ -188,7 +196,7 @@ body {
   font-family: var(--font-family);
   transition: background-color 0.3s, box-shadow 0.3s, transform 0.2s;
   border: none;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   animation: var(--fade-in);
 }
 

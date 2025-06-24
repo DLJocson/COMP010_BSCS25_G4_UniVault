@@ -417,13 +417,6 @@ function initializeFormValidation() {
       setSuccess(firstName);
     }
 
-    if (!middleName.value.trim()) {
-      setError(middleName, "Middle Name is required");
-      isValid = false;
-    } else {
-      setSuccess(middleName);
-    }
-
     if (!lastName.value.trim()) {
       setError(lastName, "Last Name is required");
       isValid = false;

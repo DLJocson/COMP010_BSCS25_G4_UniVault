@@ -14,16 +14,16 @@
     />
   </head>
   <body>
-    <div class="alias-page">
+    <div class="update-alias-page">
       <div class="title-container">
-        <h1 class="title">Create Account</h1>
+        <h1 class="title">Update Account</h1>
         <h2 class="alias">Aliases</h2>
 
         <div class="checkbox">
           <label>Do you have an alias?</label>
           <div class="yes">
             <input id="yes" type="checkbox" />
-            <label for="yes">No</label>
+            <label for="yes">Yes</label>
           </div>
         </div>
       </div>
@@ -319,13 +319,13 @@
       "Gov’t / GOCC ID",
       "DSWD Certification",
       "NCWDP Certification",
-      "PWD ID"
+      "PWD ID",
     ];
     const select = document.getElementById(selectId);
     while (select.options.length > 1) {
       select.remove(1);
     }
-    options.forEach(opt => {
+    options.forEach((opt) => {
       const option = document.createElement("option");
       option.value = opt.toLowerCase().replace(/[^a-z0-9]+/g, "-");
       option.textContent = opt;
@@ -333,7 +333,7 @@
     });
   }
 
-  document.addEventListener("DOMContentLoaded", function() {
+  document.addEventListener("DOMContentLoaded", function () {
     addIdOptions("select-id1");
     addIdOptions("select-id2");
   });
@@ -342,8 +342,18 @@
 <script>
   function populateMonths(selectId) {
     const months = [
-      "January", "February", "March", "April", "May", "June",
-      "July", "August", "September", "October", "November", "December"
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December",
     ];
     const select = document.getElementById(selectId);
     while (select.options.length > 1) {
@@ -371,7 +381,7 @@
     }
   }
 
-  document.addEventListener("DOMContentLoaded", function() {
+  document.addEventListener("DOMContentLoaded", function () {
     populateMonths("issue-month-id1");
     populateMonths("month");
     populateMonths("issue-month-id2");
@@ -384,45 +394,61 @@
 </script>
 
 <script>
-  document.addEventListener("DOMContentLoaded", function() {
-    const firstNameLabel = document.querySelector('label[for="first-name"]');
-    const lastNameLabel = document.querySelector('label[for="last-name"]');
-    [firstNameLabel, lastNameLabel].forEach(label => {
-      if (label && !label.querySelector('.required-asterisk')) {
-        label.insertAdjacentHTML('beforeend', '<span class="required-asterisk">*</span>');
-      }
-    });
-
-    const id1IssueDate = document.querySelector('.id1-issue-date .subtitle');
-    const id2IssueDate = document.querySelector('.id2-issue-date .subtitle');
-    [id1IssueDate, id2IssueDate].forEach(label => {
-      if (label && !label.querySelector('.required-asterisk')) {
-        label.insertAdjacentHTML('beforeend', '<span class="required-asterisk">*</span>');
-      }
-    });
-
-    // Add red asterisk to "ID 1" and "ID 2" headings
-    const id1Heading = document.querySelector('.second-container > .subtitle');
-    if (id1Heading && !id1Heading.querySelector('.required-asterisk')) {
-      id1Heading.insertAdjacentHTML('beforeend', '<span class="required-asterisk">*</span>');
-    }
-    const id2Heading = document.querySelector('.third-container > h2');
-    if (id2Heading && !id2Heading.querySelector('.required-asterisk')) {
-      id2Heading.insertAdjacentHTML('beforeend', '<span class="required-asterisk">*</span>');
-    }
-
-    const uploadDirections = [
-      "Upload Front of ID 1",
-      "Upload Back of ID 1",
-      "Upload Front of ID 2",
-      "Upload Back of ID 2"
+  document.addEventListener("DOMContentLoaded", function () {
+    // Labels for First Name
+    const firstNameLabels = [
+      document.querySelector('label[for="first-name"]'),
+      document.querySelector('label[for="first-name"]'),
     ];
-    uploadDirections.forEach(directionText => {
-      const p = Array.from(document.querySelectorAll('.upload-box .direction'))
-        .find(el => el.textContent.trim() === directionText);
-      if (p && !p.querySelector('.required-asterisk')) {
-        p.insertAdjacentHTML('beforeend', '<span class="required-asterisk">*</span>');
-      }
-    });
+
+    // Labels for Last Name
+    const lastNameLabels = [
+      document.querySelector('label[for="last-name"]'),
+      document.querySelector('label[for="lname2"]'),
+    ];
+
+    // Labels for ID Type
+    const idTypeLabels = [
+      document.querySelector('label[for="select-id1"]'),
+      document.querySelector('label[for="select-id2"]'),
+    ];
+
+    // Labels for ID Number
+    const idNumberLabels = [
+      document.querySelector("#id1-num")?.previousElementSibling,
+      document.querySelector("#id2-num")?.previousElementSibling,
+    ];
+
+    // Labels for Issue Month
+    const issueMonthLabels = [
+      document.querySelector('label[for="issue-month-id1"]'),
+      document.querySelector('label[for="issue-month-id2"]'),
+    ];
+
+    // Labels for Issue Year
+    const issueYearLabels = [
+      document.querySelector('label[for="issue-year-id1"]'),
+      document.querySelector('label[for="issue-year-id2"]'),
+    ];
+
+    // Function to add asterisk to labels
+    function addAsteriskToLabels(labels) {
+      labels.forEach((label) => {
+        if (label && !label.querySelector(".required-asterisk")) {
+          label.insertAdjacentHTML(
+            "beforeend",
+            '<span class="required-asterisk"> *</span>'
+          );
+        }
+      });
+    }
+
+    // Add asterisks
+    addAsteriskToLabels(firstNameLabels);
+    addAsteriskToLabels(lastNameLabels);
+    addAsteriskToLabels(idTypeLabels);
+    addAsteriskToLabels(idNumberLabels);
+    addAsteriskToLabels(issueMonthLabels);
+    addAsteriskToLabels(issueYearLabels);
   });
 </script>

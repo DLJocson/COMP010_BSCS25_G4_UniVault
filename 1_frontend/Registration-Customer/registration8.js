@@ -43,7 +43,7 @@ document.addEventListener("DOMContentLoaded", () => {
         allValid = false;
       } else {
         errorMsg.style.display = "none";
-        window.location.href = "registration9.html";
+        window.location.href = "registration10.html";
       }
     });
 

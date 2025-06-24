@@ -11,6 +11,10 @@
   box-sizing: border-box;
 }
 
+.red-text {
+  color: red;
+}
+
 body {
   position: relative;
   display: flex;
@@ -366,7 +370,7 @@ body {
 
 .province-country {
   display: flex;
-  gap: 280px;
+  gap: 255px;
   width: 100%;
   padding-left: 25px;
   flex: 1;
